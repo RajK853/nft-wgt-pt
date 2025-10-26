@@ -38,7 +38,7 @@ export function TypewriterEffect({ text, delay = 0.05, duration = 0.5 }: Typewri
       y: 0,
       transition: {
         duration: duration,
-        ease: "easeOut", // Corrected easing value
+        ease: "linear" as any, // Explicitly cast to any to bypass type error
       },
     },
   };
