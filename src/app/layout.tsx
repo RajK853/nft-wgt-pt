@@ -27,6 +27,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Removed empty navigation bar */}
         {children}
       </body>
     </html>
