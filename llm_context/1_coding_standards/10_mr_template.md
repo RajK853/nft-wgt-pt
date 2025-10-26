@@ -7,6 +7,10 @@
 
 **Related Issue:**
 Closes #(issue-number)
+*(This will automatically close the linked issue when the MR is merged.)*
+
+**Assignee:**
+(Please assign this MR to the author for review.)
 
 ---
 
