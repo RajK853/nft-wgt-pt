@@ -24,6 +24,9 @@ This document provides a map to the detailed context files located in the `llm_c
 *   **`5_documentation_aesthetics.md`**: Principles for visually appealing and maintainable documentation.
 *   **`6_git_practices.md`**: Specific Git practices for the Gemini LLM.
 *   **`7_nextjs_routing.md`**: Guidelines for using Next.js App Router for navigation.
+*   **`8_github_actions.md`**: Workflow for using the `github` tool to manage features.
+*   **`9_issue_template.md`**: Template for creating new issues.
+*   **`10_mr_template.md`**: Template for creating new merge requests.
 
 ### `llm_context/2_llm_interaction/`
 *   **`0_rules_of_engagement.md`**: My core operating principles for every prompt.
