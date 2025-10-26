@@ -1,6 +1,6 @@
 # Next.js + Supabase Project
 
-This is a web application built with the Next.js framework and Supabase for the backend.
+This is a web application built with the Next.js framework and Supabase for the backend. It utilizes `shadcn/ui` for its UI components and styling.
 
 ---
 
