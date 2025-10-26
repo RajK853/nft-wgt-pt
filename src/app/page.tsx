@@ -1,50 +1,53 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
+'use client';
 
-export default async function HomePage() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-  const { data: penalties } = await supabase.from("penalties").select(`
-    id,
-    date,
-    status,
-    shooter:players!penalties_shooter_id_fkey ( name ),
-    keeper:players!penalties_keeper_id_fkey ( name )
-  `);
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CircularLogo } from '@/components/circular-logo'; // Import CircularLogo
+import { HoverCard } from '@/components/hover-card';
+import { TypewriterEffect } from '@/components/typewriter-effect'; // Import TypewriterEffect
 
+const navItems = [
+  {
+    title: 'Dashboard',
+    description: 'Overview of your NFT collection.',
+    href: '/dashboard',
+    icon: '📊', // Suitable emoji for Dashboard
+  },
+  {
+    title: 'Goal Keeper Stats',
+    description: 'Analyze goalkeeper performance.',
+    href: '/goalkeeper-stats',
+    icon: '🥅', // Suitable emoji for Goal Keeper Stats
+  },
+  {
+    title: 'Player Stats',
+    description: 'View individual player statistics.',
+    href: '/player-stats',
+    icon: '🏃', // Suitable emoji for Player Stats
+  },
+  {
+    title: 'Scoring Method',
+    description: 'Define and manage scoring rules.',
+    href: '/scoring-method',
+    icon: '🔢', // Suitable emoji for Scoring Method
+  },
+];
+
+export default function DashboardPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <Card className="w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle className="text-4xl font-bold mb-4">Penalty Tracker</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button className="mb-4">Click me</Button>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Shooter</TableHead>
-                <TableHead>Keeper</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {penalties?.map((penalty) => (
-                <TableRow key={penalty.id}>
-                  <TableCell>{new Date(penalty.date).toLocaleDateString()}</TableCell>
-                  <TableCell>{penalty.shooter?.name}</TableCell>
-                  <TableCell>{penalty.keeper?.name}</TableCell>
-                  <TableCell>{penalty.status}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </main>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <div className="flex flex-col items-center mb-8">
+        <CircularLogo /> {/* Use CircularLogo component */}
+        <TypewriterEffect text="NFT Weingarten - Penalty Tracker" /> {/* Use TypewriterEffect component */}
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        {navItems.map((item) => (
+          <Link key={item.title} href={item.href} passHref>
+            <HoverCard title={item.title} description={item.description} href={item.href} icon={item.icon} />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
