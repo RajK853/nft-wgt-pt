@@ -3,12 +3,23 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * @interface TypewriterEffectProps
+ * @property {string} text - The text content to apply the typewriter effect to.
+ * @property {number} [delay=0.05] - The delay between each character's animation in seconds.
+ * @property {number} [duration=0.5] - The duration of each character's animation in seconds.
+ */
 interface TypewriterEffectProps {
   text: string;
   delay?: number;
   duration?: number;
 }
 
+/**
+ * @component TypewriterEffect
+ * @description A component that animates text with a typewriter effect, revealing characters sequentially.
+ * @param {TypewriterEffectProps} props - The props for the TypewriterEffect component.
+ */
 export function TypewriterEffect({ text, delay = 0.05, duration = 0.5 }: TypewriterEffectProps) {
   const words = text.split(' ');
 

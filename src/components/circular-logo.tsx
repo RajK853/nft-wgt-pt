@@ -4,10 +4,18 @@ import Image from 'next/image';
 import { motion, useAnimation } from "framer-motion";
 import React from 'react'; // useState is no longer needed
 
+/**
+ * @component CircularLogo
+ * @description A circular logo component with Framer Motion animations.
+ * It features a gentle pulse on hover and a ripple effect on click.
+ */
 export function CircularLogo() {
   const controls = useAnimation();
   // isHovered state is no longer needed
 
+  /**
+   * Handles the click event on the logo, triggering a ripple animation.
+   */
   const handleLogoClick = () => {
     controls.start({
       boxShadow: [

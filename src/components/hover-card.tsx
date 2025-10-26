@@ -4,6 +4,13 @@ import { motion, useAnimate } from "framer-motion";
 import React from "react"; // useState is no longer needed
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
+/**
+ * @interface HoverCardProps
+ * @property {string} title - The title of the navigation card.
+ * @property {string} description - A brief description for the navigation card.
+ * @property {string} icon - An emoji icon to display on the card.
+ * @property {string} href - The URL to navigate to when the card is clicked.
+ */
 interface HoverCardProps {
   title: string;
   description: string;
@@ -11,10 +18,19 @@ interface HoverCardProps {
   href: string; // Add href prop
 }
 
+/**
+ * @component HoverCard
+ * @description A customizable navigation card component with Framer Motion hover and click animations.
+ * It displays an icon, title, and description, and navigates to a specified URL on click.
+ * @param {HoverCardProps} props - The props for the HoverCard component.
+ */
 export function HoverCard({ title, description, icon, href }: HoverCardProps) {
   // isHovered state is no longer needed
   const [scope, animate] = useAnimate();
 
+  /**
+   * Triggers a "big bounce" animation on the card when it is tapped/clicked.
+   */
   function sequence() {
     animate([
       [scope.current, { scale: 1.3 }, { type: "spring", stiffness: 400, damping: 10 }], // Big bounce out
