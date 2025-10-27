@@ -1,3 +1,7 @@
+# LLM Review Summary
+
+*   **Status**: ✅ Looks good! / ❌ Has N issues.
+
 # PR Review Guidelines
 
 ## Standard Practices
