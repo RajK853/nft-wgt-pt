@@ -49,6 +49,7 @@ export function TypewriterEffect({ text, delay = 0.05, duration = 0.5 }: Typewri
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      data-testid="typewriter-text"
     >
       {words.map((word, index) => (
         <motion.span key={word + index} className="inline-block mr-2">
