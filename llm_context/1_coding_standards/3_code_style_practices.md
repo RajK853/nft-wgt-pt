@@ -1,29 +1,21 @@
-# Good Code Style Practices
+# Code Style
 
-This section outlines practices for writing visually appealing and maintainable TypeScript code, enforced by ESLint and Prettier.
+## Formatting
 
-### 1. General Code Aesthetics
+*   **Prettier**: Use for automatic formatting.
+*   **Naming**:
+    *   `camelCase` for variables/functions.
+    *   `PascalCase` for components/types.
+*   **Comments**:
+    *   **JSDoc**: Explain purpose, params, and returns.
+    *   **Inline**: Explain complex logic.
 
-*   **Formatting:** Use Prettier for consistent code formatting. It will handle indentation, line length, and spacing automatically.
-*   **Naming Conventions:**
-    *   Use `camelCase` for variables and functions.
-    *   Use `PascalCase` for components, classes, and type interfaces.
-*   **Comments:**
-    *   Use JSDoc for functions and components to explain their purpose, parameters, and return values.
-    *   Use inline comments (`//`) to explain complex or non-obvious logic.
+## Imports
 
-### 2. Import Organization
+*   **Grouping**: Group and sort imports (React, then third-party, then internal).
+*   **Paths**: Use absolute paths (`@/components/...`).
 
-*   **Grouping and Sorting:** Use a Prettier plugin or ESLint rule to automatically group and sort imports. The typical order is:
-    1.  React imports.
-    2.  Third-party library imports.
-    3.  Internal component and module imports.
-    4.  Style imports.
-*   **Absolute Paths:** Use absolute paths for imports (e.g., `import MyComponent from '@/components/MyComponent'`) configured via `tsconfig.json`.
+## Linting (ESLint)
 
-### 3. ESLint Rules
-
-The project should have a comprehensive ESLint configuration to enforce code quality and style. Some recommended rules include:
-*   `no-unused-vars`: Warns about unused variables.
-*   `no-console`: Warns about `console.log` statements in production builds.
-*   `react/prop-types`: Enforces prop type definitions (though TypeScript interfaces are preferred).
+*   `no-unused-vars`: Warn on unused variables.
+*   `no-console`: Warn on `console.log` in production.

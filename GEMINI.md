@@ -32,6 +32,24 @@ This document provides a map to the detailed context files located in the `llm_c
 *   **`0_rules_of_engagement.md`**: My core operating principles for every prompt.
 *   **`1_llm_guidelines.md`**: Guidelines for interacting with the Gemini LLM, including context management and file size.
 
+### `llm_context/3_plan_generation/`
+*   **`0_plan_generation_workflow.md`**: The complete workflow for generating an implementation plan.
+
+### `llm_context/4_execution_strategy/`
+*   **`0_execution_workflow.md`**: The workflow for executing an implementation plan.
+
+---
+
+## Plan Generation and Execution
+
+### Plan Generation
+
+When you ask me to **create**, **generate**, or **make a plan** to **do**, **implement**, or **fix** something, I will follow the workflow defined in `llm_context/3_plan_generation/0_plan_generation_workflow.md`.
+
+### Plan Execution
+
+When you ask me to **implement**, **execute**, **run**, or **follow a plan**, I will follow the workflow defined in `llm_context/4_execution_strategy/0_execution_workflow.md`.
+
 ---
 
 ## Rigorously Adhere to Style Guides
