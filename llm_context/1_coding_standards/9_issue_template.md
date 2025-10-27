@@ -11,6 +11,8 @@
 
 **Labels:** (Apply relevant GitHub labels to categorize the issue. Use a comma-separated list. Examples: `bug`, `feature`, `refactor`, `documentation`, `enhancement`, `performance`, `security`)
 
+**Assignees:** RajK853 (This issue will be automatically assigned to RajK853.)
+
 **TODO:**
 - [ ] Task 1 (Break down the issue into smaller, actionable tasks. Use markdown checkboxes. Example: `- [ ] Implement signup endpoint`)
 - [ ] Task 2

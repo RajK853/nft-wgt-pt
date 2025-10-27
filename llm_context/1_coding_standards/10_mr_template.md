@@ -8,10 +8,4 @@
 
 **Assignee:** @<author>
 
----
-
-**Type of change:**
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation
+**Labels:** (Please apply relevant GitHub labels for the type of change, e.g., `bug`, `feature`, `breaking-change`, `documentation`)
