@@ -15,8 +15,8 @@ Execute an implementation plan in a structured and iterative manner.
     *   **Simple Task**: A single feature branch is required.
     *   **Complex Task**: Multiple feature branches for each sub-task may be required.
 3.  **Create Feature Branch**:
-    *   Create all feature branches from the `main` branch.
-    *   Use the following naming convention: `issues/#{issue_number}_{branch_name}`.
+    *   Always create a feature branch for each plan (if not already present) from the `main` branch.
+    *   Refer to `llm_context/1_coding_standards/6_git_practices.md` for the feature branch naming convention.
     *   For complex tasks, use the same `issue_number` and a unique `branch_name` for each sub-task.
 4.  **Execute**: Execute subtasks sequentially in their feature branches.
 5.  **Manage Context**: Use the plan as the source of truth.
