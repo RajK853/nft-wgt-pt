@@ -1,4 +1,4 @@
-# NFT-WGT-PT 🖼️
+# Penalty Tracker 🖼️
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -12,7 +12,7 @@
     <img src="public/nft-logo.jpg" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">NFT-WGT-PT</h3>
+  <h3 align="center">Penalty Tracker</h3>
 
   <p align="center">
     A web application for tracking NFT player stats.
@@ -58,7 +58,9 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great NFT player stats trackers available on GitHub; however, I didn't find one that really suited my needs so I created this one. I want to track player stats in a more granular way.
+This project is a web application designed to track penalty statistics for our football team, NFT Weingarten.
+
+The goal is to provide a comprehensive platform for analyzing player performance in penalty situations, helping our team improve their strategies and individual skills.
 
 Here's why:
 * Your time should be focused on creating something amazing. A project that solves a problem and helps others
