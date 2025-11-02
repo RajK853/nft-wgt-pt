@@ -1,7 +1,7 @@
 /**
  * Defines the structure for an event outcome in the scoring system.
  */
-interface EventOutcome {
+export interface EventOutcome {
   /** The name of the event (e.g., "Goal", "Saved", "Out"). */
   event: string;
   /** The points awarded to a shooter for this event. */

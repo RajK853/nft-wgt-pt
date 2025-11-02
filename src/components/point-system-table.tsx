@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from '@/lib/utils';
+import { EventOutcome } from '@/lib/scoring-data';
 
 /**
  * Defines the props for the PointSystemTable component.
