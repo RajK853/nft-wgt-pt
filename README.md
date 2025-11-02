@@ -56,8 +56,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 This project is a web application designed to track penalty statistics for our football team, NFT Weingarten.
 
 The goal is to provide a comprehensive platform for analyzing player performance in penalty situations, helping our team improve their strategies and individual skills.
@@ -136,7 +134,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Raj Kumar rana -  rgk.rana@gmail.com
+Raj Kumar Rana -  rgk.rana@gmail.com
 
 Project Link: [https://github.com/RajK853/nft-wgt-pt](https://github.com/RajK853/nft-wgt-pt)
 
