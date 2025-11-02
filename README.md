@@ -148,6 +148,6 @@ Project Link: [https://github.com/RajK853/nft-wgt-pt](https://github.com/RajK853
 [stars-url]: https://github.com/RajK853/nft-wgt-pt/stargazers
 [issues-shield]: https://img.shields.io/github/issues/RajK853/nft-wgt-pt.svg?style=for-the-badge
 [issues-url]: https://github.com/RajK853/nft-wgt-pt/issues
-[license-shield]: https://img.shields.io/github/license/RajK853/nft-wgt-pt.svg?style=flat-square
+[license-shield]: https://img.shields.io/github/license/RajK853/nft-wgt-pt.svg?style=for-the-badge
 [license-url]: https://github.com/RajK853/nft-wgt-pt/blob/main/LICENSE
 [product-screenshot]: images/screenshot.png
