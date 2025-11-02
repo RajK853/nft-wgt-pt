@@ -4,6 +4,10 @@
 
 Execute an implementation plan in a structured and iterative manner.
 
+## Pre-implementation Clarification
+
+1.  **Read and Clarify**: When instructed to implement a plan, first read the plan thoroughly. Ask follow-up questions as many times as needed to gather useful information or fix any ambiguities before starting implementation.
+
 ## Process
 
 1.  **Decompose**: Break the plan into atomic subtasks.
@@ -16,7 +20,6 @@ Execute an implementation plan in a structured and iterative manner.
     *   For complex tasks, use the same `issue_number` and a unique `branch_name` for each sub-task.
 4.  **Execute**: Execute subtasks sequentially in their feature branches.
 5.  **Manage Context**: Use the plan as the source of truth.
-6.  **Interact**: Keep the user informed.
 
 ## Principles
 
@@ -30,3 +33,5 @@ Execute an implementation plan in a structured and iterative manner.
     *   **Progress Updates**: Keep the user informed.
     *   **Confirmation**: Seek confirmation for significant actions.
     *   **Error Handling**: Pause, explain, propose a solution, and wait for confirmation.
+    *   **Commit Policy**: NEVER automatically commit changes to git unless explicitly instructed by the user.
+    *   **Task Completion**: After finishing code implementation or any task, always wait for user instruction. Never do multiple tasks at once.
