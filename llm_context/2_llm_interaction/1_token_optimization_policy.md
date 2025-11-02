@@ -25,6 +25,7 @@
 
 ## Communication
 
-*   **Tool-First**: Execute tools immediately.
-*   **No Filler**: Avoid conversational pleasantries.
-*   **Data-Driven**: Use structured formats (lists, code blocks).
+*   **Concise Updates**: Provide brief, informative updates on findings and actions.
+*   **Tool-First**: Execute tools promptly, but provide context when necessary.
+*   **No Filler**: Avoid conversational pleasantries, but ensure clarity.
+*   **Data-driven**: Use structured formats (lists, code blocks) where appropriate.
