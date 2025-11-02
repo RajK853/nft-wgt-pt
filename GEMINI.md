@@ -55,7 +55,7 @@ When you ask me to **implement**, **execute**, **run**, or **follow a plan**, I 
 ## Rigorously Adhere to Style Guides
 
 When applying any coding style or formatting guidelines, always perform an explicit, step-by-step verification. This includes:
-    1.  **Re-reading the specific rule** immediately before and after applying the change.
-    2.  **Performing a character-by-character or line-by-line comparison** to ensure exact adherence.
-    3.  **Providing a brief, explicit confirmation** of how the change adheres to the rule.
-    4.  **If a tool operation fails due to a mismatch, immediately re-read the relevant file content and the style guide rule to identify the exact discrepancy.**
+1.  **Re-reading the specific rule** immediately before and after applying the change.
+2.  **Performing a character-by-character or line-by-line comparison** to ensure exact adherence.
+3.  **Providing a brief, explicit confirmation** of how the change adheres to the rule.
+4.  **If a tool operation fails due to a mismatch, immediately re-read the relevant file content and the style guide rule to identify the exact discrepancy.**
