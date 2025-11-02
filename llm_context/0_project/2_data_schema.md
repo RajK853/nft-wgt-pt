@@ -15,3 +15,12 @@ The project uses a **PostgreSQL** database managed by **Supabase**.
 ## Row-Level Security (RLS)
 
 RLS is enabled to restrict data access to the owner.
+
+## `game_events` Table Example
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `date` | `timestamp` | | Date of the event. |
+| `player_name` | `text` | | Name of the player. |
+| `keeper_name` | `text` | | Name of the goalkeeper. |
+| `status` | `text` | CHECK (status IN ('saved', 'goal', 'out')) | Status of the event (saved, goal, or out). |
