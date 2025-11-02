@@ -6,4 +6,4 @@ The application's logic is built around the Next.js framework.
 *   **Client Components**: Used for interactive UI. Marked with `"use client"`.
 *   **Server Actions**: Asynchronous functions for server-side mutations.
 *   **API Routes**: For building API endpoints.
-*   **Supabase Client**: Located in `lib/supabase.ts` for backend interaction.
+*   **Supabase Integration**: Detailed patterns and best practices are covered in `llm_context/0_project/5_supabase_integration.md`.
