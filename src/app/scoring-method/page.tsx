@@ -3,20 +3,26 @@
 import React from 'react';
 
 import { PointSystemTable } from '@/components/point-system-table';
-import { shooterOutcomes, goalkeeperOutcomes } from '@/lib/scoring-data';
+import { eventOutcomes } from '@/lib/scoring-data';
 
+/**
+ * Renders the Scoring Method Page, displaying a table of event-based points for shooters and goalkeepers.
+ * This page outlines the base points system used to calculate player scores.
+ * Points are awarded or deducted based on various in-game events for both shooters and goalkeepers.
+ *
+ * @returns {JSX.Element} The rendered Scoring Method Page.
+ */
 export default function ScoringMethodPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <h1 className="text-4xl font-bold">Scoring Method Page</h1>
-      <div className="container mx-auto px-4 py-8">
-        <p className="text-lg text-center mb-8">
-          This page outlines the base points system used to calculate player scores. Points are awarded or deducted based on various in-game events for both shooters and goalkeepers.
-        </p>
-
-        <PointSystemTable title="Shooter Point System" outcomes={shooterOutcomes} />
-        <PointSystemTable title="Goalkeeper Point System" outcomes={goalkeeperOutcomes} />
-      </div>
-    </div>
+    <>
+      <h1 className="text-4xl font-bold text-center mt-8">Scoring Method Page</h1>
+      <p className="text-lg text-center mb-8 px-4">
+        This page outlines the base points system used to calculate player scores. Points are awarded or deducted based on various in-game events for both shooters and goalkeepers.
+      </p>
+      <PointSystemTable outcomes={eventOutcomes} />
+    </>
   );
 }
+
+
+

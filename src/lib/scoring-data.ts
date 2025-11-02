@@ -1,26 +1,20 @@
-interface Outcome {
-  description: string;
-  points: number;
+/**
+ * Defines the structure for an event outcome in the scoring system.
+ */
+interface EventOutcome {
+  /** The name of the event (e.g., "Goal", "Saved", "Out"). */
+  event: string;
+  /** The points awarded to a shooter for this event. */
+  shooterPoints: number;
+  /** The points awarded to a goalkeeper for this event. */
+  goalkeeperPoints: number;
 }
 
-export const shooterOutcomes: Outcome[] = [
-  { description: "Goal Scored (Open Play)", points: 10 },
-  { description: "Goal Scored (Penalty)", points: 7 },
-  { description: "Assist", points: 5 },
-  { description: "Shot on Target", points: 2 },
-  { description: "Pass Completion (per 10)", points: 1 },
-  { description: "Tackle Won", points: 1 },
-  { description: "Interception", points: 1 },
-  { description: "Yellow Card", points: -2 },
-  { description: "Red Card", points: -5 },
-  { description: "Own Goal", points: -3 },
-];
-
-export const goalkeeperOutcomes: Outcome[] = [
-  { description: "Clean Sheet", points: 8 },
-  { description: "Save", points: 2 },
-  { description: "Penalty Save", points: 10 },
-  { description: "Goal Conceded", points: -3 },
-  { description: "Yellow Card", points: -2 },
-  { description: "Red Card", points: -5 },
+/**
+ * An array of event outcomes, detailing points awarded to shooters and goalkeepers for each event.
+ */
+export const eventOutcomes: EventOutcome[] = [
+  { event: "Goal", shooterPoints: 1.5, goalkeeperPoints: -1.0 },
+  { event: "Saved", shooterPoints: 0.0, goalkeeperPoints: 1.5 },
+  { event: "Out", shooterPoints: -1.0, goalkeeperPoints: 0.0 },
 ];
