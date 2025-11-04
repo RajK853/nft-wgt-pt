@@ -33,7 +33,7 @@ export const ScoringExplanation: React.FC<ScoringExplanationProps> = ({
           </div>
           <div className="flex flex-col items-center justify-center p-4 bg-muted rounded-lg">
             <h3 className="text-lg font-semibold mb-2">{formulaTitle}</h3>
-            <BlockMath math={formula} />
+            <BlockMath math={formula} data-testid="react-katex" />
             <p className="text-sm text-muted-foreground mt-2">{formulaExplanation}</p>
           </div>
         </div>
