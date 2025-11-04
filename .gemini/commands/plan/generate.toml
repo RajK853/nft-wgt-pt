@@ -32,4 +32,8 @@ Present your strategic plan in markdown. It should be the direct result of your 
 6.  **Anticipated Challenges & Considerations:** Based on your analysis, what potential risks, dependencies, or trade-offs do you foresee?
 
 Your final output should be ONLY this strategic plan. Do not include any other conversational text.
+
+After generating the plan, save it to the file `plans/{{plan_name}}.md`.
+
+**Note on plan_name:** The `plan_name` used for the output filename should follow the pattern `github_{issue_number}_{short_description}`.
 """
