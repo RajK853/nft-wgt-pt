@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
-
 import { PointSystemTable } from '@/components/point-system-table';
+import { ScoringExplanation } from '@/components/scoring-explanation';
 import { eventOutcomes } from '@/lib/scoring-data';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 
 /**
  * Renders the Scoring Method Page, displaying a table of event-based points for shooters and goalkeepers.
@@ -14,25 +15,35 @@ import { eventOutcomes } from '@/lib/scoring-data';
  */
 export default function ScoringMethodPage() {
   return (
-    <>
-      <section className="bg-gray-700 text-white py-8 mb-8">
-        <h1 className="text-4xl font-bold text-center">Scoring Method Page</h1>
-        <p className="text-lg text-center px-4 mt-4">
-          This page outlines the base points system used to calculate player scores. Points are awarded or deducted based on various in-game events for both shooters and goalkeepers.
+    <div className="container mx-auto px-4 py-8">
+      <section className="text-center mb-12">
+        <h1 className="text-4xl font-bold">Scoring Method</h1>
+        <p className="text-lg text-muted-foreground mt-2">
+          Learn how player scores are calculated based on in-game events and our time-weighted system.
         </p>
       </section>
 
-      <section className="mb-8 px-4">
-        <h2 className="text-3xl font-bold text-center mt-8 mb-4">Total Points Calculation & Time-Weighted Points</h2>
-        <p className="text-lg">
-          While the table above details the base points for individual events, a player's overall "Total Points" will be calculated using a more comprehensive approach. This will involve "Time-Weighted Points," where recent events contribute more significantly to the total score than older events. This method ensures that a player's current form and recent performance are accurately reflected in their overall rating.
-        </p>
-        <p className="text-lg mt-2">
-          The detailed algorithm for calculating Time-Weighted Points, including factors like playing time, event decay, and specific weighting parameters, will be implemented in a future update. This section serves as a conceptual overview of how total scores will be derived.
-        </p>
+      <section className="mb-12">
+        <ScoringExplanation
+          title="Understanding Time-Weighted Scoring"
+          description="Time-weighted scoring values recent performance more than older achievements. This system reduces the value of old scores over time. The key idea is 'half-life,' which is the time it takes for a score's value to decrease by half."
+          example="For example, if a score has a 30-day half-life, its value will be 50% after 30 days, and 25% after 60 days. This decay highlights current performance."
+          formulaTitle="Score Decay Formula"
+          formula="S_{decayed} = S_{original} \times (1/2)^{\frac{t_{elapsed}}{t_{half-life}}}"
+          formulaExplanation="This formula shows how a score decays. `Original Score` is the initial points. `Time Elapsed` is the time since the event. `Half-Life` is the time for a score's value to halve."
+        />
       </section>
 
-      <PointSystemTable outcomes={eventOutcomes} />
-    </>
+      <section>
+        <Card>
+          <CardHeader>
+            <CardTitle>Base Point System</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PointSystemTable outcomes={eventOutcomes} />
+          </CardContent>
+        </Card>
+      </section>
+    </div>
   );
 }
