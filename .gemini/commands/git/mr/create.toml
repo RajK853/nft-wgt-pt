@@ -1,0 +1,50 @@
+description = "Create a merge request/pull request for the current branch using our MR guidelines."
+prompt = """
+You are tasked with creating a GitHub Pull Request (PR) for the current branch. Follow these steps meticulously to ensure the PR is high-quality and adheres to project standards.
+
+**1. Understand the Context:**
+
+*   **Identify Current Branch:** Use `git branch --show-current` to get the name of the current branch.
+*   **Identify Remote and Base Branch:**
+    *   Use `git remote -v` to find the remote repository URL.
+    *   Assume the base branch is `main` unless specified otherwise. You can verify this by checking recent pull requests or asking the user.
+*   **Fetch Latest Changes:** Run `git fetch` to ensure you have the latest information from the remote.
+
+**2. Gather Commit Information:**
+
+*   **Review Commits:** Use `git log main..HEAD` (replace `main` with the actual base branch if different) to list the commits on the current branch that are not in the base branch.
+*   **Summarize Changes:** Based on the commit messages, create a concise summary of the changes. This will be the basis for your PR title and body.
+
+**3. Draft the Pull Request Content:**
+
+*   **Read the Template:** Read the contents of the merge request template located at `llm_context/1_coding_standards/10_mr_template.md`.
+*   **Generate Title:**
+    *   Based on the commit summary, create a descriptive, one-line title.
+    *   Follow the conventional commit format if the project uses it (e.g., "feat: Add user authentication").
+*   **Generate Body:**
+    *   Fill out the sections of the MR template using the information gathered from the commits.
+    *   Be detailed in the "Description" section.
+    *   If there are related issues, reference them (e.g., "Closes #123").
+
+**4. Create the Pull Request:**
+
+*   **Propose to User:** Present the generated title and body to the user for review.
+*   **Use GitHub Tool:** Once the user approves, use the `github.create_pull_request` tool to create the PR.
+    *   `owner`: Extract from the remote URL (e.g., "RajK853").
+    *   `repo`: Extract from the remote URL (e.g., "nft-wgt-pt").
+    *   `title`: The approved title.
+    *   `head`: The current branch name.
+    *   `base`: The base branch name (`main`).
+    *   `body`: The approved body.
+
+**Example Workflow:**
+
+1.  `git branch --show-current` -> `feat/new-feature`
+2.  `git remote -v` -> `origin	git@github.com:RajK853/nft-wgt-pt.git (fetch)`
+3.  `git log main..feat/new-feature` -> shows 3 commits related to adding a new login page.
+4.  Read `llm_context/1_coding_standards/10_mr_template.md`.
+5.  Propose title: "feat: Add login page"
+6.  Propose body by filling out the template.
+7.  User approves.
+8.  Call `github.create_pull_request` with the correct parameters.
+"""

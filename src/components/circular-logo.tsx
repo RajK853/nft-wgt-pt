@@ -9,7 +9,7 @@ import React from 'react'; // useState is no longer needed
  * @description A circular logo component with Framer Motion animations.
  * It features a gentle pulse on hover and a ripple effect on click.
  */
-export function CircularLogo({ className }: { className?: string }) {
+export function CircularLogo({ className, width = 150, height = 150 }: { className?: string; width?: number; height?: number }) {
   const controls = useAnimation();
   // isHovered state is no longer needed
 
@@ -29,7 +29,8 @@ export function CircularLogo({ className }: { className?: string }) {
 
   return (
     <motion.div
-      className={`rounded-full overflow-hidden w-[150px] h-[150px] mb-4 ${className}`}
+      className={`rounded-full overflow-hidden ${className}`}
+      style={{ width: `${width}px`, height: `${height}px` }}
       onClick={handleLogoClick}
       animate={controls}
       whileTap={{ scale: 0.9 }} // Optional: slight press effect on click
@@ -40,8 +41,8 @@ export function CircularLogo({ className }: { className?: string }) {
       <Image
         src="/nft-logo.jpg"
         alt="NFT Logo"
-        width={150}
-        height={150}
+        width={width}
+        height={height}
         className="w-full h-full object-cover"
       />
     </motion.div>
