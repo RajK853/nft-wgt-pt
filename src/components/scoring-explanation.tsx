@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import 'katex/dist/katex.min.css';
 import { BlockMath } from 'react-katex';
+import { clsx } from 'clsx';
 
 interface ScoringExplanationProps {
   title: string;
@@ -10,6 +11,7 @@ interface ScoringExplanationProps {
   formulaTitle: string;
   formula: string;
   formulaExplanation: string;
+  className?: string;
 }
 
 export const ScoringExplanation: React.FC<ScoringExplanationProps> = ({
@@ -19,9 +21,10 @@ export const ScoringExplanation: React.FC<ScoringExplanationProps> = ({
   formulaTitle,
   formula,
   formulaExplanation,
+  className,
 }) => {
   return (
-    <Card className="w-full">
+    <Card className={clsx("w-full", className)}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>

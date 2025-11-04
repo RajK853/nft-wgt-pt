@@ -10,7 +10,3 @@
 **Description:** (Provide a clear and concise summary of the changes made in this PR. Explain the 'what' and 'why'. Example: `This PR implements the secure user authentication flow, including signup, login, and session management. It addresses the need for user data protection and personalized experiences.`)
 
 **Related Issue:** Closes #<issue-number> (Reference the issue this PR closes. Example: `Closes #123`)
-
-**Assignee:** RajK853 (This PR will be automatically assigned to RajK853.)
-
-**Labels:** (Apply relevant GitHub labels to categorize the PR. Use a comma-separated list. Examples: `bug`, `feature`, `breaking-change`, `documentation`, `enhancement`, `performance`, `security`)
