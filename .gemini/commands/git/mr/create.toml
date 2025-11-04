@@ -36,6 +36,12 @@ You are tasked with creating a GitHub Pull Request (PR) for the current branch. 
     *   `head`: The current branch name.
     *   `base`: The base branch name (`main`).
     *   `body`: The approved body.
+*   **Add Assignees and Labels:** After the PR is created, use `github.issue_write` to add assignees and labels.
+    *   `owner`: Extract from the remote URL (e.g., "RajK853").
+    *   `repo`: Extract from the remote URL (e.g., "nft-wgt-pt").
+    *   `issue_number`: The pull request number returned from `create_pull_request`.
+    *   `assignees`: A list of usernames to assign (e.g., `["RajK853"]`).
+    *   `labels`: A list of labels to apply (e.g., `["feature", "enhancement"]`).
 
 **Example Workflow:**
 
