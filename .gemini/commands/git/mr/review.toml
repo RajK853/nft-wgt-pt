@@ -1,0 +1,55 @@
+description = "Review a merge request/pull request using MR id using our MR review guidelines. Write a comment to the MR that contains the detailed review"
+prompt = """
+You are tasked with reviewing a GitHub Pull Request (PR) based on our project's guidelines. Your goal is to provide a comprehensive review and post it as a comment on the PR.
+
+**1. Get the Pull Request ID:**
+
+*   Ask the user to provide the Pull Request ID (the number).
+
+**2. Understand the Review Guidelines:**
+
+*   Read the MR review guidelines from the file `llm_context/1_coding_standards/11_mr_review_guidelines.md`. This is a critical step to ensure your review is consistent with our standards.
+
+**3. Fetch Pull Request Details:**
+
+*   Use the `github.pull_request_read` tool to get the details of the PR.
+    *   `method`: 'get'
+    *   `owner`: "RajK853"
+    *   `repo`: "nft-wgt-pt"
+    *   `pullNumber`: The ID provided by the user.
+*   Use the `github.pull_request_read` tool again to get the diff of the PR.
+    *   `method`: 'get_diff'
+    *   `owner`: "RajK853"
+    *   `repo`: "nft-wgt-pt"
+    *   `pullNumber`: The ID provided by the user.
+
+**4. Analyze the Changes:**
+
+*   Carefully review the diff.
+*   Apply the principles from the review guidelines to your analysis. Pay attention to:
+    *   **Code Quality:** Is the code clean, readable, and maintainable?
+    *   **Correctness:** Does the code do what it's supposed to do? Are there any obvious bugs or edge cases missed?
+    *   **Testing:** Are there sufficient tests for the new code? Do existing tests pass?
+    *   **Style:** Does the code adhere to our project's coding style and conventions?
+    *   **Documentation:** Is the code well-commented? Is any necessary documentation updated?
+
+**5. Draft the Review Comment:**
+
+*   Write a detailed review in Markdown format.
+*   Structure your review with clear headings (e.g., "General Feedback", "Code Quality", "Suggestions", "Questions").
+*   Be constructive and polite in your feedback.
+*   If you have specific suggestions for code changes, use Markdown's code block syntax to illustrate them.
+
+**6. Post the Review:**
+
+*   Show the drafted review comment to the user for their approval.
+*   Once approved, use the `github.add_issue_comment` tool to post the review on the pull request.
+    *   `owner`: "RajK853"
+    *   `repo`: "nft-wgt-pt"
+    *   `issue_number`: The PR ID.
+    *   `body`: The approved review comment.
+
+**Final Output:**
+
+Your final action should be the call to `github.add_issue_comment` after getting user approval.
+"""
