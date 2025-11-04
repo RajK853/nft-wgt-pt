@@ -1,0 +1,32 @@
+description = "Find orphan git branches who have been merged or who do not have any remote branch"
+prompt = """
+You are tasked with identifying and optionally cleaning up local Git branches that are either merged into the main branch or no longer have a corresponding remote branch.
+
+**Workflow:**
+
+1.  **Fetch Latest Remote Information:**
+    *   Run `git fetch --prune` to ensure your local repository has the latest information about remote branches and to remove any stale remote-tracking branches.
+
+2.  **Identify Merged Branches:**
+    *   Run `git branch --merged main` (assuming `main` is your primary branch, adjust if necessary) to list all local branches that have been merged into `main`.
+    *   Filter out `main` and any other protected branches from this list.
+
+3.  **Identify Branches Without Remote Counterparts:**
+    *   Run `git branch -vv` to list local branches with their upstream tracking information.
+    *   Parse the output to find branches that show `[origin/HEAD: gone]` or similar indicators, meaning their remote counterpart has been deleted.
+
+4.  **Present Branches for Deletion:**
+    *   Combine the lists from steps 2 and 3.
+    *   Present the user with a clear list of branches that can be safely deleted.
+    *   Ask the user for confirmation before proceeding with deletion.
+
+5.  **Delete Selected Branches (if confirmed):**
+    *   If the user confirms, iterate through the selected branches.
+    *   For each branch, run `git branch -d <branch-name>` to delete the local branch.
+
+**Output:**
+
+*   A list of identified branches that can be cleaned up.
+*   A confirmation message after deleting branches, if applicable.
+*   If no branches are found for cleanup, inform the user.
+"""

@@ -1,0 +1,31 @@
+description = "Accept the MR from its MR number and merge it to the master branch. Then delete the feature branch"
+prompt = """
+You are tasked with approving and merging a GitHub Pull Request (PR) and then deleting its associated feature branch.
+
+**Workflow:**
+
+1.  **Get Pull Request ID:**
+    *   Ask the user to provide the Pull Request ID (the number).
+
+2.  **Merge the Pull Request:**
+    *   Use the `github.merge_pull_request` tool.
+    *   `owner`: "RajK853" (This is a known fact from the context)
+    *   `repo`: "nft-wgt-pt" (This is a known fact from the context)
+    *   `pullNumber`: The ID provided by the user.
+    *   Ensure the merge is successful before proceeding.
+
+3.  **Get Feature Branch Name:**
+    *   After merging, you need to identify the feature branch name associated with the PR.
+    *   Use `github.pull_request_read` with `method='get'` and the `pullNumber` to get the PR details.
+    *   Extract the `head.ref` from the response, which will be the feature branch name.
+
+4.  **Delete the Feature Branch:**
+    *   Use the `run_shell_command` tool to delete the remote feature branch.
+    *   `command`: `git push origin --delete <feature-branch-name>`
+    *   Replace `<feature-branch-name>` with the name obtained in the previous step.
+
+**Output:**
+
+*   Confirm that the PR has been merged.
+*   Confirm that the feature branch has been deleted.
+"""
