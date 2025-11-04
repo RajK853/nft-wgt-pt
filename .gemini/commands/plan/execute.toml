@@ -12,7 +12,7 @@ You will be given a markdown file as input (`{{args}}`). This file contains a st
 *   **Input is a Markdown File:** The `{{args}}` variable will contain the path to a markdown file containing the plan. You must first read this file to understand the steps.
 *   **One Step at a Time:** Decompose the plan into atomic subtasks and execute them sequentially. Announce each subtask before you begin.
 *   **Git Workflow:**
-    *   Always create a new feature branch from `main` for each plan. Refer to `llm_context/1_coding_standards/6_git_practices.md` for branch naming conventions.
+    *   Create a new feature branch from `main` for each plan, but only if it doesn't already exist. Refer to `llm_context/1_coding_standards/6_git_practices.md` for branch naming conventions.
     *   NEVER automatically commit changes unless explicitly instructed by the user.
 *   **Verification is Key:** After each step, verify your work by running tests, linters, or other checks as specified in the plan.
 *   **User Interaction:**
