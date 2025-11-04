@@ -1,7 +1,7 @@
-import { calculateScoreDecay } from './scoring-utils';
+import { calculateScoreDecay, MAX_DAYS_SIMULATED } from './scoring-utils';
 
 describe('calculateScoreDecay', () => {
-  const timeElapsed = Array.from({ length: 366 }, (_, i) => i); // 0 to 365 days
+  const timeElapsed = Array.from({ length: MAX_DAYS_SIMULATED + 1 }, (_, i) => i); // 0 to MAX_DAYS_SIMULATED days
 
   it('should calculate decayed scores correctly for a given half-life', () => {
     const originalScore = 100;
@@ -21,10 +21,10 @@ describe('calculateScoreDecay', () => {
     expect(result[60].time).toBe(60);
     expect(result[60].decayedScore).toBeCloseTo(originalScore * 0.25);
 
-    // Check value at end of range (time = 365)
-    expect(result[365].time).toBe(365);
-    const expectedDecayedScoreAt365 = originalScore * Math.pow(0.5, 365 / halfLife);
-    expect(result[365].decayedScore).toBeCloseTo(expectedDecayedScoreAt365);
+    // Check value at end of range (time = MAX_DAYS_SIMULATED)
+    expect(result[MAX_DAYS_SIMULATED].time).toBe(MAX_DAYS_SIMULATED);
+    const expectedDecayedScoreAtMaxDays = originalScore * Math.pow(0.5, MAX_DAYS_SIMULATED / halfLife);
+    expect(result[MAX_DAYS_SIMULATED].decayedScore).toBeCloseTo(expectedDecayedScoreAtMaxDays);
   });
 
   it('should return all zeros if half-life is zero or negative', () => {

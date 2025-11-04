@@ -9,7 +9,7 @@ import { PointSystemTable } from '@/components/point-system-table';
 import React, { useState, useMemo } from 'react';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 
-import { calculateScoreDecay } from '@/lib/scoring-utils';
+import { calculateScoreDecay, MAX_DAYS_SIMULATED } from '@/lib/scoring-utils';
 import { eventOutcomes } from '@/lib/scoring-data';
 
 /**
@@ -26,7 +26,7 @@ export default function ScoringMethodPage() {
   const debouncedHalfLife = useDebounce(halfLife, 100); // Debounce with 100ms delay
   const debouncedOriginalScore = useDebounce(originalScore, 100); // Debounce with 100ms delay
 
-  const timeElapsed = Array.from({ length: 366 }, (_, i) => i); // 0 to 365 days
+  const timeElapsed = Array.from({ length: MAX_DAYS_SIMULATED + 1 }, (_, i) => i); // 0 to MAX_DAYS_SIMULATED days
 
   const decayCurveData = useMemo(() => {
     return calculateScoreDecay(debouncedOriginalScore, debouncedHalfLife, timeElapsed);

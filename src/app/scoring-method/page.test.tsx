@@ -60,6 +60,7 @@ jest.mock('@/components/scoring-explanation', () => ({
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import ScoringMethodPage from './page';
+import { MAX_DAYS_SIMULATED } from '@/lib/scoring-utils';
 
 describe('ScoringMethodPage', () => {
   beforeEach(() => {
@@ -94,7 +95,7 @@ describe('ScoringMethodPage', () => {
 
     // Initial state check (originalScore = 1.5, halfLife = 30)
     expect(halfLifeSliderInput).toHaveValue('30');
-    expect(chart).toHaveTextContent('Chart Data Points: 366');
+    expect(chart).toHaveTextContent(`Chart Data Points: ${MAX_DAYS_SIMULATED + 1}`);
     expect(chart).toHaveTextContent('First: 1.50, Last: 0.00');
 
     // Simulate half-life slider change to 60

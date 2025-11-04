@@ -1,3 +1,5 @@
+export const MAX_DAYS_SIMULATED = 365;
+
 export function calculateScoreDecay(
   originalScore: number,
   halfLife: number,

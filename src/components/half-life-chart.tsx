@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Dot,
 } from 'recharts';
+import { MAX_DAYS_SIMULATED } from '@/lib/scoring-utils';
 
 interface HalfLifeChartProps {
   data: { time: number; decayedScore: number }[];
@@ -19,6 +20,8 @@ interface HalfLifeChartProps {
 }
 
 export function HalfLifeChart({ data, originalScore, halfLife }: HalfLifeChartProps) {
+  const interval = Math.ceil(MAX_DAYS_SIMULATED / 10); // Show roughly 10 ticks
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart
@@ -29,15 +32,14 @@ export function HalfLifeChart({ data, originalScore, halfLife }: HalfLifeChartPr
           left: 20,
           bottom: 5,
         }}
-        pure
       >
 
         <XAxis
           dataKey="time"
           label={{ value: 'Time Elapsed (days)', position: 'insideBottom', offset: -5 }}
           interval={0}
-          tickCount={data.length / 10 + 1}
-          tickFormatter={(value) => (value % 10 === 0 ? value : '')}
+          tickCount={MAX_DAYS_SIMULATED / interval + 1}
+          tickFormatter={(value) => (value % interval === 0 ? value : '')}
         />
         <YAxis label={{ value: 'Decayed Score', angle: -90, position: 'insideLeft' }} />
         <Tooltip content={<CustomTooltip originalScore={originalScore} halfLife={halfLife} />} />
