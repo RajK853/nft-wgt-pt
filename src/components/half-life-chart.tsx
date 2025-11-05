@@ -60,7 +60,15 @@ export function HalfLifeChart({ data, originalScore, halfLife }: HalfLifeChartPr
                 />
               );
             }
-            return null; // Render no dot for other points
+            return (
+              <Dot
+                cx={cx}
+                cy={cy}
+                r={3}
+                fillOpacity={0} // Make it transparent
+                key={`dot-${payload.time}`}
+              />
+            );
           }}
         />
       </LineChart>
