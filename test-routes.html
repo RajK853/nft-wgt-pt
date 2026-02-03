@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Testing</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { margin: 5px; padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Route Testing</h1>
+    <p>Click the buttons below to test different routes in your application:</p>
+    
+    <div class="test-section">
+        <h3>Test Routes</h3>
+        <button onclick="testRoute('/')">Home (/)</button>
+        <button onclick="testRoute('/dashboard')">Dashboard (/dashboard)</button>
+        <button onclick="testRoute('/player-stats')">Player Stats (/player-stats)</button>
+        <button onclick="testRoute('/goalkeeper-stats')">Goalkeeper Stats (/goalkeeper-stats)</button>
+        <button onclick="testRoute('/scoring-method')">Scoring Method (/scoring-method)</button>
+    </div>
+
+    <div class="test-section" id="result">
+        <h3>Test Results</h3>
+        <p>Click a button above to test a route.</p>
+    </div>
+
+    <script>
+        function testRoute(path) {
+            const result = document.getElementById('result');
+            const url = `http://localhost:3000${path}`;
+            
+            // Test if the route exists by making a fetch request
+            fetch(url, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        result.innerHTML = `
+                            <h3>✅ Route Test: ${path}</h3>
+                            <p><strong>Status:</strong> ${response.status} ${response.statusText}</p>
+                            <p><strong>URL:</strong> ${url}</p>
+                            <p><strong>Result:</strong> Route is accessible!</p>
+                            <p>Open your browser and navigate to: <a href="${url}" target="_blank">${url}</a></p>
+                        `;
+                        result.className = 'test-section success';
+                    } else {
+                        result.innerHTML = `
+                            <h3>❌ Route Test: ${path}</h3>
+                            <p><strong>Status:</strong> ${response.status} ${response.statusText}</p>
+                            <p><strong>URL:</strong> ${url}</p>
+                            <p><strong>Result:</strong> Route returned an error</p>
+                        `;
+                        result.className = 'test-section error';
+                    }
+                })
+                .catch(error => {
+                    result.innerHTML = `
+                        <h3>❌ Route Test: ${path}</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>URL:</strong> ${url}</p>
+                        <p><strong>Result:</strong> Could not reach the server. Make sure the development server is running on port 3000.</p>
+                    `;
+                    result.className = 'test-section error';
+                });
+        }
+    </script>
+</body>
+</html>
