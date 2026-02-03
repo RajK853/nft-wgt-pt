@@ -27,7 +27,6 @@
   border-radius: 50%;
   filter: blur(12px);
   opacity: 0.5;
-  animation: pulse 2s infinite;
 }
 
 .logoFrame {
@@ -68,7 +67,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradientShift 4s ease infinite;
   line-height: 1.2;
   margin: 0 0 0.5rem 0;
 }
@@ -95,36 +93,6 @@
   height: 8px;
   background-color: #22c55e;
   border-radius: 50%;
-  animation: blink 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-@keyframes gradientShift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes blink {
-  0%, 50% {
-    opacity: 1;
-  }
-  51%, 100% {
-    opacity: 0.3;
-  }
 }
 
 @media (max-width: 768px) {
