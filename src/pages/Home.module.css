@@ -1,0 +1,111 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.content {
+  text-align: center;
+}
+
+.logoContainer {
+  margin-bottom: 2rem;
+}
+
+.logoWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.logoGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, #a855f7, #ec4899);
+  border-radius: 50%;
+  filter: blur(12px);
+  opacity: 0.5;
+}
+
+.logoFrame {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.logoFrame:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.logo {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  display: block;
+}
+
+.titleSection {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #ffffff, #9ca3af, #a855f7);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #cbd5e1;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .logo {
+    width: 72px;
+    height: 72px;
+  }
+}

@@ -1,6 +1,7 @@
 const config = {
   plugins: {
-    "@tailwindcss/postcss": {},
+    // No PostCSS plugins needed for CSS Modules
+    // Vite handles CSS Modules natively
   },
 };
 

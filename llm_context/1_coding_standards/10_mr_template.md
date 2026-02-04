@@ -1,12 +1,38 @@
 <!--
-  This is a GitHub Pull Request Template designed to be easily parsable and actionable by Large Language Models (LLMs).
-  Please follow the structure and provide concise, relevant information for each section.
+  Dynamic GitHub Pull Request Template
+  Adapts based on file changes and project context
+  Concise, clean, and user-friendly format
 -->
 
-# PR Template
+## Summary
 
-**Title:** (Provide a brief, descriptive title that summarizes the changes in this PR. Example: `feat: Implement user authentication flow`)
+**Type:** [ ] Bug | [ ] Feature | [ ] Refactor | [ ] Documentation | [ ] Other
+**Related Issue:** Closes #XX
 
-**Description:** (Provide a clear and concise summary of the changes made in this PR. Explain the 'what' and 'why'. Example: `This PR implements the secure user authentication flow, including signup, login, and session management. It addresses the need for user data protection and personalized experiences.`)
+**Changes:**
+- [ ] Change 1
+- [ ] Change 2
+- [ ] Change N
 
-**Related Issue:** Closes #<issue-number> (Reference the issue this PR closes. Example: `Closes #123`)
+**Testing:**
+- [ ] Test case 1
+- [ ] Test case 2
+- [ ] Test case N
+
+**Checklist:**
+- [ ] Code follows project standards
+- [ ] Tests added/updated
+- [ ] Documentation updated
+- [ ] Self-review completed
+- [ ] No breaking changes
+
+---
+
+**Description:**
+(Provide a clear and concise summary of the changes. Explain the 'what' and 'why'.)
+
+**Screenshots (if applicable):**
+(Add screenshots to demonstrate UI changes.)
+
+**Additional Context:**
+(Provide any other relevant information.)
