@@ -30,6 +30,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Main content area */
+main {
+  min-height: calc(100vh - 60px);
+}
+
 /* Focus styles for accessibility */
 *:focus {
   outline: 2px solid var(--primary-gradient-start);
