@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import { memo } from 'react'
 import styles from './Header.module.css'
 
 function Header() {
@@ -13,6 +14,7 @@ function Header() {
           width="40" 
           height="40"
           className={styles.logo}
+          loading="lazy"
         />
       </Link>
       <nav className={styles.nav} aria-label="Main navigation">
@@ -29,7 +31,7 @@ interface NavLinkProps {
   children: string
 }
 
-function NavLink({ to, current, children }: NavLinkProps) {
+const NavLink = memo(({ to, current, children }: NavLinkProps) => {
   const isActive = current === to
   
   return (
@@ -41,6 +43,8 @@ function NavLink({ to, current, children }: NavLinkProps) {
       {children}
     </Link>
   )
-}
+})
+
+NavLink.displayName = 'NavLink'
 
 export default Header
