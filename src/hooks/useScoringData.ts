@@ -1,8 +1,6 @@
 /**
  * Scoring Data Hook
- * 
- * Custom hook for data fetching and state management.
- * Follows Dependency Inversion principle - depends on abstractions.
+ * Simple data fetching hook with KISS principle
  */
 
 import { useState, useCallback, useEffect } from 'react';
@@ -14,56 +12,47 @@ export interface ScoringDataService {
   fetchScoreDistribution(): Promise<Array<{ name: string; value: number }>>;
 }
 
+export interface ErrorDetails {
+  message: string;
+  type: 'network' | 'timeout' | 'validation' | 'unknown';
+  retryCount: number;
+}
+
 interface UseScoringDataReturn {
-  // Data state
   historicalData: ScoreData[];
   leaderboard: ScoreResult[];
   scoreDistribution: Array<{ name: string; value: number }>;
-  
-  // Loading states
-  loading: {
-    historical: boolean;
-    leaderboard: boolean;
-    distribution: boolean;
-  };
-  
-  // Error states
-  error: {
-    historical: string | null;
-    leaderboard: string | null;
-    distribution: string | null;
-  };
-  
-  // Actions
+  loading: { historical: boolean; leaderboard: boolean; distribution: boolean };
+  error: { historical: ErrorDetails | null; leaderboard: ErrorDetails | null; distribution: ErrorDetails | null };
   loadHistoricalData: () => Promise<void>;
   loadLeaderboard: () => Promise<void>;
   loadScoreDistribution: () => Promise<void>;
   refreshAll: () => Promise<void>;
+  retryHistoricalData: () => Promise<void>;
+  retryLeaderboard: () => Promise<void>;
+  retryScoreDistribution: () => Promise<void>;
 }
 
-/**
- * Custom hook for managing scoring data
- */
 export function useScoringData(service: ScoringDataService): UseScoringDataReturn {
-  // State management
   const [historicalData, setHistoricalData] = useState<ScoreData[]>([]);
   const [leaderboard, setLeaderboard] = useState<ScoreResult[]>([]);
   const [scoreDistribution, setScoreDistribution] = useState<Array<{ name: string; value: number }>>([]);
   
-  const [loading, setLoading] = useState({
-    historical: false,
-    leaderboard: false,
-    distribution: false
-  });
-  
-  const [error, setError] = useState({
-    historical: null as string | null,
-    leaderboard: null as string | null,
-    distribution: null as string | null
+  const [loading, setLoading] = useState({ historical: false, leaderboard: false, distribution: false });
+  const [error, setError] = useState({ historical: null as ErrorDetails | null, leaderboard: null as ErrorDetails | null, distribution: null as ErrorDetails | null });
+
+  const createError = (message: string, type: ErrorDetails['type'], retryCount = 0): ErrorDetails => ({
+    message, type, retryCount
   });
 
-  // Load historical data
-  const loadHistoricalData = useCallback(async () => {
+  const getErrorType = (err: any): ErrorDetails['type'] => {
+    if (err.name === 'TypeError' || err.message?.includes('fetch')) return 'network';
+    if (err.message?.includes('timeout')) return 'timeout';
+    if (err.message?.includes('validation')) return 'validation';
+    return 'unknown';
+  };
+
+  const loadHistoricalData = useCallback(async (retryCount = 0) => {
     setLoading(prev => ({ ...prev, historical: true }));
     setError(prev => ({ ...prev, historical: null }));
     
@@ -71,17 +60,19 @@ export function useScoringData(service: ScoringDataService): UseScoringDataRetur
       const data = await service.fetchHistoricalData();
       setHistoricalData(data);
     } catch (err) {
-      setError(prev => ({ 
-        ...prev, 
-        historical: 'Failed to load historical data. Please check your connection and try again.' 
-      }));
+      const type = getErrorType(err);
+      const message = type === 'network' ? 'Network error: Unable to connect to the server.' : 
+                     type === 'timeout' ? 'Request timeout: The server is taking too long to respond.' :
+                     type === 'validation' ? 'Data validation error: Received invalid data.' :
+                     'An unexpected error occurred while loading historical data.';
+      
+      setError(prev => ({ ...prev, historical: createError(message, type, retryCount) }));
     } finally {
       setLoading(prev => ({ ...prev, historical: false }));
     }
   }, [service]);
 
-  // Load leaderboard
-  const loadLeaderboard = useCallback(async () => {
+  const loadLeaderboard = useCallback(async (retryCount = 0) => {
     setLoading(prev => ({ ...prev, leaderboard: true }));
     setError(prev => ({ ...prev, leaderboard: null }));
     
@@ -89,17 +80,19 @@ export function useScoringData(service: ScoringDataService): UseScoringDataRetur
       const data = await service.fetchLeaderboard();
       setLeaderboard(data);
     } catch (err) {
-      setError(prev => ({ 
-        ...prev, 
-        leaderboard: 'Failed to load leaderboard. Please check your connection and try again.' 
-      }));
+      const type = getErrorType(err);
+      const message = type === 'network' ? 'Network error: Unable to connect to the server.' : 
+                     type === 'timeout' ? 'Request timeout: The server is taking too long to respond.' :
+                     type === 'validation' ? 'Data validation error: Received invalid data.' :
+                     'An unexpected error occurred while loading leaderboard.';
+      
+      setError(prev => ({ ...prev, leaderboard: createError(message, type, retryCount) }));
     } finally {
       setLoading(prev => ({ ...prev, leaderboard: false }));
     }
   }, [service]);
 
-  // Load score distribution
-  const loadScoreDistribution = useCallback(async () => {
+  const loadScoreDistribution = useCallback(async (retryCount = 0) => {
     setLoading(prev => ({ ...prev, distribution: true }));
     setError(prev => ({ ...prev, distribution: null }));
     
@@ -107,45 +100,54 @@ export function useScoringData(service: ScoringDataService): UseScoringDataRetur
       const data = await service.fetchScoreDistribution();
       setScoreDistribution(data);
     } catch (err) {
-      setError(prev => ({ 
-        ...prev, 
-        distribution: 'Failed to load score distribution. Please check your connection and try again.' 
-      }));
+      const type = getErrorType(err);
+      const message = type === 'network' ? 'Network error: Unable to connect to the server.' : 
+                     type === 'timeout' ? 'Request timeout: The server is taking too long to respond.' :
+                     type === 'validation' ? 'Data validation error: Received invalid data.' :
+                     'An unexpected error occurred while loading score distribution.';
+      
+      setError(prev => ({ ...prev, distribution: createError(message, type, retryCount) }));
     } finally {
       setLoading(prev => ({ ...prev, distribution: false }));
     }
   }, [service]);
 
-  // Refresh all data
+  const retryHistoricalData = useCallback(async () => {
+    const currentError = error.historical;
+    if (!currentError || currentError.retryCount >= 3) return;
+    
+    const delay = Math.pow(2, currentError.retryCount) * 1000;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    await loadHistoricalData(currentError.retryCount + 1);
+  }, [error.historical, loadHistoricalData]);
+
+  const retryLeaderboard = useCallback(async () => {
+    const currentError = error.leaderboard;
+    if (!currentError || currentError.retryCount >= 3) return;
+    
+    const delay = Math.pow(2, currentError.retryCount) * 1000;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    await loadLeaderboard(currentError.retryCount + 1);
+  }, [error.leaderboard, loadLeaderboard]);
+
+  const retryScoreDistribution = useCallback(async () => {
+    const currentError = error.distribution;
+    if (!currentError || currentError.retryCount >= 3) return;
+    
+    const delay = Math.pow(2, currentError.retryCount) * 1000;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    await loadScoreDistribution(currentError.retryCount + 1);
+  }, [error.distribution, loadScoreDistribution]);
+
   const refreshAll = useCallback(async () => {
-    await Promise.all([
-      loadHistoricalData(),
-      loadLeaderboard(),
-      loadScoreDistribution()
-    ]);
+    await Promise.all([loadHistoricalData(), loadLeaderboard(), loadScoreDistribution()]);
   }, [loadHistoricalData, loadLeaderboard, loadScoreDistribution]);
 
-  // Initial data loading
-  useEffect(() => {
-    refreshAll();
-  }, [refreshAll]);
+  useEffect(() => { refreshAll(); }, [refreshAll]);
 
   return {
-    // Data
-    historicalData,
-    leaderboard,
-    scoreDistribution,
-    
-    // Loading states
-    loading,
-    
-    // Error states
-    error,
-    
-    // Actions
-    loadHistoricalData,
-    loadLeaderboard,
-    loadScoreDistribution,
-    refreshAll
+    historicalData, leaderboard, scoreDistribution, loading, error,
+    loadHistoricalData, loadLeaderboard, loadScoreDistribution, refreshAll,
+    retryHistoricalData, retryLeaderboard, retryScoreDistribution
   };
 }
