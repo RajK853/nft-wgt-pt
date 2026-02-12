@@ -9,14 +9,18 @@
     "lint": "bun run eslint",
     "test": "bun run jest",
     "test:watch": "bun run jest --watch",
-    "import": "bun run scripts/import-data.mjs"
+    "import:sheets": "bun run scripts/import-game-events.js"
   },
   "dependencies": {
+    "@googleapis/sheets": "^13.0.1",
     "@supabase/supabase-js": "^2.76.1",
     "@types/jest": "^30.0.0",
     "@types/recharts": "^1.8.29",
     "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
     "framer-motion": "^11.0.0",
+    "google-auth-library": "^10.5.0",
+    "googleapis": "^171.4.0",
     "katex": "^0.16.25",
     "papaparse": "^5.5.3",
     "react": "^19.0.0",
