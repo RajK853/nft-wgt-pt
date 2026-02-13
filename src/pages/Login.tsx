@@ -10,7 +10,9 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
+  const [isSignUp, setIsSignUp] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const { signIn, signUp } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   
@@ -19,23 +21,43 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
     setLoading(true)
 
-    const { error } = await signIn(email, password)
-    
-    if (error) {
-      setError(error.message)
-      setLoading(false)
+    if (isSignUp) {
+      const { error } = await signUp(email, password)
+      
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+      } else {
+        setSuccessMessage('Check your email to confirm your account!')
+        setLoading(false)
+      }
     } else {
-      navigate(from, { replace: true })
+      const { error } = await signIn(email, password)
+      
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+      } else {
+        navigate(from, { replace: true })
+      }
     }
+  }
+
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp)
+    setError('')
+    setSuccessMessage('')
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Sign In</h1>
+        <h1 className={styles.title}>{isSignUp ? 'Create Account' : 'Sign In'}</h1>
         {error && <div className={styles.error}>{error}</div>}
+        {successMessage && <div className={styles.success}>{successMessage}</div>}
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputGroup}>
             <label htmlFor="email" className={styles.label}>Email</label>
@@ -59,12 +81,19 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
             />
           </div>
           <button type="submit" className={styles.button} disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? (isSignUp ? 'Creating account...' : 'Signing in...') : (isSignUp ? 'Create Account' : 'Sign In')}
           </button>
         </form>
+        <p className={styles.toggleText}>
+          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+          <button type="button" className={styles.toggleButton} onClick={toggleMode}>
+            {isSignUp ? 'Sign In' : 'Sign Up'}
+          </button>
+        </p>
       </div>
     </div>
   )

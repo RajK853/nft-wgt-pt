@@ -85,3 +85,35 @@
   font-size: 0.875rem;
   margin-bottom: 1rem;
 }
+
+.success {
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.toggleText {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #4a90d9;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+}
+
+.toggleButton:hover {
+  text-decoration: underline;
+}
