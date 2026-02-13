@@ -87,3 +87,4 @@ plans/
 .clinerules/
 
 .local_github/
+google-credentials.json

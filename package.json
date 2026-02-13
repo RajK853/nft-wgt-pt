@@ -7,16 +7,20 @@
     "build": "bun run vite build",
     "preview": "bun run vite preview",
     "lint": "bun run eslint",
-    "test": "bun run jest",
-    "test:watch": "bun run jest --watch",
-    "import": "bun run scripts/import-data.mjs"
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "import:sheets": "bun run scripts/import-game-events.js"
   },
   "dependencies": {
+    "@googleapis/sheets": "^13.0.1",
     "@supabase/supabase-js": "^2.76.1",
     "@types/jest": "^30.0.0",
     "@types/recharts": "^1.8.29",
     "clsx": "^2.1.1",
+    "dotenv": "^17.3.1",
     "framer-motion": "^11.0.0",
+    "google-auth-library": "^10.5.0",
+    "googleapis": "^171.4.0",
     "katex": "^0.16.25",
     "papaparse": "^5.5.3",
     "react": "^19.0.0",
@@ -27,6 +31,8 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
@@ -38,6 +44,14 @@
     "jest-environment-jsdom": "^29.7.0",
     "terser": "^5.27.0",
     "typescript": "^5.3.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^3.0.0"
+  },
+  "vitest": {
+    "test": {
+      "environment": "jsdom",
+      "globals": true,
+      "setupFiles": ["./vitest-setup.js"]
+    }
   }
 }
