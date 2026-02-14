@@ -1,0 +1,50 @@
+.container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.header:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.icon {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  transition: transform 0.3s ease;
+}
+
+.icon.open {
+  transform: rotate(180deg);
+}
+
+.content {
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.inner {
+  padding: 0 1.25rem 1.25rem;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}

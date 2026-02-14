@@ -12,6 +12,13 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth()
   const location = useLocation()
 
+  // TEMP: Bypass auth for development - set to true to disable auth
+  const AUTH_DISABLED = true
+
+  if (AUTH_DISABLED) {
+    return <>{children}</>
+  }
+
   if (loading) {
     return (
       <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
