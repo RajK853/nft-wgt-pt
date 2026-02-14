@@ -12,7 +12,8 @@ import {
   getUniquePlayers
 } from '@/lib/analysis'
 import { BarChart } from '@/components/charts'
-import { DataTable, MultiSelect, Select, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, MultiSelect, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import styles from './PlayerPerformance.module.css'
 
@@ -41,6 +42,10 @@ export default function PlayerPerformance() {
   const [selectedPlayers, setSelectedPlayers] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState<string>('score')
 
+  // Table sorting state
+  const [tableSortKey, setTableSortKey] = useState<string>('score')
+  const [tableSortDirection, setTableSortDirection] = useState<'asc' | 'desc'>('desc')
+
   useEffect(() => {
     document.title = 'Player Performance - NFT Weingarten'
   }, [])
@@ -66,10 +71,31 @@ export default function PlayerPerformance() {
     return calculatePlayerScores(filteredData)
   }, [filteredData])
 
+  // Sort player scores based on table sorting
+  const sortedPlayerScores = useMemo(() => {
+    const sorted = [...playerScores].sort((a, b) => {
+      const aVal = a[tableSortKey as keyof typeof a]
+      const bVal = b[tableSortKey as keyof typeof b]
+      
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
+      }
+      
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return tableSortDirection === 'asc' 
+          ? aVal.localeCompare(bVal) 
+          : bVal.localeCompare(aVal)
+      }
+      
+      return 0
+    })
+    return sorted
+  }, [playerScores, tableSortKey, tableSortDirection])
+
   // Get top 10 players for leaderboard
   const top10Players = useMemo(() => {
-    return playerScores.slice(0, 10)
-  }, [playerScores])
+    return sortedPlayerScores.slice(0, 10)
+  }, [sortedPlayerScores])
 
   // Chart data for leaderboard
   const leaderboardChartData = useMemo(() => {
@@ -79,6 +105,18 @@ export default function PlayerPerformance() {
       goals: p.goals
     }))
   }, [top10Players])
+
+  // Handle table sorting
+  const handleTableSort = (key: string) => {
+    if (tableSortKey === key) {
+      // Toggle direction if same key
+      setTableSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
+    } else {
+      // New key - default to descending for numeric, ascending for strings
+      setTableSortKey(key)
+      setTableSortDirection('desc')
+    }
+  }
 
   // Comparison data - filter selected players
   const comparisonData = useMemo(() => {
@@ -157,6 +195,7 @@ export default function PlayerPerformance() {
             <BarChart 
               data={leaderboardChartData}
               height={300}
+              dataKeys={['score']}
             />
           </div>
           
@@ -164,8 +203,9 @@ export default function PlayerPerformance() {
             <DataTable 
               data={top10Players}
               columns={PLAYER_STATS_COLUMNS}
-              sortKey="score"
-              sortDirection="desc"
+              sortKey={tableSortKey}
+              sortDirection={tableSortDirection}
+              onSort={handleTableSort}
             />
           </div>
         </div>
@@ -191,12 +231,9 @@ export default function PlayerPerformance() {
             <div className={styles.control}>
               <Select
                 label="Select Month"
-                value={selectedMonth}
-                onChange={setSelectedMonth}
-                options={[
-                  { value: '', label: 'All Time' },
-                  ...monthOptions
-                ]}
+                value={selectedMonth || '__all__'}
+                onChange={(val) => setSelectedMonth(val === '__all__' ? '' : val)}
+                options={[{ value: '__all__', label: 'All Time' }, ...monthOptions.map(m => ({ value: m.value, label: m.label }))]}
               />
             </div>
           </div>
@@ -218,7 +255,7 @@ export default function PlayerPerformance() {
                           height={300}
                           layout="vertical"
                           dataKeys={['value']}
-                          colors={chartData.map(d => d.fill || '#a855f7')}
+                          colors={chartData.map(d => d.fill || '#94a3b8')}
                           colorCoding="custom"
                         />
                       </div>

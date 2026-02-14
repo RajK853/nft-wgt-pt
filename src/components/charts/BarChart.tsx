@@ -1,8 +1,10 @@
 /**
  * Bar Chart Component
- * Supports color coding: green (best), red (worst)
+ * Simple, focused bar chart using Recharts
+ * Follows KISS principle with clean, readable code
  */
 
+import React from 'react';
 import {
   BarChart as RechartsBarChart,
   Bar,
@@ -10,134 +12,178 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
   Legend,
-  Cell
+  ResponsiveContainer,
+  Cell,
+  ReferenceLine,
 } from 'recharts';
 
 interface BarChartProps {
-  data: Array<{
-    name: string;
-    [key: string]: string | number;
-  }>;
+  data: Array<{ name: string; value: number; [key: string]: any }>;
   title?: string;
+  color?: string;
   height?: number;
-  dataKeys?: string[];
-  colors?: string[];
-  colorCoding?: 'none' | 'performance' | 'custom';
   showGrid?: boolean;
+  showLegend?: boolean;
   layout?: 'horizontal' | 'vertical';
+  colors?: string[];
+  dataKeys?: string[];
+  colorCoding?: 'single' | 'custom';
 }
 
+/** Custom tooltip component */
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg">
+        <p className="text-sm text-gray-300 mb-1">{label}</p>
+        <p className="text-sm font-semibold text-white">
+          Value: {payload[0].value}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+// Neutral bright colors palette - bright visible colors for dark background
+const NEUTRAL_COLORS = [
+  '#e2e8f0', // slate-200 (brightest)
+  '#f1f5f9', // slate-100
+  '#cbd5e1', // slate-300
+  '#ffffff', // white
+  '#818cf8', // indigo-400 (accent for visibility)
+];
+
 /**
- * Bar chart with optional color coding (green=best, red=worst)
+ * Bar chart component with responsive design
  */
 export function BarChart({ 
   data, 
   title, 
+  color = '#e2e8f0', 
   height = 300,
-  dataKeys = ['baseScore'],
-  colors = ['#3b82f6', '#22c55e', '#f59e0b'],
-  colorCoding = 'none',
   showGrid = true,
-  layout = 'horizontal'
+  showLegend = false,
+  layout = 'horizontal',
+  colors = NEUTRAL_COLORS,
+  dataKeys = ['value'],
+  colorCoding = 'single',
 }: BarChartProps) {
-  // Calculate colors based on performance
-  const getBarColors = () => {
-    if (colorCoding === 'none') {
-      return undefined
-    }
-    
-    // For the first data key, calculate colors
-    const primaryKey = dataKeys[0]
-    const values = data.map(d => Number(d[primaryKey]))
-    const maxVal = Math.max(...values)
-    const minVal = Math.min(...values)
-    const range = maxVal - minVal
-    
-    return data.map(d => {
-      const val = Number(d[primaryKey])
-      if (range === 0) return colors[0]
-      
-      // Normalize value between 0 and 1
-      const normalized = (val - minVal) / range
-      
-      // Green for high values, red for low values
-      if (normalized > 0.66) return '#22c55e' // green-500
-      if (normalized > 0.33) return '#f59e0b' // yellow-500
-      return '#ef4444' // red-500
-    })
-  }
-
-  const barColors = getBarColors()
-
+  // Default data key for single bar
+  const primaryDataKey = dataKeys[0] || 'value'
+  
+  // Find the max value for highlighting
+  const maxValue = Math.max(...data.map(d => d[primaryDataKey] || d.value || 0))
+  const defaultColor = color
+  
   return (
-    <div className="bg-gray-800 rounded-lg p-4">
+    <div className="chart-container bg-gray-800 rounded-lg p-4 shadow-lg">
       {title && (
-        <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+        <h3 className="chart-title text-lg font-semibold text-white mb-4">
+          {title}
+        </h3>
       )}
       
       <ResponsiveContainer width="100%" height={height}>
         <RechartsBarChart 
           data={data} 
-          margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           layout={layout}
+          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
         >
-          {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#374151" />}
+          {showGrid && (
+            <CartesianGrid 
+              strokeDasharray="3 3" 
+              stroke="#374151"
+              vertical={layout === 'horizontal'}
+              horizontal={layout === 'vertical'}
+            />
+          )}
+          
           {layout === 'horizontal' ? (
             <>
               <XAxis 
                 dataKey="name" 
                 stroke="#9ca3af"
                 tick={{ fill: '#9ca3af', fontSize: 12 }}
-                angle={-45}
-                textAnchor="end"
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
+                minTickGap={30}
                 height={80}
               />
               <YAxis 
                 stroke="#9ca3af"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                fontSize={12}
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
+                origin={0}
               />
+              <ReferenceLine y={0} stroke="#9ca3af" strokeWidth={1} />
             </>
           ) : (
             <>
               <XAxis 
                 type="number"
                 stroke="#9ca3af"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                fontSize={12}
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
               />
               <YAxis 
-                dataKey="name" 
+                dataKey="name"
                 type="category"
                 stroke="#9ca3af"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                fontSize={12}
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
                 width={100}
               />
             </>
           )}
+          
           <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#1f2937', 
-              border: '1px solid #374151',
-              borderRadius: '8px',
-              color: '#fff'
-            }}
-            labelStyle={{ color: '#fff' }}
+            content={<CustomTooltip />}
+            cursor={{ fill: '#374151', opacity: 0.4 }}
           />
-          <Legend />
-          {dataKeys.map((key, index) => (
+          
+          {showLegend && (
+            <Legend 
+              verticalAlign="top" 
+              height={36}
+              formatter={(value) => <span className="text-gray-300">{value}</span>}
+            />
+          )}
+          
+          {/* Render bars for each data key */}
+          {dataKeys.map((key, keyIndex) => (
             <Bar 
-              key={key} 
+              key={key}
               dataKey={key} 
+              fill={colorCoding === 'single' ? color : undefined}
               radius={[4, 4, 0, 0]}
+              barSize={80}
+              isAnimationActive={true}
+              animationDuration={500}
             >
-              {barColors ? (
-                barColors.map((color, i) => (
-                  <Cell key={`cell-${i}`} fill={color} />
-                ))
-              ) : (
-                <Cell fill={colors[index % colors.length]} />
-              )}
+              {/* Color highest value green, others use default or custom */}
+              {colorCoding === 'single' && data.map((entry, index) => {
+                const value = entry[primaryDataKey] || entry.value || 0
+                return (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={value === maxValue && maxValue > 0 ? '#22c55e' : defaultColor}
+                  />
+                )
+              })}
+              {colorCoding === 'custom' && data.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.fill || colors[index % colors.length]} 
+                />
+              ))}
             </Bar>
           ))}
         </RechartsBarChart>

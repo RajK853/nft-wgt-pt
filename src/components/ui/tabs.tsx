@@ -3,7 +3,47 @@ import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { cn } from "@/lib/utils"
 
-const Tabs = TabsPrimitive.Root
+interface Tab {
+  id: string
+  label: string
+}
+
+interface TabsProps {
+  tabs: Tab[]
+  defaultTab?: string
+  children: (activeTab: string) => React.ReactNode
+  className?: string
+}
+
+const Tabs = React.forwardRef<
+  HTMLDivElement,
+  TabsProps
+>(({ className, tabs, defaultTab = "", children }, ref) => {
+  const [activeTab, setActiveTab] = React.useState(defaultTab)
+
+  return (
+    <TabsPrimitive.Root
+      ref={ref}
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className={className}
+    >
+      <TabsPrimitive.List className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+        {tabs.map((tab) => (
+          <TabsPrimitive.Trigger
+            key={tab.id}
+            value={tab.id}
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
+          >
+            {tab.label}
+          </TabsPrimitive.Trigger>
+        ))}
+      </TabsPrimitive.List>
+      {children(activeTab)}
+    </TabsPrimitive.Root>
+  )
+})
+Tabs.displayName = "Tabs"
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -51,3 +91,4 @@ const TabsContent = React.forwardRef<
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }
+

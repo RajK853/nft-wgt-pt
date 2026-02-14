@@ -12,7 +12,8 @@ import {
   getKeeperOutcomeDistribution
 } from '@/lib/analysis'
 import { BarChart, PieChart } from '@/components/charts'
-import { DataTable, MultiSelect, Select, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, MultiSelect, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import styles from './PlayerPerformance.module.css'
 
@@ -49,6 +50,10 @@ export default function KeeperPerformance() {
   const [activeTab, setActiveTab] = useState<string>('score')
   const [selectedKeeperForPie, setSelectedKeeperForPie] = useState<string>('')
 
+  // Table sorting state
+  const [tableSortKey, setTableSortKey] = useState<string>('score')
+  const [tableSortDirection, setTableSortDirection] = useState<'asc' | 'desc'>('desc')
+
   useEffect(() => {
     document.title = 'Goalkeeper Performance - NFT Weingarten'
   }, [])
@@ -76,10 +81,31 @@ export default function KeeperPerformance() {
     return calculateKeeperScores(filteredData)
   }, [filteredData])
 
+  // Sort keeper scores based on table sorting
+  const sortedKeeperScores = useMemo(() => {
+    const sorted = [...keeperScores].sort((a, b) => {
+      const aVal = a[tableSortKey as keyof typeof a]
+      const bVal = b[tableSortKey as keyof typeof b]
+      
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
+      }
+      
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        return tableSortDirection === 'asc' 
+          ? aVal.localeCompare(bVal) 
+          : bVal.localeCompare(aVal)
+      }
+      
+      return 0
+    })
+    return sorted
+  }, [keeperScores, tableSortKey, tableSortDirection])
+
   // Get top 10 keepers for leaderboard
   const top10Keepers = useMemo(() => {
-    return keeperScores.slice(0, 10)
-  }, [keeperScores])
+    return sortedKeeperScores.slice(0, 10)
+  }, [sortedKeeperScores])
 
   // Chart data for leaderboard
   const leaderboardChartData = useMemo(() => {
@@ -89,6 +115,18 @@ export default function KeeperPerformance() {
       saves: k.saves
     }))
   }, [top10Keepers])
+
+  // Handle table sorting
+  const handleTableSort = (key: string) => {
+    if (tableSortKey === key) {
+      // Toggle direction if same key
+      setTableSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
+    } else {
+      // New key - default to descending for numeric, ascending for strings
+      setTableSortKey(key)
+      setTableSortDirection('desc')
+    }
+  }
 
   // Comparison data - filter selected keepers
   const comparisonData = useMemo(() => {
@@ -218,7 +256,7 @@ export default function KeeperPerformance() {
             <BarChart 
               data={leaderboardChartData}
               height={300}
-              colors={['#3b82f6']}
+              dataKeys={['score']}
             />
           </div>
           
@@ -226,8 +264,9 @@ export default function KeeperPerformance() {
             <DataTable 
               data={top10Keepers}
               columns={KEEPER_STATS_COLUMNS}
-              sortKey="score"
-              sortDirection="desc"
+              sortKey={tableSortKey}
+              sortDirection={tableSortDirection}
+              onSort={handleTableSort}
             />
           </div>
         </div>
@@ -253,12 +292,9 @@ export default function KeeperPerformance() {
             <div className={styles.control}>
               <Select
                 label="Select Month"
-                value={selectedMonth}
-                onChange={setSelectedMonth}
-                options={[
-                  { value: '', label: 'All Time' },
-                  ...monthOptions
-                ]}
+                value={selectedMonth || '__all__'}
+                onChange={(val) => setSelectedMonth(val === '__all__' ? '' : val)}
+                options={[{ value: '__all__', label: 'All Time' }, ...monthOptions.map(m => ({ value: m.value, label: m.label }))]}
               />
             </div>
           </div>
@@ -280,7 +316,7 @@ export default function KeeperPerformance() {
                           height={300}
                           layout="vertical"
                           dataKeys={['value']}
-                          colors={chartData.map(d => d.fill || '#3b82f6')}
+                          colors={chartData.map(d => d.fill || '#94a3b8')}
                           colorCoding="custom"
                         />
                       </div>
@@ -315,24 +351,18 @@ export default function KeeperPerformance() {
             <div className={styles.control}>
               <Select
                 label="Select Goalkeeper"
-                value={selectedKeeperForPie}
-                onChange={setSelectedKeeperForPie}
-                options={[
-                  { value: '', label: 'Select a goalkeeper...' },
-                  ...keeperOptions.map(k => ({ value: k, label: k }))
-                ]}
+                value={selectedKeeperForPie || '__select__'}
+                onChange={(val) => setSelectedKeeperForPie(val === '__select__' ? '' : val)}
+                options={[{ value: '__select__', label: 'Select a goalkeeper...' }, ...keeperOptions.map(k => ({ value: k, label: k }))]}
               />
             </div>
             
             <div className={styles.control}>
               <Select
                 label="Select Month"
-                value={selectedMonth}
-                onChange={setSelectedMonth}
-                options={[
-                  { value: '', label: 'All Time' },
-                  ...monthOptions
-                ]}
+                value={selectedMonth || '__all__'}
+                onChange={(val) => setSelectedMonth(val === '__all__' ? '' : val)}
+                options={[{ value: '__all__', label: 'All Time' }, ...monthOptions.map(m => ({ value: m.value, label: m.label }))]}
               />
             </div>
           </div>
