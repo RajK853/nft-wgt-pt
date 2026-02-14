@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * MetricCard Component
  * Display a metric with label, value, and optional delta

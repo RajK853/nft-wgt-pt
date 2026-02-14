@@ -92,3 +92,88 @@ src/
 ## Project Status
 
 The application is in active development with core functionality implemented. The foundation is stable and ready for additional features and enhancements.
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Supabase Configuration (Required)
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Optional: Google Sheets Integration
+VITE_GOOGLE_SHEETS_ID=your_spreadsheet_id
+```
+
+### Getting Supabase Credentials
+
+1. Go to [Supabase](https://supabase.com) and create a project
+2. Navigate to Settings → API
+3. Copy the "Project URL" as `VITE_SUPABASE_URL`
+4. Copy the "anon public" key as `VITE_SUPABASE_ANON_KEY`
+
+---
+
+## Testing
+
+The project uses Vitest for testing with React Testing Library.
+
+### Running Tests
+
+```bash
+# Run all tests
+bun test
+
+# Run tests with coverage report
+bun test:coverage
+
+# Run tests in watch mode
+bun test:watch
+```
+
+### Test Structure
+
+```
+src/__tests__/
+├── scoring.test.ts      # Scoring logic tests
+├── utils.test.ts        # Utility and validation tests
+└── components.test.tsx  # Component tests
+```
+
+### Writing Tests
+
+```tsx
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { MyComponent } from './MyComponent';
+
+describe('MyComponent', () => {
+  it('renders correctly', () => {
+    render(<MyComponent />);
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+## Documentation
+
+- [API Documentation](docs/API.md) - Complete API reference
+- [Migration Guide](docs/MIGRATION.md) - Next.js to React migration guide
+- [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
+
+---
+
+## CI/CD
+
+The project includes GitHub Actions workflows for continuous integration:
+
+- Automated testing on push/PR
+- Code coverage reporting
+- Production build verification
+
+See [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for details.

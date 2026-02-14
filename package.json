@@ -7,8 +7,9 @@
     "build": "bun run vite build",
     "preview": "bun run vite preview",
     "lint": "bun run eslint",
-    "test": "bun test",
-    "test:watch": "bun test --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "import:sheets": "bun run scripts/import-game-events.js",
     "benchmark": "bun run benchmark.js"
   },
@@ -54,6 +55,7 @@
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^4.0.18",
     "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.3.0",
     "eslint-plugin-react": "^7.33.2",
@@ -69,7 +71,19 @@
     "test": {
       "environment": "jsdom",
       "globals": true,
-      "setupFiles": ["./vitest-setup.js"]
+      "setupFiles": ["./vitest-setup.js"],
+      "coverage": {
+        "provider": "v8",
+        "reporter": ["text", "json", "html"],
+        "include": ["src/**/*"],
+        "exclude": ["src/**/*.d.ts", "src/main.tsx", "src/vite-env.d.ts"],
+        "thresholds": {
+          "lines": 70,
+          "functions": 70,
+          "branches": 60,
+          "statements": 70
+        }
+      }
     }
   }
 }
