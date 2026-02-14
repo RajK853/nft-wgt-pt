@@ -1,18 +1,22 @@
 .container {
   min-height: calc(100vh - 60px);
   background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 2rem;
 }
 
-.content {
-  text-align: center;
+/* Header Section - Logo on left, title on right */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .logoContainer {
-  margin-bottom: 2rem;
+  flex-shrink: 0;
 }
 
 .logoWrapper {
@@ -35,32 +39,29 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  padding: 1rem;
+  padding: 0.5rem;
   transition: all 0.3s ease;
-  transform: scale(1);
 }
 
 .logoFrame:hover {
   background: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
 }
 
 .logo {
-  width: 96px;
-  height: 96px;
-  margin: 0 auto;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: block;
 }
 
-.titleSection {
-  margin-bottom: 1.5rem;
+.headerText {
+  flex: 1;
 }
 
 .title {
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 800;
   background: linear-gradient(45deg, #ffffff, #9ca3af, #a855f7);
   background-size: 200% 200%;
@@ -68,21 +69,20 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1.2;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
 }
 
 .subtitle {
-  font-size: 1.25rem;
-  color: #cbd5e1;
+  font-size: 1rem;
+  color: #9ca3af;
   font-weight: 500;
   letter-spacing: 0.05em;
-  margin: 0;
+  margin: 0.25rem 0 0 0;
 }
 
 .statusIndicator {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
   color: #94a3b8;
   font-size: 0.875rem;
@@ -95,17 +95,97 @@
   border-radius: 50%;
 }
 
-@media (max-width: 768px) {
+/* Main Content */
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Navigation Cards Grid */
+.navGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.navCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.navCard:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+}
+
+.navCardIcon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.navCardContent {
+  flex: 1;
+}
+
+.navCardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+}
+
+.navCardDescription {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.navCardArrow {
+  color: #6b7280;
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.navCard:hover .navCardArrow {
+  transform: translateX(4px);
+  color: #a855f7;
+}
+
+/* Login Card - special styling */
+.navCard.login {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+.navCard.login:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .navGrid {
+    grid-template-columns: 1fr;
+  }
+  
   .title {
-    font-size: 2rem;
-  }
-  
-  .subtitle {
-    font-size: 1rem;
-  }
-  
-  .logo {
-    width: 72px;
-    height: 72px;
+    font-size: 1.5rem;
   }
 }

@@ -20,7 +20,9 @@ function Header() {
       <nav className={styles.nav} aria-label="Main navigation">
         <NavLink to="/" current={location.pathname}>Home</NavLink>
         <NavLink to="/dashboard" current={location.pathname}>Dashboard</NavLink>
-        <NavLink to="/scoring-method" current={location.pathname}>Scoring Method</NavLink>
+        <NavLink to="/player-performance" current={location.pathname}>Players</NavLink>
+        <NavLink to="/keeper-performance" current={location.pathname}>Goalkeepers</NavLink>
+        <NavLink to="/scoring-method" current={location.pathname}>Scoring</NavLink>
       </nav>
     </header>
   )

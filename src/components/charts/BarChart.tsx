@@ -1,8 +1,7 @@
 /**
  * Bar Chart Component
- * 
- * Simple, focused component for displaying bar charts.
- * Follows KISS principle with clear, readable code.
+ * Simple, focused bar chart using Recharts
+ * Follows KISS principle with clean, readable code
  */
 
 import React from 'react';
@@ -14,46 +13,47 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Cell,
+  ReferenceLine,
 } from 'recharts';
 
 interface BarChartProps {
-  data: Array<{
-    name: string;
-    baseScore: number;
-    accuracyBonus: number;
-    speedBonus: number;
-  }>;
+  data: Array<{ name: string; value: number; [key: string]: any }>;
   title?: string;
-  colors?: {
-    baseScore: string;
-    accuracyBonus: string;
-    speedBonus: string;
-  };
+  color?: string;
   height?: number;
   showGrid?: boolean;
   showLegend?: boolean;
+  layout?: 'horizontal' | 'vertical';
+  colors?: string[];
+  dataKeys?: string[];
+  colorCoding?: 'single' | 'custom';
 }
 
-/**
- * Custom tooltip component for better styling
- */
+/** Custom tooltip component */
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg">
-        <p className="text-sm text-gray-300 mb-2">{label}</p>
-        {payload.map((entry: any, index: number) => (
-          <div key={index} className="flex justify-between text-sm">
-            <span className="text-gray-300">{entry.dataKey}:</span>
-            <span className="font-semibold text-white">{entry.value}</span>
-          </div>
-        ))}
+        <p className="text-sm text-gray-300 mb-1">{label}</p>
+        <p className="text-sm font-semibold text-white">
+          Value: {payload[0].value}
+        </p>
       </div>
     );
   }
   return null;
 };
+
+// Neutral bright colors palette - bright visible colors for dark background
+const NEUTRAL_COLORS = [
+  '#e2e8f0', // slate-200 (brightest)
+  '#f1f5f9', // slate-100
+  '#cbd5e1', // slate-300
+  '#ffffff', // white
+  '#818cf8', // indigo-400 (accent for visibility)
+];
 
 /**
  * Bar chart component with responsive design
@@ -61,139 +61,133 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export function BarChart({ 
   data, 
   title, 
-  colors = {
-    baseScore: '#3b82f6',
-    accuracyBonus: '#22c55e',
-    speedBonus: '#f59e0b'
-  },
+  color = '#e2e8f0', 
   height = 300,
   showGrid = true,
-  showLegend = true
+  showLegend = false,
+  layout = 'horizontal',
+  colors = NEUTRAL_COLORS,
+  dataKeys = ['value'],
+  colorCoding = 'single',
 }: BarChartProps) {
+  // Default data key for single bar
+  const primaryDataKey = dataKeys[0] || 'value'
+  
+  // Find the max value for highlighting
+  const maxValue = Math.max(...data.map(d => d[primaryDataKey] || d.value || 0))
+  const defaultColor = color
+  
   return (
-    <div className="chart-container bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-6 shadow-xl border border-gray-700/50">
+    <div className="chart-container bg-gray-800 rounded-lg p-4 shadow-lg">
       {title && (
-        <h3 className="chart-title text-xl font-bold text-white mb-6 text-center">
+        <h3 className="chart-title text-lg font-semibold text-white mb-4">
           {title}
         </h3>
       )}
       
-      <div className="space-y-4">
-        {/* Legend with better styling */}
-        {showLegend && (
-          <div className="flex justify-center space-x-6 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded bg-blue-500 shadow-lg"></div>
-              <span className="text-gray-300 font-medium">Base Score</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded bg-green-500 shadow-lg"></div>
-              <span className="text-gray-300 font-medium">Accuracy Bonus</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded bg-amber-500 shadow-lg"></div>
-              <span className="text-gray-300 font-medium">Speed Bonus</span>
-            </div>
-          </div>
-        )}
-        
-        <ResponsiveContainer width="100%" height={height}>
-          <RechartsBarChart 
-            data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-          >
-            {showGrid && (
-              <CartesianGrid 
-                strokeDasharray="3 3" 
-                stroke="#334155"
-                vertical={false}
-                horizontal={true}
+      <ResponsiveContainer width="100%" height={height}>
+        <RechartsBarChart 
+          data={data} 
+          layout={layout}
+          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+        >
+          {showGrid && (
+            <CartesianGrid 
+              strokeDasharray="3 3" 
+              stroke="#374151"
+              vertical={layout === 'horizontal'}
+              horizontal={layout === 'vertical'}
+            />
+          )}
+          
+          {layout === 'horizontal' ? (
+            <>
+              <XAxis 
+                dataKey="name" 
+                stroke="#9ca3af"
+                tick={{ fill: '#9ca3af', fontSize: 12 }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
+                minTickGap={30}
+                height={80}
               />
-            )}
-            
-            <XAxis 
-              dataKey="name" 
-              stroke="#94a3b8"
-              fontSize={12}
-              tick={{ fill: '#94a3b8' }}
-              axisLine={{ stroke: '#334155' }}
-              tickLine={{ stroke: '#334155' }}
-              tickMargin={8}
+              <YAxis 
+                stroke="#9ca3af"
+                fontSize={12}
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
+                origin={0}
+              />
+              <ReferenceLine y={0} stroke="#9ca3af" strokeWidth={1} />
+            </>
+          ) : (
+            <>
+              <XAxis 
+                type="number"
+                stroke="#9ca3af"
+                fontSize={12}
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
+              />
+              <YAxis 
+                dataKey="name"
+                type="category"
+                stroke="#9ca3af"
+                fontSize={12}
+                tick={{ fill: '#9ca3af' }}
+                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
+                tickLine={{ stroke: '#9ca3af' }}
+                width={100}
+              />
+            </>
+          )}
+          
+          <Tooltip 
+            content={<CustomTooltip />}
+            cursor={{ fill: '#374151', opacity: 0.4 }}
+          />
+          
+          {showLegend && (
+            <Legend 
+              verticalAlign="top" 
+              height={36}
+              formatter={(value) => <span className="text-gray-300">{value}</span>}
             />
-            
-            <YAxis 
-              stroke="#94a3b8"
-              fontSize={12}
-              tick={{ fill: '#94a3b8' }}
-              axisLine={{ stroke: '#334155' }}
-              tickLine={{ stroke: '#334155' }}
-              tickMargin={8}
-              domain={[0, 'auto']}
-            />
-            
-            <Tooltip 
-              content={<CustomTooltip />}
-              cursor={{ 
-                fill: 'rgba(56, 189, 248, 0.1)',
-                stroke: '#3b82f6',
-                strokeWidth: 1
-              }}
-              wrapperStyle={{
-                backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                border: '1px solid #334155',
-                borderRadius: '8px',
-                padding: '8px'
-              }}
-            />
-            
+          )}
+          
+          {/* Render bars for each data key */}
+          {dataKeys.map((key, keyIndex) => (
             <Bar 
-              dataKey="baseScore" 
-              fill="url(#baseScoreGradient)"
-              radius={[8, 8, 0, 0]}
+              key={key}
+              dataKey={key} 
+              fill={colorCoding === 'single' ? color : undefined}
+              radius={[4, 4, 0, 0]}
+              barSize={80}
               isAnimationActive={true}
-              animationDuration={800}
-              stroke="#1e3a8a"
-              strokeWidth={2}
-            />
-            
-            <Bar 
-              dataKey="accuracyBonus" 
-              fill="url(#accuracyBonusGradient)"
-              radius={[8, 8, 0, 0]}
-              isAnimationActive={true}
-              animationDuration={800}
-              stroke="#166534"
-              strokeWidth={2}
-            />
-            
-            <Bar 
-              dataKey="speedBonus" 
-              fill="url(#speedBonusGradient)"
-              radius={[8, 8, 0, 0]}
-              isAnimationActive={true}
-              animationDuration={800}
-              stroke="#92400e"
-              strokeWidth={2}
-            />
-            
-            {/* Add gradients for better visual appeal */}
-            <defs>
-              <linearGradient id="baseScoreGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#60a5fa" stopOpacity={1} />
-                <stop offset="100%" stopColor="#1e3a8a" stopOpacity={1} />
-              </linearGradient>
-              <linearGradient id="accuracyBonusGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#4ade80" stopOpacity={1} />
-                <stop offset="100%" stopColor="#166534" stopOpacity={1} />
-              </linearGradient>
-              <linearGradient id="speedBonusGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#fbbf24" stopOpacity={1} />
-                <stop offset="100%" stopColor="#92400e" stopOpacity={1} />
-              </linearGradient>
-            </defs>
-          </RechartsBarChart>
-        </ResponsiveContainer>
-      </div>
+              animationDuration={500}
+            >
+              {/* Color highest value green, others use default or custom */}
+              {colorCoding === 'single' && data.map((entry, index) => {
+                const value = entry[primaryDataKey] || entry.value || 0
+                return (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={value === maxValue && maxValue > 0 ? '#22c55e' : defaultColor}
+                  />
+                )
+              })}
+              {colorCoding === 'custom' && data.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.fill || colors[index % colors.length]} 
+                />
+              ))}
+            </Bar>
+          ))}
+        </RechartsBarChart>
+      </ResponsiveContainer>
     </div>
   );
 }
