@@ -9,7 +9,8 @@
     "lint": "bun run eslint",
     "test": "bun test",
     "test:watch": "bun test --watch",
-    "import:sheets": "bun run scripts/import-game-events.js"
+    "import:sheets": "bun run scripts/import-game-events.js",
+    "benchmark": "bun run benchmark.js"
   },
   "dependencies": {
     "@googleapis/sheets": "^13.0.1",
