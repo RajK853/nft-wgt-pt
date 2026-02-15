@@ -5,7 +5,7 @@
  * Supports light/dark theme
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   BarChart as RechartsBarChart,
   Bar,
@@ -21,7 +21,7 @@ import {
 import { useTheme } from '@/hooks/useTheme';
 
 interface BarChartProps {
-  data: Array<{ name: string; value: number; [key: string]: any }>;
+  data: Array<{ name: string; value: number; [key: string]: unknown }>;
   title?: string;
   color?: string;
   height?: number;
@@ -83,25 +83,16 @@ export function BarChart({
 }: BarChartProps) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
-  const [mounted, setMounted] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-  }, []);
   
   const chartColors = getChartColors(isDark);
   const defaultColors = colors || chartColors.neutralColors;
   
   // Default data key for single bar
-  const primaryDataKey = dataKeys[0] || 'value'
+  const primaryDataKey = dataKeys[0] || 'value';
   
   // Find the max value for highlighting
-  const maxValue = Math.max(...data.map(d => d[primaryDataKey] || d.value || 0))
-  const defaultColor = color
-  
-  if (!mounted) {
-    return <div style={{ height }} />;
-  }
+  const maxValue = Math.max(...data.map(d => Number(d[primaryDataKey]) || d.value || 0));
+  const defaultColor = color;
   
   return (
     <div className={`chart-container rounded-lg p-2 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
@@ -208,7 +199,7 @@ export function BarChart({
               {colorCoding === 'custom' && data.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.fill || defaultColors[index % defaultColors.length]} 
+                  fill={(entry.fill as string) || defaultColors[index % defaultColors.length]} 
                 />
               ))}
             </Bar>

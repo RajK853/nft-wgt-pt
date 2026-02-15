@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -27,42 +27,26 @@ function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
+function resolveTheme(currentTheme: Theme): 'light' | 'dark' {
+  return currentTheme === 'system' ? getSystemTheme() : currentTheme;
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'nft-wgt-pt-theme',
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => getInitialTheme(defaultTheme, storageKey));
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => {
-    const current = theme === 'system' ? getSystemTheme() : theme;
-    return current;
-  });
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => resolveTheme(theme));
 
-  // Apply theme class immediately on mount
+  // Apply theme class and update resolved theme
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
+    const resolved = resolveTheme(theme);
     
-    const resolved = theme === 'system' ? getSystemTheme() : theme;
+    root.classList.remove('light', 'dark');
     root.classList.add(resolved);
     setResolvedTheme(resolved);
-  }, []);
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    
-    // Remove old class
-    root.classList.remove('light', 'dark');
-    
-    if (theme === 'system') {
-      const systemTheme = getSystemTheme();
-      root.classList.add(systemTheme);
-      setResolvedTheme(systemTheme);
-    } else {
-      root.classList.add(theme);
-      setResolvedTheme(theme);
-    }
-    
     localStorage.setItem(storageKey, theme);
   }, [theme, storageKey]);
 

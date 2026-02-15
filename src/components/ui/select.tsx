@@ -5,6 +5,38 @@ import { useTheme } from "@/hooks/useTheme"
 
 import { cn } from "@/lib/utils"
 
+// Theme-aware class helper
+function useThemeClass() {
+  const { resolvedTheme } = useTheme();
+  return resolvedTheme === 'dark';
+}
+
+// Pre-defined theme classes for consistency
+const triggerClasses = {
+  dark: "flex h-10 w-full items-center justify-between rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white ring-offset-background placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+  light: "flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+};
+
+const contentClasses = {
+  dark: "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-gray-600 bg-gray-800 text-white shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+  light: "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-gray-300 bg-white text-gray-900 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+};
+
+const labelClasses = {
+  dark: "py-1.5 pl-8 pr-2 text-sm font-semibold text-gray-300",
+  light: "py-1.5 pl-8 pr-2 text-sm font-semibold text-gray-600",
+};
+
+const itemClasses = {
+  dark: "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-700 focus:text-white data-[state=checked]:bg-purple-600 data-[state=checked]:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+  light: "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 focus:text-gray-900 data-[state=checked]:bg-purple-500 data-[state=checked]:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+};
+
+const separatorClasses = {
+  dark: "-mx-1 my-1 h-px bg-gray-600",
+  light: "-mx-1 my-1 h-px bg-gray-200",
+};
+
 // Rename the primitive to avoid conflicts
 const SelectPrimitiveRoot = SelectPrimitive.Root
 
@@ -18,16 +50,13 @@ const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
+  const isDark = useThemeClass();
   
   return (
     <SelectPrimitive.Trigger
       ref={ref}
       className={cn(
-        isDark 
-          ? "flex h-10 w-full items-center justify-between rounded-md border border-gray-600 bg-gray-800 px-3 py-2 text-sm text-white ring-offset-background placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-          : "flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 ring-offset-background placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        isDark ? triggerClasses.dark : triggerClasses.light,
         className
       )}
       {...props}
@@ -80,17 +109,14 @@ const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 >(({ className, children, position = "popper", ...props }, ref) => {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
+  const isDark = useThemeClass();
   
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         ref={ref}
         className={cn(
-          isDark 
-            ? "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-gray-600 bg-gray-800 text-white shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-            : "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-gray-300 bg-white text-gray-900 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          isDark ? contentClasses.dark : contentClasses.light,
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className
@@ -119,14 +145,13 @@ const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
 >(({ className, ...props }, ref) => {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
+  const isDark = useThemeClass();
   
   return (
     <SelectPrimitive.Label
       ref={ref}
       className={cn(
-        isDark ? "py-1.5 pl-8 pr-2 text-sm font-semibold text-gray-300" : "py-1.5 pl-8 pr-2 text-sm font-semibold text-gray-600", 
+        isDark ? labelClasses.dark : labelClasses.light, 
         className
       )}
       {...props}
@@ -139,23 +164,20 @@ const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
 >(({ className, children, ...props }, ref) => {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
+  const isDark = useThemeClass();
   
   return (
     <SelectPrimitive.Item
       ref={ref}
       className={cn(
-        isDark 
-          ? "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-700 focus:text-white data-[state=checked]:bg-purple-600 data-[state=checked]:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-          : "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 focus:text-gray-900 data-[state=checked]:bg-purple-500 data-[state=checked]:text-white data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        isDark ? itemClasses.dark : itemClasses.light,
         className
       )}
       {...props}
     >
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Check className={isDark ? "h-4 w-4 text-white" : "h-4 w-4 text-white"} />
+          <Check className="h-4 w-4 text-white" />
         </SelectPrimitive.ItemIndicator>
       </span>
 
@@ -169,14 +191,13 @@ const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
 >(({ className, ...props }, ref) => {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
+  const isDark = useThemeClass();
   
   return (
     <SelectPrimitive.Separator
       ref={ref}
       className={cn(
-        isDark ? "-mx-1 my-1 h-px bg-gray-600" : "-mx-1 my-1 h-px bg-gray-200", 
+        isDark ? separatorClasses.dark : separatorClasses.light, 
         className
       )}
       {...props}
@@ -203,8 +224,7 @@ function SelectWithLabel({
   placeholder = "Select an option...",
   className = ""
 }: SelectWithLabelProps) {
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === 'dark'
+  const isDark = useThemeClass();
   
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
