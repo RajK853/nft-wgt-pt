@@ -1,27 +1,127 @@
 @import "tailwindcss";
 
-/* Shadcn UI Theme Variables */
+/* ========================================
+   SHADCN UI THEME VARIABLES - LIGHT MODE
+   ======================================== */
 @theme {
-  --color-border: hsl(214.3 31.8% 91.4%);
-  --color-input: hsl(214.3 31.8% 91.4%);
-  --color-ring: hsl(222.2 84% 4.9%);
-  --color-background: hsl(0 0% 100%);
-  --color-foreground: hsl(222.2 84% 4.9%);
-  --color-primary: hsl(222.2 47.4% 11.2%);
-  --color-primary-foreground: hsl(210 40% 98%);
-  --color-secondary: hsl(210 40% 96.1%);
-  --color-secondary-foreground: hsl(222.2 47.4% 11.2%);
-  --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: hsl(210 40% 98%);
-  --color-muted: hsl(210 40% 96.1%);
-  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
-  --color-accent: hsl(210 40% 96.1%);
-  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
-  --color-popover: hsl(0 0% 100%);
-  --color-popover-foreground: hsl(222.2 84% 4.9%);
-  --color-card: hsl(0 0% 100%);
-  --color-card-foreground: hsl(222.2 84% 4.9%);
+  /* Better contrast colors for light mode */
+  --color-border: oklch(0.85 0 0);
+  --color-input: oklch(0.85 0 0);
+  --color-ring: oklch(0.55 0 0);
+  --color-background: oklch(0.98 0 0);
+  --color-foreground: oklch(0.15 0 0);
+  --color-primary: oklch(0.45 0 0);
+  --color-primary-foreground: oklch(0.98 0 0);
+  --color-secondary: oklch(0.94 0 0);
+  --color-secondary-foreground: oklch(0.15 0 0);
+  --color-destructive: oklch(0.55 0.12 25);
+  --color-destructive-foreground: oklch(0.98 0 0);
+  --color-muted: oklch(0.92 0 0);
+  --color-muted-foreground: oklch(0.45 0 0);
+  --color-accent: oklch(0.92 0 0);
+  --color-accent-foreground: oklch(0.15 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.15 0 0);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.15 0 0);
   --color-radius: 0.5rem;
+  
+  /* Legacy Background Colors - Light */
+  --color-legacy-bg-primary: oklch(0.98 0 0);
+  --color-legacy-bg-secondary: oklch(0.94 0 0);
+  --color-legacy-bg-tertiary: oklch(0.9 0 0);
+  --color-legacy-bg-elevated: oklch(1 0 0);
+  
+  /* Legacy Text Colors - Light (darker for better contrast) */
+  --color-legacy-text-primary: oklch(0.15 0 0);
+  --color-legacy-text-secondary: oklch(0.35 0 0);
+  --color-legacy-text-muted: oklch(0.5 0 0);
+  --color-legacy-text-disabled: oklch(0.7 0 0);
+  
+  /* Legacy Accent Colors - Light */
+  --color-legacy-accent-subtle: oklch(0.9 0 0);
+  --color-legacy-accent-soft: oklch(0.85 0 0);
+  --color-legacy-accent: oklch(0.4 0 0);
+  
+  /* Legacy Status Colors - Light (more saturated for visibility) */
+  --color-legacy-success: oklch(0.55 0.15 160);
+  --color-legacy-warning: oklch(0.7 0.15 75);
+  --color-legacy-error: oklch(0.55 0.15 25);
+  --color-legacy-info: oklch(0.55 0.15 220);
+  
+  /* Legacy Border Colors - Light */
+  --color-legacy-border: oklch(0.85 0 0);
+  --color-legacy-border-medium: oklch(0.75 0 0);
+  --color-legacy-border-strong: oklch(0.65 0 0);
+  
+  /* Legacy Surface Colors - Light */
+  --color-legacy-surface-hover: oklch(0.94 0 0);
+  --color-legacy-surface-active: oklch(0.88 0 0);
+  --color-legacy-surface-focus: oklch(0.82 0 0);
+  
+  /* Legacy Overlay */
+  --color-legacy-overlay: oklch(0 0 0 / 0.4);
+}
+
+/* ========================================
+   DARK MODE THEME VARIABLES
+   ======================================== */
+.dark {
+  --color-border: oklch(0.22 0 0);
+  --color-input: oklch(0.22 0 0);
+  --color-ring: oklch(0.75 0 0);
+  --color-background: oklch(0.08 0 0);
+  --color-foreground: oklch(0.92 0 0);
+  --color-primary: oklch(0.75 0 0);
+  --color-primary-foreground: oklch(0.18 0 0);
+  --color-secondary: oklch(0.14 0 0);
+  --color-secondary-foreground: oklch(0.92 0 0);
+  --color-destructive: oklch(0.6 0.18 25);
+  --color-destructive-foreground: oklch(0.92 0 0);
+  --color-muted: oklch(0.14 0 0);
+  --color-muted-foreground: oklch(0.62 0 0);
+  --color-accent: oklch(0.14 0 0);
+  --color-accent-foreground: oklch(0.92 0 0);
+  --color-popover: oklch(0.11 0 0);
+  --color-popover-foreground: oklch(0.92 0 0);
+  --color-card: oklch(0.11 0 0);
+  --color-card-foreground: oklch(0.92 0 0);
+  
+  /* Legacy Background Colors - Dark */
+  --color-legacy-bg-primary: oklch(0.08 0 0);
+  --color-legacy-bg-secondary: oklch(0.11 0 0);
+  --color-legacy-bg-tertiary: oklch(0.14 0 0);
+  --color-legacy-bg-elevated: oklch(0.18 0 0);
+  
+  /* Legacy Text Colors - Dark */
+  --color-legacy-text-primary: oklch(0.92 0 0);
+  --color-legacy-text-secondary: oklch(0.68 0 0);
+  --color-legacy-text-muted: oklch(0.48 0 0);
+  --color-legacy-text-disabled: oklch(0.35 0 0);
+  
+  /* Legacy Accent Colors - Dark */
+  --color-legacy-accent-subtle: oklch(0.22 0 0);
+  --color-legacy-accent-soft: oklch(0.28 0 0);
+  --color-legacy-accent: oklch(0.75 0 0);
+  
+  /* Legacy Status Colors - Dark */
+  --color-legacy-success: oklch(0.58 0.15 160);
+  --color-legacy-warning: oklch(0.7 0.15 75);
+  --color-legacy-error: oklch(0.6 0.18 25);
+  --color-legacy-info: oklch(0.58 0.15 220);
+  
+  /* Legacy Border Colors - Dark */
+  --color-legacy-border: oklch(0.22 0 0);
+  --color-legacy-border-medium: oklch(0.28 0 0);
+  --color-legacy-border-strong: oklch(0.35 0 0);
+  
+  /* Legacy Surface Colors - Dark */
+  --color-legacy-surface-hover: oklch(0.15 0 0);
+  --color-legacy-surface-active: oklch(0.2 0 0);
+  --color-legacy-surface-focus: oklch(0.25 0 0);
+  
+  /* Legacy Overlay - Dark */
+  --color-legacy-overlay: oklch(0 0 0 / 0.6);
 }
 
 /* Global styles for the application */
@@ -47,8 +147,9 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 50%, var(--primary-bg) 100%);
-  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-secondary) 50%, var(--color-background) 100%);
+  color: var(--color-foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -73,16 +174,16 @@ main {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--primary-bg);
+  background: var(--color-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
+  background: var(--color-muted-foreground);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--color-secondary-foreground);
 }
 
 /* CSS Animations */
