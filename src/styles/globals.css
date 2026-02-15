@@ -126,16 +126,23 @@
 
 /* Global styles for the application */
 
+/* Legacy CSS variables - now theme-aware using CSS variables */
 :root {
-  --primary-bg: #111827;
-  --secondary-bg: #1f2937;
-  --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --primary-bg: var(--color-background);
+  --secondary-bg: var(--color-secondary);
+  --text-primary: var(--color-foreground);
+  --text-secondary: var(--color-muted-foreground);
+  --text-muted: var(--color-muted-foreground);
+  --border-color: var(--color-border);
   --primary-gradient-start: #a855f7;
   --primary-gradient-end: #ec4899;
   --success-color: #22c55e;
+}
+
+/* Error Boundary Container - theme-aware using legacy neutral colors */
+.error-boundary-container {
+  background: linear-gradient(135deg, var(--color-legacy-bg-primary) 0%, var(--color-legacy-bg-secondary) 50%, var(--color-legacy-bg-primary) 100%);
+  color: var(--color-legacy-text-primary);
 }
 
 * {
@@ -147,8 +154,8 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-secondary) 50%, var(--color-background) 100%);
-  color: var(--color-foreground);
+  background: linear-gradient(135deg, var(--color-legacy-bg-primary) 0%, var(--color-legacy-bg-secondary) 50%, var(--color-legacy-bg-primary) 100%);
+  color: var(--color-legacy-text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

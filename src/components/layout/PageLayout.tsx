@@ -35,7 +35,7 @@ export function PageLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-legacy-bg-primary)' }}>
       {/* Global Header */}
       <Header />
       

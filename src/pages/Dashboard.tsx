@@ -78,6 +78,7 @@ function Dashboard() {
   const chartData = useMemo(() => 
     top10Players.map(p => ({
       name: p.name.length > 10 ? p.name.substring(0, 10) + '...' : p.name,
+      value: p.score,
       score: p.score,
       goals: p.goals
     })),
@@ -126,10 +127,12 @@ function Dashboard() {
             />
             {revealedTop10 && top10Players.length > 0 && (
               <div className={styles.revealedContent}>
-                <BarChart 
-                  data={chartData} 
-                  height={250}
-                />
+                <div className={styles.revealedChart}>
+                  <BarChart 
+                    data={chartData} 
+                    height={250}
+                  />
+                </div>
                 <DataTable 
                   data={top10Players}
                   columns={PLAYER_STATS_COLUMNS}
@@ -146,7 +149,7 @@ function Dashboard() {
             <RevealButton 
               label="Reveal Player" 
               onReveal={() => setRevealedTopPlayer(true)}
-              variant="success"
+              variant="primary"
             />
             {revealedTopPlayer && topPlayer && (
               <div className={styles.revealedContent}>
@@ -154,7 +157,7 @@ function Dashboard() {
                   label={topPlayer.name}
                   value={topPlayer.score.toFixed(2)}
                   delta={`${topPlayer.goals} goals • ${topPlayer.saved} saved • ${topPlayer.out} out`}
-                  variant="success"
+                  sentiment="positive"
                 />
               </div>
             )}
@@ -174,7 +177,7 @@ function Dashboard() {
                   label={topKeeper.name}
                   value={topKeeper.score.toFixed(2)}
                   delta={`${topKeeper.saves} saves • ${topKeeper.goalsConceded} conceded`}
-                  variant="success"
+                  sentiment="positive"
                 />
               </div>
             )}
@@ -202,13 +205,13 @@ function Dashboard() {
                     label="Most Goals in Session"
                     value={hallOfFame.mostGoals?.playerName || 'N/A'}
                     delta={hallOfFame.mostGoals ? `${hallOfFame.mostGoals.goals} goals on ${hallOfFame.mostGoals.date.toLocaleDateString()}` : 'No data'}
-                    variant="success"
+                    sentiment="positive"
                   />
                   <MetricCard
                     label="Most Saves in Session"
                     value={hallOfFame.mostSaves?.keeperName || 'N/A'}
                     delta={hallOfFame.mostSaves ? `${hallOfFame.mostSaves.saves} saves on ${hallOfFame.mostSaves.date.toLocaleDateString()}` : 'No data'}
-                    variant="default"
+                    sentiment="neutral"
                   />
                 </div>
               )}
@@ -219,13 +222,13 @@ function Dashboard() {
                     label="Longest Goal Streak"
                     value={hallOfFame.longestStreak?.playerName || 'N/A'}
                     delta={hallOfFame.longestStreak ? `${hallOfFame.longestStreak.streak} consecutive goals` : 'No data'}
-                    variant="success"
+                    sentiment="positive"
                   />
                   <MetricCard
                     label="Biggest Rivalry"
                     value={hallOfFame.biggestRivalry ? `${hallOfFame.biggestRivalry.shooterName} vs ${hallOfFame.biggestRivalry.keeperName}` : 'N/A'}
                     delta={hallOfFame.biggestRivalry ? `${hallOfFame.biggestRivalry.encounters} encounters` : 'No data'}
-                    variant="default"
+                    sentiment="neutral"
                   />
                 </div>
               )}
@@ -236,19 +239,19 @@ function Dashboard() {
                     label="Marathon Man"
                     value={hallOfFame.marathonMan?.playerName || 'N/A'}
                     delta={hallOfFame.marathonMan ? `${hallOfFame.marathonMan.sessionCount} sessions played` : 'No data'}
-                    variant="success"
+                    sentiment="positive"
                   />
                   <MetricCard
                     label="Mysterious Ninja"
                     value={hallOfFame.mysteriousNinja?.playerName || 'N/A'}
                     delta={hallOfFame.mysteriousNinja ? `Only ${hallOfFame.mysteriousNinja.sessionCount} session(s)` : 'No data'}
-                    variant="default"
+                    sentiment="neutral"
                   />
                   <MetricCard
                     label="Busiest Day"
                     value={hallOfFame.busiestDay ? hallOfFame.busiestDay.date.toLocaleDateString() : 'N/A'}
                     delta={hallOfFame.busiestDay ? `${hallOfFame.busiestDay.penaltyCount} penalties` : 'No data'}
-                    variant="default"
+                    sentiment="neutral"
                   />
                 </div>
               )}
@@ -273,17 +276,17 @@ function Dashboard() {
           <MetricCard
             label="Goals"
             value={recentSession?.goals || 0}
-            variant="success"
+            sentiment="positive"
           />
           <MetricCard
             label="Saves"
             value={recentSession?.saves || 0}
-            variant="default"
+            sentiment="neutral"
           />
           <MetricCard
             label="Out"
             value={recentSession?.outs || 0}
-            variant="warning"
+            sentiment="negative"
           />
         </div>
         
@@ -298,10 +301,13 @@ function Dashboard() {
             <div className={styles.statsContent}>
               {activeTab === 'players' && playerScores.length > 0 && (
                 <>
-                  <BarChart 
-                    data={chartData}
-                    height={200}
-                  />
+                  <div className={styles.revealedChart}>
+                    <BarChart 
+                      data={chartData}
+                      dataKeys={['score']}
+                      height={200}
+                    />
+                  </div>
                   <DataTable 
                     data={playerScores.slice(0, 10)}
                     columns={PLAYER_STATS_COLUMNS}

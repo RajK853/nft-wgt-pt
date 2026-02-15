@@ -12,7 +12,7 @@ import {
   getKeeperOutcomeDistribution
 } from '@/lib/analysis'
 import { BarChart, PieChart } from '@/components/charts'
-import { DataTable, MultiSelect, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import styles from './PlayerPerformance.module.css'
@@ -24,14 +24,6 @@ const KEEPER_STATS_COLUMNS = [
   { key: 'saves', header: 'Saves', sortable: true },
   { key: 'goalsConceded', header: 'Goals Conceded', sortable: true },
   { key: 'outs', header: 'Out', sortable: true }
-]
-
-// Tab options for comparison view
-const COMPARISON_TABS = [
-  { id: 'score', label: 'Score' },
-  { id: 'saves', label: 'Saves' },
-  { id: 'goalsConceded', label: 'Goals Conceded' },
-  { id: 'outs', label: 'Out' }
 ]
 
 // Tab options for outcome distribution
@@ -46,8 +38,6 @@ export default function KeeperPerformance() {
   
   // Filter state
   const [selectedMonth, setSelectedMonth] = useState<string>('')
-  const [selectedKeepers, setSelectedKeepers] = useState<string[]>([])
-  const [activeTab, setActiveTab] = useState<string>('score')
   const [selectedKeeperForPie, setSelectedKeeperForPie] = useState<string>('')
 
   // Table sorting state
@@ -111,6 +101,7 @@ export default function KeeperPerformance() {
   const leaderboardChartData = useMemo(() => {
     return top10Keepers.map(k => ({
       name: k.name.length > 12 ? k.name.substring(0, 12) + '...' : k.name,
+      value: k.score,
       score: k.score,
       saves: k.saves
     }))
@@ -126,66 +117,6 @@ export default function KeeperPerformance() {
       setTableSortKey(key)
       setTableSortDirection('desc')
     }
-  }
-
-  // Comparison data - filter selected keepers
-  const comparisonData = useMemo(() => {
-    if (selectedKeepers.length === 0) return []
-    
-    return keeperScores.filter(k => selectedKeepers.includes(k.name))
-  }, [keeperScores, selectedKeepers])
-
-  // Determine color based on value (green for best, red for worst)
-  const getComparisonChartData = () => {
-    if (comparisonData.length === 0) return []
-    
-    // For keeper stats: saves are good, goals conceded are bad
-    const values = comparisonData.map(k => k[activeTab as keyof typeof k] as number)
-    const max = Math.max(...values)
-    const min = Math.min(...values)
-    
-    return comparisonData.map(k => {
-      const value = k[activeTab as keyof typeof k] as number
-      let color = '#3b82f6' // default blue
-      
-      if (max !== min) {
-        if (activeTab === 'saves') {
-          // More saves is better - green for best
-          if (value === max) {
-            color = '#22c55e' // green
-          } else if (value === min) {
-            color = '#ef4444' // red
-          }
-        } else if (activeTab === 'goalsConceded') {
-          // Fewer goals conceded is better - green for lowest
-          if (value === min) {
-            color = '#22c55e' // green
-          } else if (value === max) {
-            color = '#ef4444' // red
-          }
-        } else if (activeTab === 'outs') {
-          // More outs is better for keeper
-          if (value === max) {
-            color = '#22c55e' // green
-          } else if (value === min) {
-            color = '#ef4444' // red
-          }
-        } else {
-          // Score: higher is better
-          if (value === max) {
-            color = '#22c55e' // green
-          } else if (value === min) {
-            color = '#ef4444' // red
-          }
-        }
-      }
-      
-      return {
-        name: k.name.length > 12 ? k.name.substring(0, 12) + '...' : k.name,
-        value: value,
-        fill: color
-      }
-    })
   }
 
   // Pie chart data for selected keeper
@@ -269,76 +200,6 @@ export default function KeeperPerformance() {
               onSort={handleTableSort}
             />
           </div>
-        </div>
-      </section>
-
-      {/* Compare Goalkeeper Performance Section */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Compare Goalkeeper Performance</h2>
-        
-        <div className={styles.comparisonSection}>
-          <div className={styles.controls}>
-            <div className={styles.control}>
-              <MultiSelect
-                label="Select Goalkeepers"
-                value={selectedKeepers}
-                onChange={setSelectedKeepers}
-                options={keeperOptions}
-                max={10}
-                placeholder="Select up to 10 goalkeepers..."
-              />
-            </div>
-            
-            <div className={styles.control}>
-              <Select
-                label="Select Month"
-                value={selectedMonth || '__all__'}
-                onChange={(val) => setSelectedMonth(val === '__all__' ? '' : val)}
-                options={[{ value: '__all__', label: 'All Time' }, ...monthOptions.map(m => ({ value: m.value, label: m.label }))]}
-              />
-            </div>
-          </div>
-
-          {selectedKeepers.length > 0 ? (
-            <>
-              <Tabs
-                tabs={COMPARISON_TABS}
-                defaultTab="score"
-              >
-                {(activeTab) => {
-                  setActiveTab(activeTab)
-                  const chartData = getComparisonChartData()
-                  return (
-                    <div className={styles.tabsContainer}>
-                      <div className={styles.comparisonChart}>
-                        <BarChart 
-                          data={chartData}
-                          height={300}
-                          layout="vertical"
-                          dataKeys={['value']}
-                          colors={chartData.map(d => d.fill || '#94a3b8')}
-                          colorCoding="custom"
-                        />
-                      </div>
-                      <p className={styles.description}>
-                        {activeTab === 'score' && 'Comparing overall scores (green = best, red = worst)'}
-                        {activeTab === 'saves' && 'Comparing total saves (green = best, red = worst)'}
-                        {activeTab === 'goalsConceded' && 'Comparing goals conceded (green = best, red = worst)'}
-                        {activeTab === 'outs' && 'Comparing total shots out (green = best, red = worst)'}
-                      </p>
-                    </div>
-                  )
-                }}
-              </Tabs>
-            </>
-          ) : (
-            <div className={styles.noData}>
-              <div className={styles.noDataIcon}>🧤</div>
-              <div className={styles.noDataText}>
-                Select goalkeepers above to compare their performance
-              </div>
-            </div>
-          )}
         </div>
       </section>
 

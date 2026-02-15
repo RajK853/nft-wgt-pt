@@ -104,9 +104,9 @@ export function BarChart({
   }
   
   return (
-    <div className={`chart-container rounded-lg p-4 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+    <div className={`chart-container rounded-lg p-2 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
       {title && (
-        <h3 className={`chart-title text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+        <h3 className={`chart-title text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
           {title}
         </h3>
       )}
@@ -115,7 +115,7 @@ export function BarChart({
         <RechartsBarChart 
           data={data} 
           layout={layout}
-          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+          margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
         >
           {showGrid && (
             <CartesianGrid 
@@ -132,17 +132,18 @@ export function BarChart({
                 dataKey="name" 
                 stroke={chartColors.axisColor}
                 tick={{ fill: chartColors.axisColor, fontSize: 12 }}
-                axisLine={{ stroke: chartColors.axisColor, strokeWidth: 1 }}
-                tickLine={{ stroke: chartColors.axisColor }}
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
                 minTickGap={30}
-                height={80}
               />
               <YAxis 
                 stroke={chartColors.axisColor}
                 fontSize={12}
                 tick={{ fill: chartColors.axisColor }}
-                axisLine={{ stroke: chartColors.axisColor, strokeWidth: 1 }}
-                tickLine={{ stroke: chartColors.axisColor }}
+                axisLine={false}
+                tickLine={false}
+                tickMargin={8}
                 origin={0}
               />
               <ReferenceLine y={0} stroke={chartColors.axisColor} strokeWidth={1} />

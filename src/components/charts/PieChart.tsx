@@ -53,6 +53,10 @@ export function PieChart({
   
   const chartColors = getChartColors(isDark);
   
+  // Calculate proportional radius based on height to ensure chart fits in container
+  const outerRadius = Math.min(height / 2.5, 100);
+  const innerRadius = donut ? outerRadius * 0.6 : 0;
+  
   if (!mounted) {
     return <div style={{ height }} />;
   }
@@ -72,8 +76,8 @@ export function PieChart({
             cx="50%"
             cy="50%"
             labelLine={false}
-            outerRadius={donut ? 80 : 100}
-            innerRadius={donut ? 50 : 0}
+            outerRadius={outerRadius}
+            innerRadius={innerRadius}
             fill="#8884d8"
             dataKey="value"
           >
@@ -91,6 +95,9 @@ export function PieChart({
           />
           <Legend 
             formatter={(value) => <span style={{ color: chartColors.legendText }}>{value}</span>}
+            verticalAlign="bottom"
+            align="center"
+            wrapperStyle={{ paddingTop: '10px' }}
           />
         </RechartsPieChart>
       </ResponsiveContainer>

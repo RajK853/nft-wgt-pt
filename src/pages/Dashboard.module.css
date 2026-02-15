@@ -202,6 +202,10 @@
   animation: fadeIn 0.3s ease;
 }
 
+.revealedChart {
+  margin-bottom: 1.5rem;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

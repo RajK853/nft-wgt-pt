@@ -101,6 +101,7 @@ export default function PlayerPerformance() {
   const leaderboardChartData = useMemo(() => {
     return top10Players.map(p => ({
       name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
+      value: p.score,
       score: p.score,
       goals: p.goals
     }))
@@ -149,6 +150,7 @@ export default function PlayerPerformance() {
       return {
         name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
         value: value,
+        score: value,
         fill: color
       }
     })
