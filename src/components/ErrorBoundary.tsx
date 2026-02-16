@@ -70,14 +70,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       
       return (
         <div 
+          className="error-boundary-container"
           style={{
             minHeight: '100vh',
-            background: 'linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '2rem',
-            color: '#ffffff'
           }}
         >
           <div style={{ textAlign: 'center', maxWidth: '600px' }}>
@@ -85,7 +84,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               fontSize: '2rem', 
               fontWeight: '700', 
               marginBottom: '1rem',
-              background: 'linear-gradient(45deg, #fff, #9ca3af, #a855f7)',
+              background: 'linear-gradient(45deg, var(--color-foreground), var(--color-muted-foreground), var(--color-primary))',
               backgroundSize: '200% 200%',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -94,7 +93,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               Something went wrong
             </h2>
             <p style={{ 
-              color: '#cbd5e1', 
+              color: 'var(--color-muted-foreground)', 
               fontSize: '1.1rem', 
               marginBottom: '1.5rem',
               lineHeight: '1.6'
@@ -145,13 +144,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details style={{ 
                 textAlign: 'left', 
-                background: 'rgba(255, 255, 255, 0.05)', 
+                background: 'var(--color-muted)', 
                 padding: '1rem', 
                 borderRadius: '0.5rem',
                 marginTop: '1rem'
               }}>
-                <summary style={{ cursor: 'pointer', color: '#94a3b8' }}>Debug Information</summary>
-                <pre style={{ color: '#e5e7eb', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                <summary style={{ cursor: 'pointer', color: 'var(--color-muted-foreground)' }}>Debug Information</summary>
+                <pre style={{ color: 'var(--color-foreground)', fontSize: '0.875rem', marginTop: '0.5rem' }}>
                   {this.state.error.stack}
                 </pre>
               </details>

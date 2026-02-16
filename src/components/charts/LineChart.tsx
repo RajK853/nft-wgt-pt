@@ -3,9 +3,10 @@
  * 
  * Simple, focused component for displaying line charts.
  * Follows KISS principle with clear, readable code.
+ * Supports light/dark theme
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -17,6 +18,8 @@ import {
   ResponsiveContainer,
   type TooltipProps
 } from 'recharts';
+import { useTheme } from '@/hooks/useTheme';
+
 interface LineChartProps {
   data: Array<{ name: string; value: number }>;
   title?: string;
@@ -27,14 +30,14 @@ interface LineChartProps {
 }
 
 /**
- * Custom tooltip component for better styling
+ * Custom tooltip component for better styling - theme aware
  */
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label, isDark }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg">
-        <p className="text-sm text-gray-300 mb-1">{label}</p>
-        <p className="text-sm font-semibold text-white">
+      <div className={isDark ? "bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg" : "bg-white border border-gray-200 p-3 rounded-lg shadow-lg"}>
+        <p className={isDark ? "text-sm text-gray-300 mb-1" : "text-sm text-gray-700 mb-1"}>{label}</p>
+        <p className={isDark ? "text-sm font-semibold text-white" : "text-sm font-semibold text-gray-900"}>
           Score: {payload[0].value}
         </p>
       </div>
@@ -43,8 +46,19 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+// Theme-aware colors
+const getChartColors = (isDark: boolean) => ({
+  axisColor: isDark ? '#9ca3af' : '#6b7280',
+  gridColor: isDark ? '#374151' : '#e5e7eb',
+  tooltipBg: isDark ? '#1f2937' : '#ffffff',
+  tooltipBorder: isDark ? '#374151' : '#e5e7eb',
+  textColor: isDark ? '#e5e7eb' : '#1f2937',
+  dotStroke: isDark ? '#1f2937' : '#ffffff',
+  cursorColor: isDark ? '#64748b' : '#94a3b8',
+});
+
 /**
- * Line chart component with responsive design
+ * Line chart component with responsive design and theme support
  */
 export function LineChart({ 
   data, 
@@ -54,10 +68,24 @@ export function LineChart({
   showGrid = true,
   showLegend = true
 }: LineChartProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  const chartColors = getChartColors(isDark);
+  
+  if (!mounted) {
+    return <div style={{ height }} />;
+  }
+  
   return (
-    <div className="chart-container bg-gray-800 rounded-lg p-4 shadow-lg">
+    <div className={`chart-container rounded-lg p-4 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
       {title && (
-        <h3 className="chart-title text-lg font-semibold text-white mb-4">
+        <h3 className={`chart-title text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
           {title}
         </h3>
       )}
@@ -67,38 +95,38 @@ export function LineChart({
           {showGrid && (
             <CartesianGrid 
               strokeDasharray="3 3" 
-              stroke="#374151"
+              stroke={chartColors.gridColor}
               vertical={false}
             />
           )}
           
           <XAxis 
             dataKey="name" 
-            stroke="#9ca3af"
+            stroke={chartColors.axisColor}
             fontSize={12}
-            tick={{ fill: '#9ca3af' }}
-            axisLine={{ stroke: '#374151' }}
-            tickLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axisColor }}
+            axisLine={{ stroke: chartColors.axisColor }}
+            tickLine={{ stroke: chartColors.axisColor }}
           />
           
           <YAxis 
-            stroke="#9ca3af"
+            stroke={chartColors.axisColor}
             fontSize={12}
-            tick={{ fill: '#9ca3af' }}
-            axisLine={{ stroke: '#374151' }}
-            tickLine={{ stroke: '#374151' }}
+            tick={{ fill: chartColors.axisColor }}
+            axisLine={{ stroke: chartColors.axisColor }}
+            tickLine={{ stroke: chartColors.axisColor }}
           />
           
           <Tooltip 
-            content={<CustomTooltip />}
-            cursor={{ stroke: '#64748b', strokeWidth: 1, strokeDasharray: '3 3' }}
+            content={<CustomTooltip isDark={isDark} />}
+            cursor={{ stroke: chartColors.cursorColor, strokeWidth: 1, strokeDasharray: '3 3' }}
           />
           
           {showLegend && (
             <Legend 
               verticalAlign="top" 
               height={36}
-              formatter={(value) => <span className="text-gray-300">{value}</span>}
+              formatter={(value) => <span style={{ color: chartColors.textColor }}>{value}</span>}
             />
           )}
           
@@ -110,13 +138,13 @@ export function LineChart({
             dot={{ 
               r: 4, 
               fill: color,
-              stroke: '#1f2937',
+              stroke: chartColors.dotStroke,
               strokeWidth: 2
             }}
             activeDot={{ 
               r: 6, 
               fill: color,
-              stroke: '#1f2937',
+              stroke: chartColors.dotStroke,
               strokeWidth: 2
             }}
             isAnimationActive={true}

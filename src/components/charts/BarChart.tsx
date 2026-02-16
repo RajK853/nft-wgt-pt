@@ -2,6 +2,7 @@
  * Bar Chart Component
  * Simple, focused bar chart using Recharts
  * Follows KISS principle with clean, readable code
+ * Supports light/dark theme
  */
 
 import React from 'react';
@@ -17,9 +18,10 @@ import {
   Cell,
   ReferenceLine,
 } from 'recharts';
+import { useTheme } from '@/hooks/useTheme';
 
 interface BarChartProps {
-  data: Array<{ name: string; value: number; [key: string]: any }>;
+  data: Array<{ name: string; value: number; [key: string]: unknown }>;
   title?: string;
   color?: string;
   height?: number;
@@ -32,12 +34,12 @@ interface BarChartProps {
 }
 
 /** Custom tooltip component */
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label, isDark }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg">
-        <p className="text-sm text-gray-300 mb-1">{label}</p>
-        <p className="text-sm font-semibold text-white">
+      <div className={isDark ? "bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg" : "bg-white border border-gray-200 p-3 rounded-lg shadow-lg"}>
+        <p className={isDark ? "text-sm text-gray-300 mb-1" : "text-sm text-gray-700 mb-1"}>{label}</p>
+        <p className={isDark ? "text-sm font-semibold text-white" : "text-sm font-semibold text-gray-900"}>
           Value: {payload[0].value}
         </p>
       </div>
@@ -46,17 +48,26 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-// Neutral bright colors palette - bright visible colors for dark background
-const NEUTRAL_COLORS = [
-  '#e2e8f0', // slate-200 (brightest)
-  '#f1f5f9', // slate-100
-  '#cbd5e1', // slate-300
-  '#ffffff', // white
-  '#818cf8', // indigo-400 (accent for visibility)
-];
+// Theme-aware colors
+const getChartColors = (isDark: boolean) => ({
+  // Neutral bright colors palette - bright visible colors
+  neutralColors: [
+    '#e2e8f0', // slate-200 (brightest)
+    '#f1f5f9', // slate-100
+    '#cbd5e1', // slate-300
+    '#ffffff', // white
+    '#818cf8', // indigo-400 (accent for visibility)
+  ],
+  // Axis and grid colors
+  axisColor: isDark ? '#9ca3af' : '#6b7280',
+  gridColor: isDark ? '#374151' : '#e5e7eb',
+  tooltipBg: isDark ? '#1f2937' : '#ffffff',
+  tooltipBorder: isDark ? '#374151' : '#e5e7eb',
+  textColor: isDark ? '#e5e7eb' : '#1f2937',
+});
 
 /**
- * Bar chart component with responsive design
+ * Bar chart component with responsive design and theme support
  */
 export function BarChart({ 
   data, 
@@ -66,21 +77,27 @@ export function BarChart({
   showGrid = true,
   showLegend = false,
   layout = 'horizontal',
-  colors = NEUTRAL_COLORS,
+  colors,
   dataKeys = ['value'],
   colorCoding = 'single',
 }: BarChartProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
+  
+  const chartColors = getChartColors(isDark);
+  const defaultColors = colors || chartColors.neutralColors;
+  
   // Default data key for single bar
-  const primaryDataKey = dataKeys[0] || 'value'
+  const primaryDataKey = dataKeys[0] || 'value';
   
   // Find the max value for highlighting
-  const maxValue = Math.max(...data.map(d => d[primaryDataKey] || d.value || 0))
-  const defaultColor = color
+  const maxValue = Math.max(...data.map(d => Number(d[primaryDataKey]) || d.value || 0));
+  const defaultColor = color;
   
   return (
-    <div className="chart-container bg-gray-800 rounded-lg p-4 shadow-lg">
+    <div className={`chart-container rounded-lg p-2 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
       {title && (
-        <h3 className="chart-title text-lg font-semibold text-white mb-4">
+        <h3 className={`chart-title text-lg font-semibold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
           {title}
         </h3>
       )}
@@ -89,12 +106,12 @@ export function BarChart({
         <RechartsBarChart 
           data={data} 
           layout={layout}
-          margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+          margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
         >
           {showGrid && (
             <CartesianGrid 
               strokeDasharray="3 3" 
-              stroke="#374151"
+              stroke={chartColors.gridColor}
               vertical={layout === 'horizontal'}
               horizontal={layout === 'vertical'}
             />
@@ -104,56 +121,57 @@ export function BarChart({
             <>
               <XAxis 
                 dataKey="name" 
-                stroke="#9ca3af"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
-                tickLine={{ stroke: '#9ca3af' }}
+                stroke={chartColors.axisColor}
+                tick={{ fill: chartColors.axisColor, fontSize: 12 }}
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
                 minTickGap={30}
-                height={80}
               />
               <YAxis 
-                stroke="#9ca3af"
+                stroke={chartColors.axisColor}
                 fontSize={12}
-                tick={{ fill: '#9ca3af' }}
-                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
-                tickLine={{ stroke: '#9ca3af' }}
+                tick={{ fill: chartColors.axisColor }}
+                axisLine={false}
+                tickLine={false}
+                tickMargin={8}
                 origin={0}
               />
-              <ReferenceLine y={0} stroke="#9ca3af" strokeWidth={1} />
+              <ReferenceLine y={0} stroke={chartColors.axisColor} strokeWidth={1} />
             </>
           ) : (
             <>
               <XAxis 
                 type="number"
-                stroke="#9ca3af"
+                stroke={chartColors.axisColor}
                 fontSize={12}
-                tick={{ fill: '#9ca3af' }}
-                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
-                tickLine={{ stroke: '#9ca3af' }}
+                tick={{ fill: chartColors.axisColor }}
+                axisLine={{ stroke: chartColors.axisColor, strokeWidth: 1 }}
+                tickLine={{ stroke: chartColors.axisColor }}
               />
               <YAxis 
                 dataKey="name"
                 type="category"
-                stroke="#9ca3af"
+                stroke={chartColors.axisColor}
                 fontSize={12}
-                tick={{ fill: '#9ca3af' }}
-                axisLine={{ stroke: '#9ca3af', strokeWidth: 1 }}
-                tickLine={{ stroke: '#9ca3af' }}
+                tick={{ fill: chartColors.axisColor }}
+                axisLine={{ stroke: chartColors.axisColor, strokeWidth: 1 }}
+                tickLine={{ stroke: chartColors.axisColor }}
                 width={100}
               />
             </>
           )}
           
           <Tooltip 
-            content={<CustomTooltip />}
-            cursor={{ fill: '#374151', opacity: 0.4 }}
+            content={<CustomTooltip isDark={isDark} />}
+            cursor={{ fill: chartColors.gridColor, opacity: 0.4 }}
           />
           
           {showLegend && (
             <Legend 
               verticalAlign="top" 
               height={36}
-              formatter={(value) => <span className="text-gray-300">{value}</span>}
+              formatter={(value) => <span style={{ color: chartColors.textColor }}>{value}</span>}
             />
           )}
           
@@ -181,7 +199,7 @@ export function BarChart({
               {colorCoding === 'custom' && data.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.fill || colors[index % colors.length]} 
+                  fill={(entry.fill as string) || defaultColors[index % defaultColors.length]} 
                 />
               ))}
             </Bar>

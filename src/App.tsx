@@ -9,7 +9,6 @@ import Login from './pages/Login'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './auth/AuthContext'
 import { LoadingSpinner } from './components/ui'
-
 // Lazy load pages for code splitting (performance optimization)
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ScoringMethod = lazy(() => import('./pages/ScoringMethod'))
@@ -21,7 +20,7 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <Router>
-          <div className="min-h-screen bg-gray-900">
+          <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-legacy-bg-primary)' }}>
             <Header />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <Suspense fallback={<LoadingSpinner />}>

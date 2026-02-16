@@ -9,6 +9,7 @@ export { NumberInput } from './NumberInput';
 export { Expander } from './Expander';
 export { InfoBox } from './InfoBox';
 export { PageTemplate, Section, TwoColumn, CardGrid } from './PageTemplate';
+export { ThemeToggle } from './theme-toggle';
 
 // Shadcn UI components
 export * from './button';

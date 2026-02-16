@@ -4,12 +4,14 @@
   align-items: center;
   min-height: calc(100vh - 80px);
   padding: 2rem;
+  background: var(--color-background);
+  transition: background 0.3s ease;
 }
 
 .card {
-  background: #fff;
+  background: var(--color-card);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--color-legacy-overlay);
   padding: 2rem;
   width: 100%;
   max-width: 400px;
@@ -20,7 +22,7 @@
   font-weight: 600;
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #333;
+  color: var(--color-foreground);
 }
 
 .form {
@@ -38,26 +40,28 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #555;
+  color: var(--color-muted-foreground);
 }
 
 .input {
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.2s;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
 
 .input:focus {
   outline: none;
-  border-color: #4a90d9;
+  border-color: var(--color-legacy-accent);
 }
 
 .button {
   padding: 0.75rem;
-  background-color: #4a90d9;
-  color: white;
+  background-color: var(--color-legacy-accent);
+  color: var(--color-primary-foreground);
   border: none;
   border-radius: 4px;
   font-size: 1rem;
@@ -68,18 +72,18 @@
 }
 
 .button:hover:not(:disabled) {
-  background-color: #357abd;
+  background-color: var(--color-legacy-accent-soft);
 }
 
 .button:disabled {
-  background-color: #ccc;
+  background-color: var(--color-legacy-text-disabled);
   cursor: not-allowed;
 }
 
 .error {
-  background-color: #fee2e2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
+  background-color: var(--color-legacy-error);
+  border: 1px solid var(--color-legacy-error);
+  color: var(--color-legacy-bg-primary);
   padding: 0.75rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -87,9 +91,9 @@
 }
 
 .success {
-  background-color: #dcfce7;
-  border: 1px solid #bbf7d0;
-  color: #16a34a;
+  background-color: var(--color-legacy-success);
+  border: 1px solid var(--color-legacy-success);
+  color: var(--color-legacy-bg-primary);
   padding: 0.75rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -100,13 +104,13 @@
   text-align: center;
   margin-top: 1rem;
   font-size: 0.875rem;
-  color: #666;
+  color: var(--color-muted-foreground);
 }
 
 .toggleButton {
   background: none;
   border: none;
-  color: #4a90d9;
+  color: var(--color-legacy-accent);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;

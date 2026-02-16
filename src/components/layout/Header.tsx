@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { memo } from 'react'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import styles from './Header.module.css'
 
 function Header() {
@@ -23,6 +24,7 @@ function Header() {
         <NavLink to="/player-performance" current={location.pathname}>Players</NavLink>
         <NavLink to="/keeper-performance" current={location.pathname}>Goalkeepers</NavLink>
         <NavLink to="/scoring-method" current={location.pathname}>Scoring</NavLink>
+        <ThemeToggle />
       </nav>
     </header>
   )

@@ -7,21 +7,21 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #e2e8f0;
+  color: var(--color-legacy-text-primary);
 }
 
 .inputWrapper {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--color-legacy-bg-tertiary);
+  border: 1px solid var(--color-legacy-border);
   border-radius: 0.5rem;
   overflow: hidden;
   transition: border-color 0.2s ease;
 }
 
 .inputWrapper:focus-within {
-  border-color: #8b5cf6;
+  border-color: var(--color-ring, #8b5cf6);
 }
 
 .button {
@@ -32,15 +32,15 @@
   justify-content: center;
   background: transparent;
   border: none;
-  color: #e2e8f0;
+  color: var(--color-legacy-text-primary);
   font-size: 1.25rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: var(--color-legacy-surface-hover);
+  color: var(--color-legacy-text-primary);
 }
 
 .button:disabled {
@@ -54,7 +54,7 @@
   padding: 0.5rem;
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--color-legacy-text-primary);
   font-size: 1rem;
   text-align: center;
   -moz-appearance: textfield;
