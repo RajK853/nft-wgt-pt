@@ -20,7 +20,7 @@ import {
   getBusiestDay,
   getRecentSession
 } from '@/lib/analysis'
-import { MetricCard, Tabs, DataTable, LoadingSpinner, RevealButton } from '@/components/ui'
+import { MetricCard, Tabs, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List } from '@/components/ui'
 import { BarChart, PieChart } from '@/components/charts'
 import styles from './Dashboard.module.css'
 
@@ -127,18 +127,7 @@ function Dashboard() {
             />
             {revealedTop10 && top10Players.length > 0 && (
               <div className={styles.revealedContent}>
-                <div className={styles.revealedChart}>
-                  <BarChart 
-                    data={chartData} 
-                    height={250}
-                  />
-                </div>
-                <DataTable 
-                  data={top10Players}
-                  columns={PLAYER_STATS_COLUMNS}
-                  sortKey="score"
-                  sortDirection="desc"
-                />
+                <TypewriterTop10List players={top10Players} />
               </div>
             )}
           </div>

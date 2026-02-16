@@ -1,6 +1,7 @@
 export { LoadingSpinner } from './LoadingSpinner';
 export { ChartSkeleton } from './ChartSkeleton';
 export { ScoreAnnouncer } from './ScoreAnnouncer';
+export { TypewriterTop10List } from './TypewriterTop10List';
 export { MetricCard } from './MetricCard';
 export { MultiSelect } from './MultiSelect';
 export { DataTable } from './DataTable';

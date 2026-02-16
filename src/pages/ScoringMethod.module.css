@@ -269,7 +269,7 @@
 }
 
 .formula code {
-  font-family: monospace;
+  font-family: var(--font-legacy-mono);
   color: #a855f7;
   font-size: 0.875rem;
 }

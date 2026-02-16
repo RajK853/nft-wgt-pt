@@ -1,0 +1,55 @@
+/* Typewriter Top-10 List Styles */
+.typewriterList {
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.typewriterRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.typewriterRow.visible {
+  opacity: 1;
+}
+
+.typewriterRow.hidden {
+  opacity: 0;
+}
+
+.typewriterRow .rank {
+  color: var(--color-muted-foreground);
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.typewriterRow .name {
+  color: var(--color-foreground);
+  font-weight: 500;
+}
+
+.typewriterRow .dots {
+  color: var(--color-muted-foreground);
+  opacity: 0.5;
+  flex: 1;
+}
+
+.typewriterRow .score {
+  color: #22c55e;
+  font-weight: 600;
+  min-width: 5rem;
+  text-align: right;
+}
+
+.typewriterRow .cursor {
+  color: var(--color-primary);
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
