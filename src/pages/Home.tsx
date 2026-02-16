@@ -41,7 +41,7 @@ function NavCard({ icon, title, description, to, onClick, variant = 'default' }:
 }
 
 function Home() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
   
   useEffect(() => {
@@ -109,8 +109,8 @@ function Home() {
           />
         </div>
         
-        {/* Login button for unauthenticated users */}
-        {!user && (
+        {/* Login button for unauthenticated users - only show after auth check completes */}
+        {!loading && !user && (
           <NavCard
             icon="🔐"
             title="Login"
