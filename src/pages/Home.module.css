@@ -28,7 +28,7 @@
 .logoGlow {
   position: absolute;
   inset: 0;
-  background: linear-gradient(45deg, #a855f7, #ec4899);
+  background: linear-gradient(45deg, var(--primary-gradient-start), var(--primary-gradient-end));
   border-radius: 50%;
   filter: blur(12px);
   opacity: 0.5;
@@ -64,7 +64,7 @@
 .title {
   font-size: 1.75rem;
   font-weight: 800;
-  background: linear-gradient(45deg, var(--color-foreground), var(--color-muted-foreground), #a855f7);
+  background: linear-gradient(45deg, var(--color-foreground), var(--color-muted-foreground), var(--primary-gradient-start));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -92,7 +92,7 @@
 .statusDot {
   width: 8px;
   height: 8px;
-  background-color: var(--color-legacy-success, #22c55e);
+  background-color: var(--color-legacy-success);
   border-radius: 50%;
 }
 
@@ -125,9 +125,9 @@
 
 .navCard:hover {
   background: var(--color-secondary);
-  border-color: rgba(168, 85, 247, 0.4);
+  border-color: var(--color-legacy-accent-soft);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 8px 24px var(--color-legacy-overlay);
 }
 
 .navCardIcon {
@@ -161,18 +161,18 @@
 
 .navCard:hover .navCardArrow {
   transform: translateX(4px);
-  color: #a855f7;
+  color: var(--primary-gradient-start);
 }
 
 /* Login Card - special styling */
 .navCard.login {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
-  border-color: rgba(168, 85, 247, 0.2);
+  background: linear-gradient(135deg, var(--color-legacy-accent-subtle) 0%, var(--color-legacy-bg-secondary) 100%);
+  border-color: var(--color-legacy-accent-soft);
 }
 
 .navCard.login:hover {
-  border-color: rgba(168, 85, 247, 0.5);
-  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
+  border-color: var(--color-legacy-accent);
+  box-shadow: 0 8px 24px var(--color-legacy-overlay);
 }
 
 @media (max-width: 640px) {

@@ -5,59 +5,59 @@
    ======================================== */
 @theme {
   /* Better contrast colors for light mode */
-  --color-border: oklch(0.85 0 0);
-  --color-input: oklch(0.85 0 0);
+  --color-border: oklch(0.86 0 0);
+  --color-input: oklch(0.86 0 0);
   --color-ring: oklch(0.55 0 0);
-  --color-background: oklch(0.98 0 0);
-  --color-foreground: oklch(0.15 0 0);
+  --color-background: oklch(0.97 0 0);
+  --color-foreground: oklch(0.12 0 0);
   --color-primary: oklch(0.45 0 0);
   --color-primary-foreground: oklch(0.98 0 0);
-  --color-secondary: oklch(0.94 0 0);
-  --color-secondary-foreground: oklch(0.15 0 0);
-  --color-destructive: oklch(0.55 0.12 25);
+  --color-secondary: oklch(0.93 0 0);
+  --color-secondary-foreground: oklch(0.12 0 0);
+  --color-destructive: oklch(0.45 0.08 25);
   --color-destructive-foreground: oklch(0.98 0 0);
-  --color-muted: oklch(0.92 0 0);
-  --color-muted-foreground: oklch(0.45 0 0);
-  --color-accent: oklch(0.92 0 0);
-  --color-accent-foreground: oklch(0.15 0 0);
-  --color-popover: oklch(1 0 0);
-  --color-popover-foreground: oklch(0.15 0 0);
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.15 0 0);
+  --color-muted: oklch(0.90 0 0);
+  --color-muted-foreground: oklch(0.42 0 0);
+  --color-accent: oklch(0.90 0 0);
+  --color-accent-foreground: oklch(0.12 0 0);
+  --color-popover: oklch(0.98 0 0);
+  --color-popover-foreground: oklch(0.12 0 0);
+  --color-card: oklch(0.98 0 0);
+  --color-card-foreground: oklch(0.12 0 0);
   --color-radius: 0.5rem;
   
-  /* Legacy Background Colors - Light */
-  --color-legacy-bg-primary: oklch(0.98 0 0);
-  --color-legacy-bg-secondary: oklch(0.94 0 0);
-  --color-legacy-bg-tertiary: oklch(0.9 0 0);
-  --color-legacy-bg-elevated: oklch(1 0 0);
+  /* Legacy Background Colors - Light (warmer, softer) */
+  --color-legacy-bg-primary: oklch(0.97 0 0);
+  --color-legacy-bg-secondary: oklch(0.93 0 0);
+  --color-legacy-bg-tertiary: oklch(0.88 0 0);
+  --color-legacy-bg-elevated: oklch(0.96 0 0);
   
-  /* Legacy Text Colors - Light (darker for better contrast) */
+  /* Legacy Text Colors - Light (softer, less harsh) */
   --color-legacy-text-primary: oklch(0.15 0 0);
-  --color-legacy-text-secondary: oklch(0.35 0 0);
-  --color-legacy-text-muted: oklch(0.5 0 0);
-  --color-legacy-text-disabled: oklch(0.7 0 0);
+  --color-legacy-text-secondary: oklch(0.40 0 0);
+  --color-legacy-text-muted: oklch(0.52 0 0);
+  --color-legacy-text-disabled: oklch(0.72 0 0);
   
-  /* Legacy Accent Colors - Light */
-  --color-legacy-accent-subtle: oklch(0.9 0 0);
-  --color-legacy-accent-soft: oklch(0.85 0 0);
-  --color-legacy-accent: oklch(0.4 0 0);
+  /* Legacy Accent Colors - Light (red/white team colors - soft for eye comfort) */
+  --color-legacy-accent: oklch(0.52 0.10 25);
+  --color-legacy-accent-subtle: oklch(0.94 0 0);
+  --color-legacy-accent-soft: oklch(0.88 0 0);
   
-  /* Legacy Status Colors - Light (more saturated for visibility) */
-  --color-legacy-success: oklch(0.55 0.15 160);
-  --color-legacy-warning: oklch(0.7 0.15 75);
-  --color-legacy-error: oklch(0.55 0.15 25);
-  --color-legacy-info: oklch(0.55 0.15 220);
+  /* Legacy Status Colors - Light (muted, professional) */
+  --color-legacy-success: oklch(0.45 0.06 150);
+  --color-legacy-warning: oklch(0.55 0.08 75);
+  --color-legacy-error: oklch(0.45 0.08 25);
+  --color-legacy-info: oklch(0.48 0.06 220);
   
   /* Legacy Border Colors - Light */
-  --color-legacy-border: oklch(0.85 0 0);
-  --color-legacy-border-medium: oklch(0.75 0 0);
-  --color-legacy-border-strong: oklch(0.65 0 0);
+  --color-legacy-border: oklch(0.86 0 0);
+  --color-legacy-border-medium: oklch(0.76 0 0);
+  --color-legacy-border-strong: oklch(0.64 0 0);
   
   /* Legacy Surface Colors - Light */
-  --color-legacy-surface-hover: oklch(0.94 0 0);
-  --color-legacy-surface-active: oklch(0.88 0 0);
-  --color-legacy-surface-focus: oklch(0.82 0 0);
+  --color-legacy-surface-hover: oklch(0.92 0 0);
+  --color-legacy-surface-active: oklch(0.86 0 0);
+  --color-legacy-surface-focus: oklch(0.80 0 0);
   
   /* Legacy Overlay */
   --color-legacy-overlay: oklch(0 0 0 / 0.4);
@@ -87,28 +87,28 @@
   --color-card: oklch(0.11 0 0);
   --color-card-foreground: oklch(0.92 0 0);
   
-  /* Legacy Background Colors - Dark */
-  --color-legacy-bg-primary: oklch(0.08 0 0);
-  --color-legacy-bg-secondary: oklch(0.11 0 0);
-  --color-legacy-bg-tertiary: oklch(0.14 0 0);
-  --color-legacy-bg-elevated: oklch(0.18 0 0);
+  /* Legacy Background Colors - Dark (deeper, cooler) */
+  --color-legacy-bg-primary: oklch(0.06 0 0);
+  --color-legacy-bg-secondary: oklch(0.09 0 0);
+  --color-legacy-bg-tertiary: oklch(0.12 0 0);
+  --color-legacy-bg-elevated: oklch(0.15 0 0);
   
-  /* Legacy Text Colors - Dark */
-  --color-legacy-text-primary: oklch(0.92 0 0);
-  --color-legacy-text-secondary: oklch(0.68 0 0);
-  --color-legacy-text-muted: oklch(0.48 0 0);
-  --color-legacy-text-disabled: oklch(0.35 0 0);
+  /* Legacy Text Colors - Dark (softer, less harsh) */
+  --color-legacy-text-primary: oklch(0.94 0 0);
+  --color-legacy-text-secondary: oklch(0.65 0 0);
+  --color-legacy-text-muted: oklch(0.46 0 0);
+  --color-legacy-text-disabled: oklch(0.32 0 0);
   
-  /* Legacy Accent Colors - Dark */
-  --color-legacy-accent-subtle: oklch(0.22 0 0);
-  --color-legacy-accent-soft: oklch(0.28 0 0);
-  --color-legacy-accent: oklch(0.75 0 0);
+  /* Legacy Accent Colors - Dark (red/white team colors - soft for eye comfort) */
+  --color-legacy-accent: oklch(0.60 0.12 25);
+  --color-legacy-accent-subtle: oklch(0.18 0 0);
+  --color-legacy-accent-soft: oklch(0.24 0 0);
   
-  /* Legacy Status Colors - Dark */
-  --color-legacy-success: oklch(0.58 0.15 160);
-  --color-legacy-warning: oklch(0.7 0.15 75);
-  --color-legacy-error: oklch(0.6 0.18 25);
-  --color-legacy-info: oklch(0.58 0.15 220);
+  /* Legacy Status Colors - Dark (muted, professional) */
+  --color-legacy-success: oklch(0.50 0.08 150);
+  --color-legacy-warning: oklch(0.58 0.08 75);
+  --color-legacy-error: oklch(0.52 0.08 25);
+  --color-legacy-info: oklch(0.52 0.06 220);
   
   /* Legacy Border Colors - Dark */
   --color-legacy-border: oklch(0.22 0 0);
@@ -116,9 +116,9 @@
   --color-legacy-border-strong: oklch(0.35 0 0);
   
   /* Legacy Surface Colors - Dark */
-  --color-legacy-surface-hover: oklch(0.15 0 0);
-  --color-legacy-surface-active: oklch(0.2 0 0);
-  --color-legacy-surface-focus: oklch(0.25 0 0);
+  --color-legacy-surface-hover: oklch(0.14 0 0);
+  --color-legacy-surface-active: oklch(0.18 0 0);
+  --color-legacy-surface-focus: oklch(0.22 0 0);
   
   /* Legacy Overlay - Dark */
   --color-legacy-overlay: oklch(0 0 0 / 0.6);
@@ -134,9 +134,20 @@
   --text-secondary: var(--color-muted-foreground);
   --text-muted: var(--color-muted-foreground);
   --border-color: var(--color-border);
-  --primary-gradient-start: #a855f7;
-  --primary-gradient-end: #ec4899;
-  --success-color: #22c55e;
+  /* Primary gradient - red/white team colors for branding */
+  --primary-gradient-start: oklch(0.52 0.10 25);
+  --primary-gradient-end: oklch(0.45 0.08 25);
+  /* Button colors - use legacy accent */
+  --button-primary: var(--color-legacy-accent);
+  --button-hover: var(--color-legacy-accent-soft);
+}
+
+/* Dark mode overrides for branding colors */
+.dark {
+  --primary-gradient-start: oklch(0.60 0.12 25);
+  --primary-gradient-end: oklch(0.52 0.10 25);
+  --button-primary: var(--color-legacy-accent);
+  --button-hover: var(--color-legacy-accent-subtle);
 }
 
 /* Error Boundary Container - theme-aware using legacy neutral colors */

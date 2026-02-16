@@ -11,7 +11,7 @@
 .card {
   background: var(--color-card);
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--color-legacy-overlay);
   padding: 2rem;
   width: 100%;
   max-width: 400px;
@@ -55,13 +55,13 @@
 
 .input:focus {
   outline: none;
-  border-color: #4a90d9;
+  border-color: var(--color-legacy-accent);
 }
 
 .button {
   padding: 0.75rem;
-  background-color: #4a90d9;
-  color: white;
+  background-color: var(--color-legacy-accent);
+  color: var(--color-primary-foreground);
   border: none;
   border-radius: 4px;
   font-size: 1rem;
@@ -72,18 +72,18 @@
 }
 
 .button:hover:not(:disabled) {
-  background-color: #357abd;
+  background-color: var(--color-legacy-accent-soft);
 }
 
 .button:disabled {
-  background-color: #ccc;
+  background-color: var(--color-legacy-text-disabled);
   cursor: not-allowed;
 }
 
 .error {
-  background-color: var(--color-destructive);
-  border: 1px solid var(--color-destructive);
-  color: var(--color-destructive-foreground);
+  background-color: var(--color-legacy-error);
+  border: 1px solid var(--color-legacy-error);
+  color: var(--color-legacy-bg-primary);
   padding: 0.75rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -93,7 +93,7 @@
 .success {
   background-color: var(--color-legacy-success);
   border: 1px solid var(--color-legacy-success);
-  color: white;
+  color: var(--color-legacy-bg-primary);
   padding: 0.75rem;
   border-radius: 4px;
   font-size: 0.875rem;
@@ -110,7 +110,7 @@
 .toggleButton {
   background: none;
   border: none;
-  color: #4a90d9;
+  color: var(--color-legacy-accent);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;

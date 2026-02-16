@@ -169,7 +169,7 @@ function Dashboard() {
             <RevealButton 
               label="Reveal Keeper" 
               onReveal={() => setRevealedTopKeeper(true)}
-              variant="secondary"
+              variant="primary"
             />
             {revealedTopKeeper && topKeeper && (
               <div className={styles.revealedContent}>
