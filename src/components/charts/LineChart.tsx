@@ -6,7 +6,7 @@
  * Supports light/dark theme
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -16,17 +16,24 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  type TooltipProps
 } from 'recharts';
 import { useTheme } from '@/hooks/useTheme';
 
+export interface LineChartSeries {
+  key: string;
+  label: string;
+  color: string;
+}
+
 interface LineChartProps {
-  data: Array<{ name: string; value: number }>;
+  data: Array<Record<string, string | number>>;
   title?: string;
   color?: string;
   height?: number;
   showGrid?: boolean;
   showLegend?: boolean;
+  /** Multi-series mode: provide an array of series descriptors instead of using dataKey="value" */
+  series?: LineChartSeries[];
 }
 
 /**
@@ -36,10 +43,12 @@ const CustomTooltip = ({ active, payload, label, isDark }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className={isDark ? "bg-gray-900 border border-gray-700 p-3 rounded-lg shadow-lg" : "bg-white border border-gray-200 p-3 rounded-lg shadow-lg"}>
-        <p className={isDark ? "text-sm text-gray-300 mb-1" : "text-sm text-gray-700 mb-1"}>{label}</p>
-        <p className={isDark ? "text-sm font-semibold text-white" : "text-sm font-semibold text-gray-900"}>
-          Score: {payload[0].value}
-        </p>
+        <p className={isDark ? "text-sm text-gray-300 mb-2" : "text-sm text-gray-700 mb-2"}>{label}</p>
+        {payload.map((entry: any) => (
+          <p key={entry.dataKey} className="text-sm font-semibold" style={{ color: entry.color }}>
+            {entry.name}: {entry.value}
+          </p>
+        ))}
       </div>
     );
   }
@@ -66,7 +75,8 @@ export function LineChart({
   color = '#8884d8', 
   height = 300,
   showGrid = true,
-  showLegend = true
+  showLegend = true,
+  series,
 }: LineChartProps) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -129,27 +139,45 @@ export function LineChart({
               formatter={(value) => <span style={{ color: chartColors.textColor }}>{value}</span>}
             />
           )}
-          
-          <Line 
-            type="monotone" 
-            dataKey="value" 
-            stroke={color}
-            strokeWidth={2}
-            dot={{ 
-              r: 4, 
-              fill: color,
-              stroke: chartColors.dotStroke,
-              strokeWidth: 2
-            }}
-            activeDot={{ 
-              r: 6, 
-              fill: color,
-              stroke: chartColors.dotStroke,
-              strokeWidth: 2
-            }}
-            isAnimationActive={true}
-            animationDuration={500}
-          />
+
+          {series && series.length > 0
+            ? series.map((s) => (
+                <Line
+                  key={s.key}
+                  type="monotone"
+                  dataKey={s.key}
+                  name={s.label}
+                  stroke={s.color}
+                  strokeWidth={2}
+                  dot={{ r: 3, fill: s.color, stroke: chartColors.dotStroke, strokeWidth: 1 }}
+                  activeDot={{ r: 5, fill: s.color, stroke: chartColors.dotStroke, strokeWidth: 2 }}
+                  isAnimationActive={true}
+                  animationDuration={500}
+                />
+              ))
+            : (
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke={color}
+                  strokeWidth={2}
+                  dot={{ 
+                    r: 4, 
+                    fill: color,
+                    stroke: chartColors.dotStroke,
+                    strokeWidth: 2
+                  }}
+                  activeDot={{ 
+                    r: 6, 
+                    fill: color,
+                    stroke: chartColors.dotStroke,
+                    strokeWidth: 2
+                  }}
+                  isAnimationActive={true}
+                  animationDuration={500}
+                />
+              )
+          }
         </RechartsLineChart>
       </ResponsiveContainer>
     </div>
