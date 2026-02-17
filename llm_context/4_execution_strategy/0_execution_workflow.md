@@ -28,7 +28,14 @@ Execute an implementation plan in a structured and iterative manner.
     1.  **State**: Announce the subtask.
     2.  **Gather**: Gather local context.
     3.  **Execute**: Perform the action.
-    4.  **Verify**: Run tests or linters.
+    4.  **Verify**: Run the appropriate check:
+
+        | Check | Command | When to run |
+        |-------|---------|-------------|
+        | Lint | `bun run lint` | After every file change |
+        | Tests | `bun test` | After logic/hook changes |
+        | Build | `bun run build` | Before marking the task done |
+        | Dev server | `bun run dev` | For visual/UI verification |
 *   **User Interaction**:
     *   **Progress Updates**: Keep the user informed.
     *   **Confirmation**: Seek confirmation for significant actions.
