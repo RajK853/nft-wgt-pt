@@ -123,6 +123,7 @@ function Dashboard() {
             <RevealButton 
               label="Reveal Top-10" 
               onReveal={() => setRevealedTop10(true)}
+              onReset={() => setRevealedTop10(false)}
               variant="primary"
             />
             {revealedTop10 && top10Players.length > 0 && (
@@ -138,6 +139,7 @@ function Dashboard() {
             <RevealButton 
               label="Reveal Player" 
               onReveal={() => setRevealedTopPlayer(true)}
+              onReset={() => setRevealedTopPlayer(false)}
               variant="primary"
             />
             {revealedTopPlayer && topPlayer && (
@@ -158,6 +160,7 @@ function Dashboard() {
             <RevealButton 
               label="Reveal Keeper" 
               onReveal={() => setRevealedTopKeeper(true)}
+              onReset={() => setRevealedTopKeeper(false)}
               variant="primary"
             />
             {revealedTopKeeper && topKeeper && (

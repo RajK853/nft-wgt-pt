@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
 /* Google Fonts - Legacy Font System */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
 
 /* ========================================
    SHADCN UI THEME VARIABLES - LIGHT MODE
@@ -46,10 +46,10 @@
   --color-legacy-text-muted: oklch(0.52 0 0);
   --color-legacy-text-disabled: oklch(0.72 0 0);
   
-  /* Legacy Accent Colors - Light (red/white team colors - soft for eye comfort) */
-  --color-legacy-accent: oklch(0.52 0.10 25);
+  /* Legacy Accent Colors - Light (red/white team colors - darker for better contrast) */
+  --color-legacy-accent: oklch(0.42 0.12 25);
   --color-legacy-accent-subtle: oklch(0.94 0 0);
-  --color-legacy-accent-soft: oklch(0.88 0 0);
+  --color-legacy-accent-soft: oklch(0.75 0.08 25);
   
   /* Legacy Status Colors - Light (muted, professional) */
   --color-legacy-success: oklch(0.45 0.06 150);
@@ -107,10 +107,10 @@
   --color-legacy-text-muted: oklch(0.46 0 0);
   --color-legacy-text-disabled: oklch(0.32 0 0);
   
-  /* Legacy Accent Colors - Dark (red/white team colors - soft for eye comfort) */
-  --color-legacy-accent: oklch(0.60 0.12 25);
+  /* Legacy Accent Colors - Dark (red/white team colors - darker for better contrast) */
+  --color-legacy-accent: oklch(0.50 0.14 25);
   --color-legacy-accent-subtle: oklch(0.18 0 0);
-  --color-legacy-accent-soft: oklch(0.24 0 0);
+  --color-legacy-accent-soft: oklch(0.35 0.10 25);
   
   /* Legacy Status Colors - Dark (muted, professional) */
   --color-legacy-success: oklch(0.50 0.08 150);
@@ -143,8 +143,8 @@
   --text-muted: var(--color-muted-foreground);
   --border-color: var(--color-border);
   /* Primary gradient - red/white team colors for branding */
-  --primary-gradient-start: oklch(0.52 0.10 25);
-  --primary-gradient-end: oklch(0.45 0.08 25);
+  --primary-gradient-start: oklch(0.42 0.12 25);
+  --primary-gradient-end: oklch(0.35 0.10 25);
   /* Button colors - use legacy accent */
   --button-primary: var(--color-legacy-accent);
   --button-hover: var(--color-legacy-accent-soft);
@@ -152,8 +152,8 @@
 
 /* Dark mode overrides for branding colors */
 .dark {
-  --primary-gradient-start: oklch(0.60 0.12 25);
-  --primary-gradient-end: oklch(0.52 0.10 25);
+  --primary-gradient-start: oklch(0.50 0.14 25);
+  --primary-gradient-end: oklch(0.42 0.12 25);
   --button-primary: var(--color-legacy-accent);
   --button-hover: var(--color-legacy-accent-subtle);
 }
@@ -266,4 +266,3 @@ main {
   margin: 0 auto;
   padding: 0 2rem;
 }
-

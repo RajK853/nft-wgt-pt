@@ -2,49 +2,58 @@
 .typewriterList {
   font-size: 0.875rem;
   line-height: 1.8;
+  width: 100%;
 }
 
 .typewriterRow {
   display: flex;
   align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.playerCell {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+  flex: 1;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
 
-.typewriterRow.visible {
+.playerCell.visible {
   opacity: 1;
 }
 
-.typewriterRow.hidden {
+.playerCell.hidden {
   opacity: 0;
 }
 
-.typewriterRow .rank {
+.playerCell .rank {
   color: var(--color-muted-foreground);
   min-width: 1.5rem;
   text-align: right;
+  flex-shrink: 0;
 }
 
-.typewriterRow .name {
+.playerCell .name {
   color: var(--color-foreground);
   font-weight: 500;
-}
-
-.typewriterRow .dots {
-  color: var(--color-muted-foreground);
-  opacity: 0.5;
   flex: 1;
+  text-align: left;
+  min-width: 0;
 }
 
-.typewriterRow .score {
+.playerCell .score {
   color: #22c55e;
   font-weight: 600;
-  min-width: 5rem;
+  min-width: 4rem;
   text-align: right;
+  flex-shrink: 0;
 }
 
-.typewriterRow .cursor {
+.playerCell .cursor {
   color: var(--color-primary);
   animation: blink 0.7s infinite;
 }
@@ -52,4 +61,15 @@
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
+}
+
+@media (max-width: 480px) {
+  .typewriterRow {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .playerCell {
+    width: 100%;
+  }
 }

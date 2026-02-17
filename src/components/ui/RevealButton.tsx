@@ -10,6 +10,7 @@ import styles from './RevealButton.module.css'
 interface RevealButtonProps {
   label: string
   onReveal: () => void
+  onReset?: () => void
   countdownSeconds?: number
   variant?: 'primary' | 'secondary' | 'success'
 }
@@ -17,6 +18,7 @@ interface RevealButtonProps {
 export function RevealButton({ 
   label, 
   onReveal, 
+  onReset,
   countdownSeconds = 3,
   variant = 'primary' 
 }: RevealButtonProps) {
@@ -54,6 +56,7 @@ export function RevealButton({
     setIsRevealed(false)
     setCountdown(null)
     setIsAnimating(false)
+    onReset?.()
   }
 
   const buttonClasses = [
