@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
+import { cn } from '@/lib/utils'
 import styles from './RevealButton.module.css'
 
 interface RevealButtonProps {
@@ -28,25 +29,23 @@ export function RevealButton({
 
   const handleClick = useCallback(() => {
     if (isRevealed) return
-    
     setIsAnimating(true)
     setCountdown(countdownSeconds)
   }, [countdownSeconds, isRevealed])
 
   useEffect(() => {
-    if (countdown === null || countdown === 0) return
+    if (countdown === null) return
+
+    if (countdown === 0) {
+      setIsRevealed(true)
+      setIsAnimating(false)
+      onReveal()
+      setCountdown(null)
+      return
+    }
 
     const timer = setTimeout(() => {
-      setCountdown(prev => {
-        if (prev === null || prev <= 1) {
-          // Time's up - reveal content
-          setIsRevealed(true)
-          setIsAnimating(false)
-          onReveal()
-          return null
-        }
-        return prev - 1
-      })
+      setCountdown(countdown - 1)
     }, 1000)
 
     return () => clearTimeout(timer)
@@ -59,17 +58,15 @@ export function RevealButton({
     onReset?.()
   }
 
-  const buttonClasses = [
-    styles.button,
-    styles[variant],
-    isAnimating && styles.animating,
-    isRevealed && styles.revealed
-  ].filter(Boolean).join(' ')
-
   return (
     <div className={styles.container}>
       <button 
-        className={buttonClasses}
+        className={cn(
+          styles.button,
+          styles[variant],
+          isAnimating && styles.animating,
+          isRevealed && styles.revealed
+        )}
         onClick={handleClick}
         disabled={isAnimating || isRevealed}
       >

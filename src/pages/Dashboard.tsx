@@ -1,10 +1,9 @@
 /**
  * Dashboard Page
  * Main dashboard with Top Performers, Hall of Fame, and Recent Activity
- * Follows the reimplementation plan layout
  */
 
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { usePenaltyData } from '@/hooks/usePenaltyData'
 import { 
   calculatePlayerScores, 
