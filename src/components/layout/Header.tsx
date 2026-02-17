@@ -9,14 +9,23 @@ function Header() {
   return (
     <header className={styles.header}>
       <Link to="/" className={styles.logoLink} aria-label="NFT Weingarten Home">
-        <img 
-          src="/nft-logo.jpg" 
-          alt="NFT Weingarten" 
-          width="40" 
-          height="40"
-          className={styles.logo}
-          loading="lazy"
-        />
+        <div className={styles.logoWrapper}>
+          <div className={styles.logoGlow}></div>
+          <div className={styles.logoFrame}>
+            <img
+              src="/nft-logo.jpg"
+              alt="NFT Weingarten"
+              width="36"
+              height="36"
+              className={styles.logo}
+              loading="lazy"
+            />
+          </div>
+        </div>
+        <div className={styles.brandText}>
+          <span className={styles.brandTitle}>NFT Weingarten</span>
+          <span className={styles.brandSubtitle}>Penalty Tracker</span>
+        </div>
       </Link>
       <nav className={styles.nav} aria-label="Main navigation">
         <NavLink to="/" current={location.pathname}>Home</NavLink>
