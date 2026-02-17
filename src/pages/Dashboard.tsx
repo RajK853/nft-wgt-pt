@@ -1,12 +1,7 @@
-/**
- * Dashboard Page
- * Main dashboard with Top Performers, Hall of Fame, and Recent Activity
- */
-
 import { useEffect, useState, useMemo } from 'react'
 import { usePenaltyData } from '@/hooks/usePenaltyData'
-import { 
-  calculatePlayerScores, 
+import {
+  calculatePlayerScores,
   calculateKeeperScores,
   getTopPlayer,
   getTopKeeper,
@@ -23,7 +18,6 @@ import { MetricCard, Tabs, DataTable, LoadingSpinner, RevealButton, TypewriterTo
 import { BarChart, PieChart } from '@/components/charts'
 import styles from './Dashboard.module.css'
 
-// Table columns for player/keeper stats
 const PLAYER_STATS_COLUMNS = [
   { key: 'name', header: 'Player', sortable: true },
   { key: 'score', header: 'Score', sortable: true },
@@ -42,8 +36,7 @@ const KEEPER_STATS_COLUMNS = [
 
 function Dashboard() {
   const { data, loading, error } = usePenaltyData()
-  
-  // Reveal states
+
   const [revealedTop10, setRevealedTop10] = useState(false)
   const [revealedTopPlayer, setRevealedTopPlayer] = useState(false)
   const [revealedTopKeeper, setRevealedTopKeeper] = useState(false)
@@ -52,14 +45,12 @@ function Dashboard() {
     document.title = 'Dashboard - NFT Weingarten'
   }, [])
 
-  // Calculate data
   const playerScores = useMemo(() => calculatePlayerScores(data), [data])
   const keeperScores = useMemo(() => calculateKeeperScores(data), [data])
   const topPlayer = useMemo(() => getTopPlayer(data), [data])
   const topKeeper = useMemo(() => getTopKeeper(data), [data])
   const top10Players = useMemo(() => playerScores.slice(0, 10), [playerScores])
-  
-  // Hall of Fame data
+
   const hallOfFame = useMemo(() => ({
     mostGoals: getMostGoalsInSession(data),
     mostSaves: getMostSavesInSession(data),
@@ -69,12 +60,10 @@ function Dashboard() {
     mysteriousNinja: getMysteriousNinja(data),
     busiestDay: getBusiestDay(data)
   }), [data])
-  
-  // Recent session
+
   const recentSession = useMemo(() => getRecentSession(data), [data])
-  
-  // Prepare chart data for top 10
-  const chartData = useMemo(() => 
+
+  const chartData = useMemo(() =>
     top10Players.map(p => ({
       name: p.name.length > 10 ? p.name.substring(0, 10) + '...' : p.name,
       value: p.score,
@@ -83,20 +72,8 @@ function Dashboard() {
     })),
     [top10Players]
   )
-  
-  // Prepare pie chart data for recent session
-  const recentPieData = useMemo(() => {
-    if (!recentSession) return []
-    return [
-      { name: 'Goals', value: recentSession.goals },
-      { name: 'Saves', value: recentSession.saves },
-      { name: 'Out', value: recentSession.outs }
-    ]
-  }, [recentSession])
 
-  if (loading) {
-    return <LoadingSpinner />
-  }
+  if (loading) return <LoadingSpinner />
 
   if (error) {
     return (
@@ -110,17 +87,15 @@ function Dashboard() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Dashboard</h1>
-      
-      {/* TOP PERFORMERS SECTION */}
+
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>🏆 Top Performers</h2>
-        
+
         <div className={styles.topPerformersGrid}>
-          {/* Top 10 Players */}
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>🔟 Top-10 Players</h3>
-            <RevealButton 
-              label="Reveal Top-10" 
+            <RevealButton
+              label="Reveal Top-10"
               onReveal={() => setRevealedTop10(true)}
               onReset={() => setRevealedTop10(false)}
               variant="primary"
@@ -131,12 +106,11 @@ function Dashboard() {
               </div>
             )}
           </div>
-          
-          {/* Top Player */}
+
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>👤 Top Player</h3>
-            <RevealButton 
-              label="Reveal Player" 
+            <RevealButton
+              label="Reveal Player"
               onReveal={() => setRevealedTopPlayer(true)}
               onReset={() => setRevealedTopPlayer(false)}
               variant="primary"
@@ -152,12 +126,11 @@ function Dashboard() {
               </div>
             )}
           </div>
-          
-          {/* Top Keeper */}
+
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>🧤 Top Goalkeeper</h3>
-            <RevealButton 
-              label="Reveal Keeper" 
+            <RevealButton
+              label="Reveal Keeper"
               onReveal={() => setRevealedTopKeeper(true)}
               onReset={() => setRevealedTopKeeper(false)}
               variant="primary"
@@ -176,10 +149,9 @@ function Dashboard() {
         </div>
       </section>
 
-      {/* HALL OF FAME SECTION */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>🏅 Hall of Fame</h2>
-        
+
         <Tabs
           tabs={[
             { id: 'single', label: 'Single Session' },
@@ -206,7 +178,7 @@ function Dashboard() {
                   />
                 </div>
               )}
-              
+
               {activeTab === 'alltime' && (
                 <div className={styles.recordsGrid}>
                   <MetricCard
@@ -223,7 +195,7 @@ function Dashboard() {
                   />
                 </div>
               )}
-              
+
               {activeTab === 'funfacts' && (
                 <div className={styles.recordsGrid}>
                   <MetricCard
@@ -251,10 +223,9 @@ function Dashboard() {
         </Tabs>
       </section>
 
-      {/* RECENT ACTIVITY SECTION */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>📊 Recent Activity</h2>
-        
+
         {recentSession && (
           <div className={styles.recentHeader}>
             <span className={styles.recentDate}>
@@ -262,25 +233,13 @@ function Dashboard() {
             </span>
           </div>
         )}
-        
+
         <div className={styles.recentMetrics}>
-          <MetricCard
-            label="Goals"
-            value={recentSession?.goals || 0}
-            sentiment="positive"
-          />
-          <MetricCard
-            label="Saves"
-            value={recentSession?.saves || 0}
-            sentiment="neutral"
-          />
-          <MetricCard
-            label="Out"
-            value={recentSession?.outs || 0}
-            sentiment="negative"
-          />
+          <MetricCard label="Goals" value={recentSession?.goals || 0} sentiment="positive" />
+          <MetricCard label="Saves" value={recentSession?.saves || 0} sentiment="neutral" />
+          <MetricCard label="Out" value={recentSession?.outs || 0} sentiment="negative" />
         </div>
-        
+
         <Tabs
           tabs={[
             { id: 'players', label: 'Player Stats' },
@@ -293,13 +252,9 @@ function Dashboard() {
               {activeTab === 'players' && playerScores.length > 0 && (
                 <>
                   <div className={styles.revealedChart}>
-                    <BarChart 
-                      data={chartData}
-                      dataKeys={['score']}
-                      height={200}
-                    />
+                    <BarChart data={chartData} dataKeys={['score']} height={200} />
                   </div>
-                  <DataTable 
+                  <DataTable
                     data={playerScores.slice(0, 10)}
                     columns={PLAYER_STATS_COLUMNS}
                     sortKey="score"
@@ -313,7 +268,7 @@ function Dashboard() {
                     {keeperScores.slice(0, 3).map(keeper => (
                       <div key={keeper.name} className={styles.keeperChart}>
                         <h4 className={styles.keeperName}>{keeper.name}</h4>
-                        <PieChart 
+                        <PieChart
                           data={[
                             { name: 'Conceded', value: keeper.goalsConceded },
                             { name: 'Saved', value: keeper.saves },
@@ -324,7 +279,7 @@ function Dashboard() {
                       </div>
                     ))}
                   </div>
-                  <DataTable 
+                  <DataTable
                     data={keeperScores.slice(0, 10)}
                     columns={KEEPER_STATS_COLUMNS}
                     sortKey="score"

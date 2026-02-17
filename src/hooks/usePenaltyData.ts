@@ -1,12 +1,15 @@
-/**
- * usePenaltyData Hook
- * Custom hook for fetching penalty data from Supabase
- * KISS: Simple data fetching with loading/error states
- */
-
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { getSupabaseClient } from '@/lib/supabase'
-import { PenaltyRecord, Gender } from '@/types'
+import type { PenaltyRecord, Gender } from '@/types'
+
+// Singleton client created once at module level
+const supabase = (() => {
+  try {
+    return getSupabaseClient()
+  } catch {
+    return null
+  }
+})()
 
 interface UsePenaltyDataReturn {
   data: PenaltyRecord[]
@@ -18,74 +21,59 @@ interface UsePenaltyDataReturn {
 }
 
 export function usePenaltyData(): UsePenaltyDataReturn {
-  const [data, setData] = useState<PenaltyRecord[]>([])
+  const [allData, setAllData] = useState<PenaltyRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const [gender, setGender] = useState<Gender>('Male')
-  
-  const supabase = useMemo(() => {
-    try {
-      return getSupabaseClient()
-    } catch (e) {
-      console.error('Failed to create Supabase client:', e)
-      return null
-    }
-  }, [])
-  
+
   const fetchData = useCallback(async () => {
     setLoading(true)
     setError(null)
-    
+
     try {
       if (!supabase) {
         throw new Error('Supabase client not initialized')
       }
-      
-      // Fetch from game_events table
+
       const { data: records, error: fetchError } = await supabase
         .from('game_events')
         .select('*')
         .order('date', { ascending: false })
-      
+
       if (fetchError) {
         throw new Error(fetchError.message)
       }
-      
-      // Map to our PenaltyRecord type
-      const mappedRecords: PenaltyRecord[] = (records || []).map((r: any) => ({
-        id: r.id,
-        date: new Date(r.date),
-        shooterName: r.player_name || r.shooterName || r.shooter_name,
-        keeperName: r.keeper_name || r.keeperName,
-        status: r.status,
-        remark: r.remark,
-        gender: r.gender
+
+      const mappedRecords: PenaltyRecord[] = (records || []).map((r: Record<string, unknown>) => ({
+        id: r.id as string,
+        date: new Date(r.date as string),
+        shooterName: (r.player_name || r.shooterName || r.shooter_name) as string,
+        keeperName: (r.keeper_name || r.keeperName) as string,
+        status: r.status as PenaltyRecord['status'],
+        remark: r.remark as string | undefined,
+        gender: r.gender as Gender | undefined,
       }))
-      
-      setData(mappedRecords)
+
+      setAllData(mappedRecords)
     } catch (err) {
-      console.error('Error fetching penalty data:', err)
       setError(err instanceof Error ? err : new Error('Failed to fetch data'))
     } finally {
       setLoading(false)
     }
-  }, [supabase])
-  
+  }, [])
+
   useEffect(() => {
     fetchData()
   }, [fetchData])
-  
-  // Filter by gender
-  const filteredData = data.filter(r => !r.gender || r.gender === gender)
-  
+
+  const filteredData = allData.filter(r => !r.gender || r.gender === gender)
+
   return {
     data: filteredData,
     loading,
     error,
     gender,
-    setGender: (g: Gender) => {
-      setGender(g)
-    },
-    refresh: fetchData
+    setGender,
+    refresh: fetchData,
   }
 }

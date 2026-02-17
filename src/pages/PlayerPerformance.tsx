@@ -1,13 +1,8 @@
-/**
- * Player Performance Page
- * Player score leaderboard and comparison over time
- */
-
 import { useEffect, useMemo, useState } from 'react'
 import { usePenaltyData } from '@/hooks/usePenaltyData'
-import { 
-  calculatePlayerScores, 
-  filterByMonth, 
+import {
+  calculatePlayerScores,
+  filterByMonth,
   getUniqueMonths,
   getUniquePlayers
 } from '@/lib/analysis'
@@ -15,9 +10,9 @@ import { BarChart } from '@/components/charts'
 import { DataTable, MultiSelect, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
+import type { PlayerScore } from '@/types'
 import styles from './PlayerPerformance.module.css'
 
-// Table columns for player stats
 const PLAYER_STATS_COLUMNS = [
   { key: 'name', header: 'Player', sortable: true },
   { key: 'score', header: 'Score', sortable: true },
@@ -26,7 +21,6 @@ const PLAYER_STATS_COLUMNS = [
   { key: 'out', header: 'Out', sortable: true }
 ]
 
-// Tab options for comparison view
 const COMPARISON_TABS = [
   { id: 'score', label: 'Score' },
   { id: 'goals', label: 'Goals' },
@@ -34,15 +28,43 @@ const COMPARISON_TABS = [
   { id: 'out', label: 'Out' }
 ]
 
+type ComparisonKey = 'score' | 'goals' | 'saved' | 'out'
+
+const COMPARISON_DESCRIPTIONS: Record<ComparisonKey, string> = {
+  score: 'Comparing overall scores (green = best, red = worst)',
+  goals: 'Comparing total goals scored',
+  saved: 'Comparing total saves',
+  out: 'Comparing total shots missed',
+}
+
+function buildComparisonChartData(players: PlayerScore[], metric: ComparisonKey) {
+  if (players.length === 0) return []
+
+  const values = players.map(p => p[metric] as number)
+  const max = Math.max(...values)
+  const min = Math.min(...values)
+
+  return players.map(p => {
+    const value = p[metric] as number
+    let color = '#a855f7'
+    if (max !== min) {
+      if (value === max) color = '#22c55e'
+      else if (value === min) color = '#ef4444'
+    }
+    return {
+      name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
+      value,
+      score: value,
+      fill: color,
+    }
+  })
+}
+
 export default function PlayerPerformance() {
   const { data, loading, error } = usePenaltyData()
-  
-  // Filter state
+
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const [selectedPlayers, setSelectedPlayers] = useState<string[]>([])
-  const [activeTab, setActiveTab] = useState<string>('score')
-
-  // Table sorting state
   const [tableSortKey, setTableSortKey] = useState<string>('score')
   const [tableSortDirection, setTableSortDirection] = useState<'asc' | 'desc'>('desc')
 
@@ -50,115 +72,57 @@ export default function PlayerPerformance() {
     document.title = 'Player Performance - NFT Weingarten'
   }, [])
 
-  // Get all unique months for filtering
-  const monthOptions = useMemo(() => {
-    return getUniqueMonths(data)
-  }, [data])
+  const monthOptions = useMemo(() => getUniqueMonths(data), [data])
+  const playerOptions = useMemo(() => getUniquePlayers(data), [data])
 
-  // Get all unique players
-  const playerOptions = useMemo(() => {
-    return getUniquePlayers(data)
-  }, [data])
-
-  // Filter data by month if selected
   const filteredData = useMemo(() => {
     if (!selectedMonth) return data
     return filterByMonth(data, selectedMonth)
   }, [data, selectedMonth])
 
-  // Calculate player scores
-  const playerScores = useMemo(() => {
-    return calculatePlayerScores(filteredData)
-  }, [filteredData])
+  const playerScores = useMemo(() => calculatePlayerScores(filteredData), [filteredData])
 
-  // Sort player scores based on table sorting
   const sortedPlayerScores = useMemo(() => {
-    const sorted = [...playerScores].sort((a, b) => {
+    return [...playerScores].sort((a, b) => {
       const aVal = a[tableSortKey as keyof typeof a]
       const bVal = b[tableSortKey as keyof typeof b]
-      
       if (typeof aVal === 'number' && typeof bVal === 'number') {
         return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
       }
-      
       if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return tableSortDirection === 'asc' 
-          ? aVal.localeCompare(bVal) 
-          : bVal.localeCompare(aVal)
+        return tableSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
       }
-      
       return 0
     })
-    return sorted
   }, [playerScores, tableSortKey, tableSortDirection])
 
-  // Get top 10 players for leaderboard
-  const top10Players = useMemo(() => {
-    return sortedPlayerScores.slice(0, 10)
-  }, [sortedPlayerScores])
+  const top10Players = useMemo(() => sortedPlayerScores.slice(0, 10), [sortedPlayerScores])
 
-  // Chart data for leaderboard
-  const leaderboardChartData = useMemo(() => {
-    return top10Players.map(p => ({
+  const leaderboardChartData = useMemo(() =>
+    top10Players.map(p => ({
       name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
       value: p.score,
       score: p.score,
-      goals: p.goals
-    }))
-  }, [top10Players])
+      goals: p.goals,
+    })),
+    [top10Players]
+  )
 
-  // Handle table sorting
+  const comparisonData = useMemo(() =>
+    playerScores.filter(p => selectedPlayers.includes(p.name)),
+    [playerScores, selectedPlayers]
+  )
+
   const handleTableSort = (key: string) => {
     if (tableSortKey === key) {
-      // Toggle direction if same key
       setTableSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
     } else {
-      // New key - default to descending for numeric, ascending for strings
       setTableSortKey(key)
       setTableSortDirection('desc')
     }
   }
 
-  // Comparison data - filter selected players
-  const comparisonData = useMemo(() => {
-    if (selectedPlayers.length === 0) return []
-    
-    return playerScores.filter(p => selectedPlayers.includes(p.name))
-  }, [playerScores, selectedPlayers])
-
-  // Determine color based on value (green for best, red for worst)
-  const getComparisonChartData = () => {
-    if (comparisonData.length === 0) return []
-    
-    const values = comparisonData.map(p => p[activeTab as keyof typeof p] as number)
-    const max = Math.max(...values)
-    const min = Math.min(...values)
-    
-    return comparisonData.map(p => {
-      const value = p[activeTab as keyof typeof p] as number
-      let color = '#a855f7' // default purple
-      
-      if (max !== min) {
-        // Green for best, red for worst
-        if (value === max) {
-          color = '#22c55e' // green
-        } else if (value === min) {
-          color = '#ef4444' // red
-        }
-      }
-      
-      return {
-        name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
-        value: value,
-        score: value,
-        fill: color
-      }
-    })
-  }
-
-  if (loading) {
-    return <LoadingSpinner />
-  }
+  if (loading) return <LoadingSpinner />
 
   if (error) {
     return (
@@ -178,31 +142,25 @@ export default function PlayerPerformance() {
         <p className={styles.subtitle}>Track and compare player statistics over time</p>
       </div>
 
-      {/* Player Score Leaderboard Section */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Player Score Leaderboard</h2>
-        
+
         <InfoBox>
           <p>
-            Scores are weighted by half-life ({Scoring.PERFORMANCE_HALF_LIFE_DAYS} days). 
-            Recent games count more than older games. 
+            Scores are weighted by half-life ({Scoring.PERFORMANCE_HALF_LIFE_DAYS} days).
+            Recent games count more than older games.
             <a href="/scoring-method" className="text-purple-400 hover:underline ml-1">
               Visit Scoring Method page for details
             </a>
           </p>
         </InfoBox>
-        
+
         <div className={styles.leaderboardSection}>
           <div className={styles.chartContainer}>
-            <BarChart 
-              data={leaderboardChartData}
-              height={300}
-              dataKeys={['score']}
-            />
+            <BarChart data={leaderboardChartData} height={300} dataKeys={['score']} />
           </div>
-          
           <div className={styles.tableContainer}>
-            <DataTable 
+            <DataTable
               data={top10Players}
               columns={PLAYER_STATS_COLUMNS}
               sortKey={tableSortKey}
@@ -213,10 +171,9 @@ export default function PlayerPerformance() {
         </div>
       </section>
 
-      {/* Compare Player Performance Section */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Compare Player Performance Over Time</h2>
-        
+
         <div className={styles.comparisonSection}>
           <div className={styles.controls}>
             <div className={styles.control}>
@@ -229,7 +186,7 @@ export default function PlayerPerformance() {
                 placeholder="Select up to 10 players..."
               />
             </div>
-            
+
             <div className={styles.control}>
               <Select
                 label="Select Month"
@@ -241,43 +198,31 @@ export default function PlayerPerformance() {
           </div>
 
           {selectedPlayers.length > 0 ? (
-            <>
-              <Tabs
-                tabs={COMPARISON_TABS}
-                defaultTab="score"
-              >
-                {(activeTab) => {
-                  setActiveTab(activeTab)
-                  const chartData = getComparisonChartData()
-                  return (
-                    <div className={styles.tabsContainer}>
-                      <div className={styles.comparisonChart}>
-                        <BarChart 
-                          data={chartData}
-                          height={300}
-                          layout="vertical"
-                          dataKeys={['value']}
-                          colors={chartData.map(d => d.fill || '#94a3b8')}
-                          colorCoding="custom"
-                        />
-                      </div>
-                      <p className={styles.description}>
-                        {activeTab === 'score' && 'Comparing overall scores (green = best, red = worst)'}
-                        {activeTab === 'goals' && 'Comparing total goals scored'}
-                        {activeTab === 'saved' && 'Comparing total saves'}
-                        {activeTab === 'out' && 'Comparing total shots missed'}
-                      </p>
+            <Tabs tabs={COMPARISON_TABS} defaultTab="score">
+              {(activeTab) => {
+                const metric = activeTab as ComparisonKey
+                const chartData = buildComparisonChartData(comparisonData, metric)
+                return (
+                  <div className={styles.tabsContainer}>
+                    <div className={styles.comparisonChart}>
+                      <BarChart
+                        data={chartData}
+                        height={300}
+                        layout="vertical"
+                        dataKeys={['value']}
+                        colors={chartData.map(d => d.fill || '#94a3b8')}
+                        colorCoding="custom"
+                      />
                     </div>
-                  )
-                }}
-              </Tabs>
-            </>
+                    <p className={styles.description}>{COMPARISON_DESCRIPTIONS[metric]}</p>
+                  </div>
+                )
+              }}
+            </Tabs>
           ) : (
             <div className={styles.noData}>
               <div className={styles.noDataIcon}>👆</div>
-              <div className={styles.noDataText}>
-                Select players above to compare their performance
-              </div>
+              <div className={styles.noDataText}>Select players above to compare their performance</div>
             </div>
           )}
         </div>

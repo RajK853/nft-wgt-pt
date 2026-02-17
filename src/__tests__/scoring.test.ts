@@ -1,256 +1,165 @@
 /**
- * Scoring Logic Tests
- * 
- * Comprehensive tests for mathematical accuracy and scoring calculations.
- * Follows KISS principle with clear, readable test cases.
+ * Analysis Logic Tests
+ * Tests for penalty score calculations in analysis.ts
  */
 
-import { ScoringCalculator, ScoreData, ScoreResult, ScoreUtils } from '../lib/scoring';
+import {
+  calculatePlayerScores,
+  calculateKeeperScores,
+  getTopPlayer,
+  getTopKeeper,
+  getBiggestRivalry,
+  getBusiestDay,
+  getRecentSession,
+} from '../lib/analysis'
+import type { PenaltyRecord } from '../types'
 
-describe('ScoringCalculator', () => {
-  describe('calculateScore', () => {
-    test('should calculate base score correctly', () => {
-      const data: ScoreData = { accuracy: 80, speed: 25, consistency: 75, difficulty: 5 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // Base score = accuracy * difficulty * 10 = 80 * 5 * 10 = 4000
-      expect(result.baseScore).toBe(4000);
-      expect(result.totalScore).toBeGreaterThan(4000);
-    });
+const makeRecord = (overrides: Partial<PenaltyRecord> = {}): PenaltyRecord => ({
+  id: Math.random().toString(36).slice(2),
+  date: new Date('2024-01-15'),
+  shooterName: 'Alice',
+  keeperName: 'Bob',
+  status: 'goal',
+  ...overrides,
+})
 
-    test('should apply accuracy bonus for high accuracy', () => {
-      const data: ScoreData = { accuracy: 95, speed: 25, consistency: 75, difficulty: 5 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      expect(result.accuracyBonus).toBe(100);
-    });
+const RECORDS: PenaltyRecord[] = [
+  makeRecord({ shooterName: 'Alice', keeperName: 'Bob', status: 'goal' }),
+  makeRecord({ shooterName: 'Alice', keeperName: 'Bob', status: 'goal' }),
+  makeRecord({ shooterName: 'Alice', keeperName: 'Bob', status: 'saved' }),
+  makeRecord({ shooterName: 'Carol', keeperName: 'Bob', status: 'goal' }),
+  makeRecord({ shooterName: 'Carol', keeperName: 'Dave', status: 'out' }),
+]
 
-    test('should apply accuracy bonus for medium accuracy', () => {
-      const data: ScoreData = { accuracy: 80, speed: 25, consistency: 75, difficulty: 5 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      expect(result.accuracyBonus).toBe(50);
-    });
+describe('calculatePlayerScores', () => {
+  test('returns empty array for no records', () => {
+    expect(calculatePlayerScores([])).toEqual([])
+  })
 
-    test('should not apply accuracy bonus for low accuracy', () => {
-      const data: ScoreData = { accuracy: 60, speed: 25, consistency: 75, difficulty: 5 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      expect(result.accuracyBonus).toBe(0);
-    });
+  test('counts goals, saves and outs per player', () => {
+    const scores = calculatePlayerScores(RECORDS)
+    const alice = scores.find(s => s.name === 'Alice')!
+    expect(alice.goals).toBe(2)
+    expect(alice.saved).toBe(1)
+    expect(alice.out).toBe(0)
+  })
 
-    test('should calculate speed bonus for fast completion', () => {
-      const data: ScoreData = { accuracy: 80, speed: 15, consistency: 75, difficulty: 6 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // Threshold = 30 - (difficulty * 2) = 30 - 12 = 18
-      // Speed 15 <= 18, so bonus should be applied
-      expect(result.speedBonus).toBe(50);
-    });
+  test('sorts by score descending', () => {
+    const scores = calculatePlayerScores(RECORDS)
+    for (let i = 1; i < scores.length; i++) {
+      expect(scores[i - 1].score).toBeGreaterThanOrEqual(scores[i].score)
+    }
+  })
 
-    test('should not calculate speed bonus for slow completion', () => {
-      const data: ScoreData = { accuracy: 80, speed: 25, consistency: 75, difficulty: 6 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // Threshold = 30 - (difficulty * 2) = 30 - 12 = 18
-      // Speed 25 > 18, so no bonus
-      expect(result.speedBonus).toBe(0);
-    });
+  test('goals give positive points, outs give negative', () => {
+    const goalOnlyRecords = [makeRecord({ shooterName: 'Alice', status: 'goal' })]
+    const outOnlyRecords = [makeRecord({ shooterName: 'Bob', status: 'out' })]
 
-    test('should calculate correct grade for excellent score', () => {
-      const data: ScoreData = { accuracy: 95, speed: 15, consistency: 90, difficulty: 8 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // baseScore = 95*8*10=7600, accuracyBonus=100, speedBonus=50, total=7750 -> A
-      expect(result.grade).toBe('A');
-      expect(result.totalScore).toBeGreaterThan(900);
-    });
+    const goalScore = calculatePlayerScores(goalOnlyRecords)[0].score
+    const outScore = calculatePlayerScores(outOnlyRecords)[0].score
 
-    test('should calculate correct grade for good score', () => {
-      const data: ScoreData = { accuracy: 85, speed: 20, consistency: 80, difficulty: 6 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // baseScore = 85*6*10=5100, accuracyBonus=50, speedBonus=0, total=5150 -> A (>=900)
-      expect(result.grade).toBe('A');
-    });
+    expect(goalScore).toBeGreaterThan(0)
+    expect(outScore).toBeLessThan(0)
+  })
+})
 
-    test('should calculate correct grade for average score', () => {
-      const data: ScoreData = { accuracy: 75, speed: 25, consistency: 70, difficulty: 5 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // baseScore = 75*5*10=3750, accuracyBonus=50, speedBonus=0, total=3800 -> A (>=900)
-      // Actually wait - the formula is accuracy * difficulty * 10, but grade thresholds are 900, 750...
-      // This means ALL scores will be >= 900 because baseScore alone is 100-10000
-      // The grade thresholds need to be adjusted or this is a design issue
-      expect(result.grade).toBe('A');
-    });
+describe('calculateKeeperScores', () => {
+  test('returns empty array for no records', () => {
+    expect(calculateKeeperScores([])).toEqual([])
+  })
 
-    test('should calculate correct grade for poor score', () => {
-      const data: ScoreData = { accuracy: 60, speed: 35, consistency: 60, difficulty: 4 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // baseScore = 60*4*10=2400, accuracyBonus=0, speedBonus=0, total=2400 -> A (>=900)
-      // This shows the grading thresholds don't match the scoring formula
-      expect(result.grade).toBe('A');
-    });
+  test('counts saves and conceded per keeper', () => {
+    const scores = calculateKeeperScores(RECORDS)
+    const bob = scores.find(s => s.name === 'Bob')!
+    // Bob faced 2 goals by Alice + 1 goal by Carol = 3 conceded, 1 save
+    expect(bob.goalsConceded).toBe(3)
+    expect(bob.saves).toBe(1)
+  })
 
-    test('should calculate correct grade for failing score', () => {
-      const data: ScoreData = { accuracy: 40, speed: 45, consistency: 40, difficulty: 2 };
-      const result = ScoringCalculator.calculateScore(data);
-      
-      // baseScore = 40*2*10=800, accuracyBonus=0, speedBonus=0, total=800 -> A (>=900? No 800<900)
-      // 800 < 900 so grade = B
-      expect(result.grade).toBe('B');
-    });
+  test('saves give positive points, conceded give negative', () => {
+    const savedRecord = [makeRecord({ keeperName: 'Bob', status: 'saved' })]
+    const goalRecord = [makeRecord({ keeperName: 'Bob', status: 'goal' })]
 
-    test('should handle edge cases', () => {
-      // Minimum values
-      const minData: ScoreData = { accuracy: 0, speed: 10, consistency: 0, difficulty: 1 };
-      const minResult = ScoringCalculator.calculateScore(minData);
-      // baseScore = 0*1*10=0, accuracyBonus=0, speedBonus=50 (threshold = 30-2=28, 10<=28), total=50
-      expect(minResult.totalScore).toBe(50);
-      expect(minResult.grade).toBe('F');  // 50 < 400 -> F
+    const saveScore = calculateKeeperScores(savedRecord)[0].score
+    const concededScore = calculateKeeperScores(goalRecord)[0].score
 
-      // Maximum values
-      const maxData: ScoreData = { accuracy: 100, speed: 10, consistency: 100, difficulty: 10 };
-      const maxResult = ScoringCalculator.calculateScore(maxData);
-      expect(maxResult.totalScore).toBeGreaterThan(900);
-      expect(maxResult.grade).toBe('A');
-    });
-  });
-});
+    expect(saveScore).toBeGreaterThan(0)
+    expect(concededScore).toBeLessThan(0)
+  })
+})
 
-describe('ScoreUtils', () => {
-  describe('calculateAverageScore', () => {
-    test('should calculate average correctly', () => {
-      const results: ScoreResult[] = [
-        { baseScore: 1000, accuracyBonus: 100, speedBonus: 50, totalScore: 1150, grade: 'A' },
-        { baseScore: 800, accuracyBonus: 50, speedBonus: 0, totalScore: 850, grade: 'B' },
-        { baseScore: 600, accuracyBonus: 0, speedBonus: 50, totalScore: 650, grade: 'C' }
-      ];
-      
-      const average = ScoreUtils.calculateAverageScore(results);
-      expect(average).toBe(883.3333333333334);
-    });
+describe('getTopPlayer', () => {
+  test('returns null for empty records', () => {
+    expect(getTopPlayer([])).toBeNull()
+  })
 
-    test('should return 0 for empty array', () => {
-      const average = ScoreUtils.calculateAverageScore([]);
-      expect(average).toBe(0);
-    });
-  });
+  test('returns the player with the highest score', () => {
+    const top = getTopPlayer(RECORDS)
+    expect(top).not.toBeNull()
+    expect(top!.name).toBe('Alice') // Alice scored 2 goals, should be highest
+  })
+})
 
-  describe('getGradeDistribution', () => {
-    test('should count grade distribution correctly', () => {
-      const results: ScoreResult[] = [
-        { baseScore: 1000, accuracyBonus: 100, speedBonus: 50, totalScore: 1150, grade: 'A' },
-        { baseScore: 800, accuracyBonus: 50, speedBonus: 0, totalScore: 850, grade: 'B' },
-        { baseScore: 600, accuracyBonus: 0, speedBonus: 50, totalScore: 650, grade: 'C' },
-        { baseScore: 500, accuracyBonus: 0, speedBonus: 0, totalScore: 500, grade: 'D' },
-        { baseScore: 300, accuracyBonus: 0, speedBonus: 0, totalScore: 300, grade: 'F' },
-        { baseScore: 900, accuracyBonus: 100, speedBonus: 50, totalScore: 1050, grade: 'A' }
-      ];
-      
-      const distribution = ScoreUtils.getGradeDistribution(results);
-      expect(distribution).toEqual({
-        A: 2,
-        B: 1,
-        C: 1,
-        D: 1,
-        F: 1
-      });
-    });
+describe('getTopKeeper', () => {
+  test('returns null for empty records', () => {
+    expect(getTopKeeper([])).toBeNull()
+  })
 
-    test('should handle empty array', () => {
-      const distribution = ScoreUtils.getGradeDistribution([]);
-      expect(distribution).toEqual({});
-    });
-  });
+  test('returns a keeper', () => {
+    const top = getTopKeeper(RECORDS)
+    expect(top).not.toBeNull()
+    expect(typeof top!.name).toBe('string')
+  })
+})
 
-  describe('findBestScore', () => {
-    test('should find best score correctly', () => {
-      const results: ScoreResult[] = [
-        { baseScore: 1000, accuracyBonus: 100, speedBonus: 50, totalScore: 1150, grade: 'A' },
-        { baseScore: 800, accuracyBonus: 50, speedBonus: 0, totalScore: 850, grade: 'B' },
-        { baseScore: 600, accuracyBonus: 0, speedBonus: 50, totalScore: 650, grade: 'C' }
-      ];
-      
-      const best = ScoreUtils.findBestScore(results);
-      expect(best).toEqual({
-        baseScore: 1000,
-        accuracyBonus: 100,
-        speedBonus: 50,
-        totalScore: 1150,
-        grade: 'A'
-      });
-    });
+describe('getBiggestRivalry', () => {
+  test('returns null for empty records', () => {
+    expect(getBiggestRivalry([])).toBeNull()
+  })
 
-    test('should return null for empty array', () => {
-      const best = ScoreUtils.findBestScore([]);
-      expect(best).toBeNull();
-    });
-  });
-});
+  test('identifies the most frequent matchup', () => {
+    const rivalry = getBiggestRivalry(RECORDS)
+    // Alice vs Bob appears 3 times (2 goals + 1 saved)
+    expect(rivalry!.shooterName).toBe('Alice')
+    expect(rivalry!.keeperName).toBe('Bob')
+    expect(rivalry!.encounters).toBe(3)
+  })
+})
 
-describe('Integration Tests', () => {
-  test('should maintain mathematical accuracy across multiple calculations', () => {
-    const testData: ScoreData[] = [
-      { accuracy: 90, speed: 20, consistency: 85, difficulty: 7 },
-      { accuracy: 75, speed: 25, consistency: 70, difficulty: 5 },
-      { accuracy: 95, speed: 15, consistency: 90, difficulty: 8 },
-      { accuracy: 60, speed: 30, consistency: 65, difficulty: 4 },
-      { accuracy: 85, speed: 18, consistency: 80, difficulty: 6 }
-    ];
+describe('getBusiestDay', () => {
+  test('returns null for empty records', () => {
+    expect(getBusiestDay([])).toBeNull()
+  })
 
-    const results = testData.map(data => ScoringCalculator.calculateScore(data));
-    
-    // Verify all calculations are consistent
-    results.forEach((result, index) => {
-      const data = testData[index];
-      
-      // Verify base score calculation
-      expect(result.baseScore).toBe(data.accuracy * data.difficulty * 10);
-      
-      // Verify accuracy bonus
-      if (data.accuracy >= 90) {
-        expect(result.accuracyBonus).toBe(100);
-      } else if (data.accuracy >= 70) {
-        expect(result.accuracyBonus).toBe(50);
-      } else {
-        expect(result.accuracyBonus).toBe(0);
-      }
-      
-      // Verify speed bonus
-      const threshold = 30 - (data.difficulty * 2);
-      if (data.speed <= threshold) {
-        expect(result.speedBonus).toBe(50);
-      } else {
-        expect(result.speedBonus).toBe(0);
-      }
-      
-      // Verify total score
-      expect(result.totalScore).toBe(result.baseScore + result.accuracyBonus + result.speedBonus);
-    });
-  });
+  test('finds the day with most penalties', () => {
+    const moreRecords: PenaltyRecord[] = [
+      ...RECORDS,
+      makeRecord({ date: new Date('2024-02-01') }),
+      makeRecord({ date: new Date('2024-02-01') }),
+      makeRecord({ date: new Date('2024-02-01') }),
+      makeRecord({ date: new Date('2024-02-01') }),
+      makeRecord({ date: new Date('2024-02-01') }),
+      makeRecord({ date: new Date('2024-02-01') }),
+    ]
+    const busiest = getBusiestDay(moreRecords)!
+    expect(busiest.penaltyCount).toBe(6)
+  })
+})
 
-  test('should handle concurrent calculations correctly', () => {
-    // Simulate multiple users calculating scores simultaneously
-    const promises = Array.from({ length: 100 }, (_, i) => {
-      const data: ScoreData = {
-        accuracy: (i % 100) + 1,
-        speed: (i % 50) + 10,
-        consistency: (i % 100) + 1,
-        difficulty: (i % 9) + 1
-      };
-      
-      return Promise.resolve(ScoringCalculator.calculateScore(data));
-    });
+describe('getRecentSession', () => {
+  test('returns null for empty records', () => {
+    expect(getRecentSession([])).toBeNull()
+  })
 
-    return Promise.all(promises).then(results => {
-      // Verify all results are valid
-      results.forEach(result => {
-        expect(result.totalScore).toBeGreaterThan(0);
-        expect(['A', 'B', 'C', 'D', 'F']).toContain(result.grade);
-      });
-    });
-  });
-});
+  test('returns stats for the most recent date', () => {
+    const records: PenaltyRecord[] = [
+      makeRecord({ date: new Date('2024-01-01'), status: 'goal' }),
+      makeRecord({ date: new Date('2024-01-01'), status: 'saved' }),
+      makeRecord({ date: new Date('2024-01-10'), status: 'out' }),
+    ]
+    const session = getRecentSession(records)!
+    expect(session.goals).toBe(0)
+    expect(session.saves).toBe(0)
+    expect(session.outs).toBe(1)
+  })
+})

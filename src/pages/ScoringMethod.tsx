@@ -1,15 +1,9 @@
-/**
- * Scoring Method Page
- * Displays base points system and time-weighted scoring with interactive simulation
- */
-
 import { useState, useMemo } from 'react'
 import { LineChart, BarChart } from '../components/charts'
-import { DataTable, NumberInput, Expander, LoadingSpinner } from '../components/ui'
+import { DataTable, NumberInput, Expander } from '../components/ui'
 import { Scoring } from '@/types'
 import styles from './ScoringMethod.module.css'
 
-// Base scoring tables
 const SHOOTER_SCORING = [
   { outcome: 'Goal', points: `+${Scoring.GOAL}` },
   { outcome: 'Saved', points: `${Scoring.SAVED}` },
@@ -32,7 +26,6 @@ export default function ScoringMethod() {
   const [halfLife, setHalfLife] = useState<number>(Scoring.PERFORMANCE_HALF_LIFE_DAYS)
   const [currentHalfLife] = useState<number>(Scoring.PERFORMANCE_HALF_LIFE_DAYS)
 
-  // Generate decay curve data for simulation
   const decayCurveData = useMemo(() => {
     const days = Array.from({ length: 180 }, (_, i) => i)
     return days.map(day => {
@@ -46,10 +39,7 @@ export default function ScoringMethod() {
     })
   }, [originalScore, halfLife, currentHalfLife])
 
-  // Calculate score at half-life point
-  const halfLifeScore = useMemo(() => {
-    return Math.round(originalScore * 0.5)
-  }, [originalScore])
+  const halfLifeScore = useMemo(() => Math.round(originalScore * 0.5), [originalScore])
 
   return (
     <div className={styles.container}>
@@ -61,37 +51,29 @@ export default function ScoringMethod() {
       </div>
 
       <div className={styles.content}>
-        {/* Base Points Section */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Base Points System</h2>
-          
+
           <div className={styles.scoringGrid}>
             <div className={styles.scoringCard}>
               <h3 className={styles.cardTitle}>🎯 Shooter Scoring</h3>
-              <DataTable
-                data={SHOOTER_SCORING}
-                columns={SCORING_COLUMNS}
-              />
+              <DataTable data={SHOOTER_SCORING} columns={SCORING_COLUMNS} />
             </div>
-            
+
             <div className={styles.scoringCard}>
               <h3 className={styles.cardTitle}>🧤 Goalkeeper Scoring</h3>
-              <DataTable
-                data={KEEPER_SCORING}
-                columns={SCORING_COLUMNS}
-              />
+              <DataTable data={KEEPER_SCORING} columns={SCORING_COLUMNS} />
             </div>
           </div>
         </section>
 
-        {/* Time-Weighted Section */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>⏱️ Time-Weighted Scoring</h2>
           <p className={styles.description}>
             Recent games matter more! Scores are weighted by a half-life decay function.
             This means recent performances have double the impact of games from {Scoring.PERFORMANCE_HALF_LIFE_DAYS} days ago.
           </p>
-          
+
           <Expander title="See the Math" defaultOpen={false}>
             <div className={styles.formula}>
               <code>Weighted Score = Original Score × 2^(-days_ago / half_life)</code>
@@ -108,13 +90,12 @@ export default function ScoringMethod() {
           </Expander>
         </section>
 
-        {/* Interactive Simulation */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>📈 Interactive Simulation</h2>
           <p className={styles.description}>
             See how the decay curve changes with different parameters
           </p>
-          
+
           <div className={styles.simulationControls}>
             <NumberInput
               label="Original Score"
@@ -133,14 +114,14 @@ export default function ScoringMethod() {
               step={5}
             />
           </div>
-          
+
           <div className={styles.simulationInfo}>
             <div className={styles.infoBox}>
               <span className={styles.infoLabel}>At half-life ({halfLife} days):</span>
               <span className={styles.infoValue}>{halfLifeScore} points</span>
             </div>
           </div>
-          
+
           <div className={styles.chartContainer}>
             <h3 className={styles.chartTitle}>Decay Curve</h3>
             <LineChart
