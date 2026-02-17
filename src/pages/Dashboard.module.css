@@ -1,228 +1,280 @@
+/* =============================================
+   Dashboard Page Styles
+   Uses legacy design token system from globals.css
+   ============================================= */
+
 .container {
   min-height: calc(100vh - 60px);
-  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-secondary) 50%, var(--color-background) 100%);
-  padding: 2rem;
-  transition: background 0.3s ease;
+  background: linear-gradient(
+    160deg,
+    var(--color-legacy-bg-primary) 0%,
+    var(--color-legacy-bg-secondary) 55%,
+    var(--color-legacy-bg-primary) 100%
+  );
+  padding: 2rem 2rem 3rem;
+  font-family: var(--font-legacy-sans);
+}
+
+/* =============================================
+   Page Header
+   ============================================= */
+
+.pageHeader {
+  margin-bottom: 1.5rem;
 }
 
 .title {
+  font-family: var(--font-legacy-display);
   font-size: 2rem;
   font-weight: 700;
-  color: var(--color-foreground);
-  margin: 0 0 1rem 0;
+  color: var(--color-legacy-text-primary);
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.02em;
 }
 
-.text {
-  color: var(--color-muted-foreground);
-  font-size: 1rem;
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--color-legacy-text-muted);
+  margin: 0;
+  font-weight: 400;
 }
 
-/* Loading States */
-.loading {
+/* =============================================
+   Stats Summary Bar
+   ============================================= */
+
+.statsBar {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  min-height: 40vh;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--color-muted);
-  border-top: 4px solid #a855f7;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loadingText {
-  color: var(--color-muted-foreground);
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-}
-
-/* Skeleton Loading */
-.skeletonContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem 0;
-}
-
-.skeletonCard {
-  background: var(--color-muted);
-  border: 1px solid var(--color-border);
+  gap: 0;
+  background: var(--color-legacy-bg-elevated);
+  border: 1px solid var(--color-legacy-border);
   border-radius: 0.75rem;
-  padding: 1.5rem;
-  animation: pulse 1.5s ease-in-out infinite;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
 }
 
-.skeletonHeader {
-  height: 24px;
-  background: var(--color-secondary);
-  border-radius: 0.25rem;
-  margin-bottom: 1rem;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-.skeletonLine {
-  height: 16px;
-  background: var(--color-secondary);
-  border-radius: 0.25rem;
-  margin-bottom: 0.5rem;
-  animation: shimmer 1.5s ease-in-out infinite;
-}
-
-.skeletonLine:nth-child(2) {
-  width: 80%;
-  animation-delay: 0.1s;
-}
-
-.skeletonLine:nth-child(3) {
-  width: 60%;
-  animation-delay: 0.2s;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200px 0; }
-  100% { background-position: calc(200px + 100%) 0; }
-}
-
-/* Error State */
-.errorState {
+.statBarItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  min-height: 40vh;
+  flex: 1;
+  gap: 0.2rem;
   text-align: center;
 }
 
-.errorIcon {
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, #ef4444, #f87171);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+.statBarValue {
+  font-family: var(--font-legacy-mono);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--color-legacy-text-primary);
+  line-height: 1;
 }
 
-.errorTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-foreground);
-  margin: 0 0 0.5rem 0;
+.statBarValueAccent {
+  color: var(--color-legacy-success);
 }
 
-.errorMessage {
-  color: var(--color-muted-foreground);
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 2rem;
-  max-width: 500px;
-}
-
-.retryButton {
-  background: linear-gradient(45deg, #3b82f6, #22c55e);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.375rem;
-  font-size: 1rem;
+.statBarLabel {
+  font-size: 0.72rem;
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  color: var(--color-legacy-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.retryButton:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.statBarDivider {
+  width: 1px;
+  height: 2.5rem;
+  background: var(--color-legacy-border-medium);
+  flex-shrink: 0;
+  margin: 0 0.5rem;
 }
 
-.retryButton:active {
-  transform: translateY(0);
-}
+/* =============================================
+   Section Layout
+   ============================================= */
 
-/* Dashboard Sections */
 .section {
   margin-bottom: 2.5rem;
+  padding-top: 0.25rem;
 }
 
 .sectionTitle {
-  font-size: 1.5rem;
+  font-family: var(--font-legacy-display);
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-foreground);
-  margin: 0 0 1.5rem 0;
+  color: var(--color-legacy-text-primary);
+  margin: 0 0 0.375rem 0;
+  letter-spacing: -0.01em;
 }
 
-/* Top Performers Grid */
-.topPerformersGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+.sectionSubtitle {
+  font-size: 0.82rem;
+  color: var(--color-legacy-text-muted);
+  margin: 0 0 1.25rem 0;
 }
+
+/* Hall of Fame tinted section background */
+.sectionAccent {
+  background: var(--color-legacy-accent-subtle);
+  border: 1px solid var(--color-legacy-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* =============================================
+   Card Base
+   ============================================= */
 
 .card {
-  background: var(--color-muted);
-  border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  background: var(--color-legacy-bg-elevated);
+  border: 1px solid var(--color-legacy-border);
+  border-radius: 0.875rem;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 1rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  background: var(--color-legacy-surface-hover);
+  border-color: var(--color-legacy-border-medium);
+}
+
+/* Accent left border on cards */
+.cardAccentLeft {
+  border-left: 3px solid var(--color-legacy-accent);
 }
 
 .cardTitle {
-  font-size: 1.125rem;
+  font-family: var(--font-legacy-sans);
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--color-foreground);
+  color: var(--color-legacy-text-primary);
   margin: 0;
   text-align: center;
   width: 100%;
 }
 
+/* =============================================
+   Top Performers — Asymmetric Grid
+   ============================================= */
+
+.topPerformersGrid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* The wide card on the left fills the full left column height */
+.cardWide {
+  height: 100%;
+  min-height: 12rem;
+}
+
+/* Right column: two stacked cards */
+.topPerformersStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.topPerformersStack .card {
+  flex: 1;
+}
+
 .revealedContent {
-  margin-top: 1rem;
-  animation: fadeIn 0.3s ease;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.35s ease;
   width: 100%;
 }
 
-.revealedChart {
-  margin-bottom: 1.5rem;
+/* =============================================
+   Current Form Section
+   ============================================= */
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 0.25rem;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.formCard {
+  background: var(--color-legacy-bg-elevated);
+  border: 1px solid var(--color-legacy-border);
+  border-radius: 0.875rem;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.875rem;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
-/* Hall of Fame */
+.formCard:hover {
+  background: var(--color-legacy-surface-hover);
+  border-color: var(--color-legacy-border-medium);
+  transform: translateY(-2px);
+}
+
+.formCardIcon {
+  font-size: 1.75rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.formCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.formCardName {
+  font-family: var(--font-legacy-sans);
+  font-size: 0.975rem;
+  font-weight: 600;
+  color: var(--color-legacy-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.formCardStat {
+  font-family: var(--font-legacy-mono);
+  font-size: 0.78rem;
+  color: var(--color-legacy-text-secondary);
+  line-height: 1.4;
+}
+
+.formCardLabelTooltip {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+.formCardLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-legacy-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+/* =============================================
+   Hall of Fame
+   ============================================= */
+
 .hallOfFameContent {
   margin-top: 1rem;
 }
@@ -233,14 +285,42 @@
   gap: 1rem;
 }
 
-/* Recent Activity */
-.recentHeader {
-  margin-bottom: 1rem;
+/* 4-column grid for Fun Facts tab */
+.recordsGridWide {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
 }
 
-.recentDate {
-  font-size: 0.875rem;
-  color: var(--color-muted-foreground);
+/* =============================================
+   Recent Activity
+   ============================================= */
+
+.recentHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Override sectionTitle margin when inside recentHeader */
+.recentHeader .sectionTitle {
+  margin: 0;
+}
+
+.sessionDatePill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--color-legacy-bg-elevated);
+  border: 1px solid var(--color-legacy-border-medium);
+  border-radius: 2rem;
+  padding: 0.25rem 0.875rem;
+  font-family: var(--font-legacy-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-legacy-text-secondary);
+  letter-spacing: 0.02em;
 }
 
 .recentMetrics {
@@ -250,10 +330,41 @@
   margin-bottom: 1.5rem;
 }
 
+/* Color-coded left-border wrappers for recent metric cards */
+.recentMetricCard {
+  border-radius: 0.875rem;
+  overflow: hidden;
+}
+
+.recentMetricGoals {
+  border-left: 3px solid var(--color-legacy-success);
+}
+
+.recentMetricSaves {
+  border-left: 3px solid var(--color-legacy-info);
+}
+
+.recentMetricOut {
+  border-left: 3px solid var(--color-legacy-error);
+}
+
+/* Card wrapper for the Tabs + chart + table area */
+.statsCard {
+  background: var(--color-legacy-bg-elevated);
+  border: 1px solid var(--color-legacy-border);
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+}
+
 .statsContent {
   margin-top: 1rem;
 }
 
+.chartWrapper {
+  margin-bottom: 1.5rem;
+}
+
+/* Keeper pie charts grid */
 .keeperCharts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -262,61 +373,171 @@
 }
 
 .keeperChart {
-  background: var(--color-muted);
-  border: 1px solid var(--color-border);
+  background: var(--color-legacy-bg-tertiary);
+  border: 1px solid var(--color-legacy-border);
   border-radius: 0.75rem;
   padding: 1rem;
 }
 
 .keeperName {
+  font-family: var(--font-legacy-sans);
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-foreground);
+  color: var(--color-legacy-text-primary);
   margin: 0 0 0.75rem 0;
   text-align: center;
 }
+
+/* =============================================
+   Error State
+   ============================================= */
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 40vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.errorIcon {
+  width: 56px;
+  height: 56px;
+  background: var(--color-legacy-error);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.errorTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-legacy-text-primary);
+  margin: 0;
+}
+
+.errorMessage {
+  color: var(--color-legacy-text-muted);
+  font-size: 0.875rem;
+  margin: 0;
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+/* =============================================
+   Animations
+   ============================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================================
+   Responsive — Tablet (≤ 1024px)
+   ============================================= */
 
 @media (max-width: 1024px) {
   .topPerformersGrid {
     grid-template-columns: 1fr;
   }
-  
-  .recordsGrid {
-    grid-template-columns: 1fr;
+
+  .topPerformersStack {
+    flex-direction: row;
   }
-  
-  .recentMetrics {
-    grid-template-columns: repeat(3, 1fr);
+
+  .formGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
+
+  .recordsGridWide {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .keeperCharts {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* =============================================
+   Responsive — Mobile (≤ 768px)
+   ============================================= */
+
 @media (max-width: 768px) {
   .container {
-    padding: 1rem;
+    padding: 1rem 1rem 2rem;
   }
 
   .title {
     font-size: 1.5rem;
   }
 
-  .skeletonContainer {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .statsBar {
+    padding: 0.875rem 1rem;
+    gap: 0;
   }
 
-  .skeletonCard {
-    padding: 1rem;
+  .statBarValue {
+    font-size: 1.25rem;
   }
-  
+
+  .statBarDivider {
+    margin: 0 0.25rem;
+  }
+
+  .topPerformersStack {
+    flex-direction: column;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .recordsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .recordsGridWide {
+    grid-template-columns: 1fr;
+  }
+
   .recentMetrics {
     grid-template-columns: 1fr;
   }
-  
+
   .keeperCharts {
     grid-template-columns: 1fr;
+  }
+
+  .sectionAccent {
+    padding: 1rem;
+  }
+
+  .statsBar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .statBarDivider {
+    display: none;
+  }
+
+  .statBarItem {
+    flex: none;
+    width: calc(50% - 0.375rem);
   }
 }

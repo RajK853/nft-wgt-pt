@@ -355,6 +355,223 @@ export function getBiggestRivalry(records: PenaltyRecord[]): { shooterName: stri
   return { shooterName: shooter, keeperName: keeper, encounters: bestCount }
 }
 
+export function getOverallStats(records: PenaltyRecord[]): {
+  totalPenalties: number
+  totalSessions: number
+  totalPlayers: number
+  goalRate: number
+} {
+  if (records.length === 0) return { totalPenalties: 0, totalSessions: 0, totalPlayers: 0, goalRate: 0 }
+
+  const sessions = groupBySession(records)
+  const players = new Set(records.map(r => r.shooterName))
+  const goals = records.filter(r => r.status === 'goal').length
+
+  return {
+    totalPenalties: records.length,
+    totalSessions: sessions.size,
+    totalPlayers: players.size,
+    goalRate: Math.round((goals / records.length) * 100)
+  }
+}
+
+export function getHottestShooter(records: PenaltyRecord[], lastNSessions = 3, minAttempts = 3): {
+  playerName: string
+  goalRate: number
+  goals: number
+  attempts: number
+  sessions: number
+} | null {
+  if (records.length === 0) return null
+
+  const sessions = groupBySession(records)
+  const sortedDates = Array.from(sessions.keys()).sort((a, b) => b.localeCompare(a))
+
+  const playerSessionRecords = new Map<string, PenaltyRecord[]>()
+  const playerSessionCounts = new Map<string, number>()
+
+  for (const dateStr of sortedDates) {
+    const sessionRecords = sessions.get(dateStr)!
+    const playersInSession = new Set(sessionRecords.map(r => r.shooterName))
+
+    for (const player of playersInSession) {
+      const sessionCount = playerSessionCounts.get(player) || 0
+      if (sessionCount < lastNSessions) {
+        const playerRecordsInSession = sessionRecords.filter(r => r.shooterName === player)
+        const existing = playerSessionRecords.get(player) || []
+        existing.push(...playerRecordsInSession)
+        playerSessionRecords.set(player, existing)
+        playerSessionCounts.set(player, sessionCount + 1)
+      }
+    }
+  }
+
+  let bestPlayer = ''
+  let bestRate = -1
+  let bestGoals = 0
+  let bestAttempts = 0
+  let bestSessions = 0
+
+  for (const [player, attempts] of playerSessionRecords) {
+    if (attempts.length < minAttempts) continue
+    const goals = attempts.filter(r => r.status === 'goal').length
+    const rate = goals / attempts.length
+    if (rate > bestRate) {
+      bestRate = rate
+      bestPlayer = player
+      bestGoals = goals
+      bestAttempts = attempts.length
+      bestSessions = playerSessionCounts.get(player) || 0
+    }
+  }
+
+  return bestPlayer
+    ? { playerName: bestPlayer, goalRate: Math.round(bestRate * 100), goals: bestGoals, attempts: bestAttempts, sessions: bestSessions }
+    : null
+}
+
+export function getBestSaveRate(records: PenaltyRecord[], minAttempts = 5): {
+  keeperName: string
+  saveRate: number
+  saves: number
+  faced: number
+} | null {
+  if (records.length === 0) return null
+
+  const keeperMap = new Map<string, { saves: number; faced: number }>()
+
+  for (const record of records) {
+    const keeper = record.keeperName
+    const existing = keeperMap.get(keeper) || { saves: 0, faced: 0 }
+    // Only count saves and goals (out doesn't count as "faced" for save rate)
+    if (record.status === 'saved') {
+      existing.saves++
+      existing.faced++
+    } else if (record.status === 'goal') {
+      existing.faced++
+    }
+    keeperMap.set(keeper, existing)
+  }
+
+  let bestKeeper = ''
+  let bestRate = -1
+  let bestSaves = 0
+  let bestFaced = 0
+
+  for (const [keeper, stats] of keeperMap) {
+    if (stats.faced < minAttempts) continue
+    const rate = stats.saves / stats.faced
+    if (rate > bestRate) {
+      bestRate = rate
+      bestKeeper = keeper
+      bestSaves = stats.saves
+      bestFaced = stats.faced
+    }
+  }
+
+  return bestKeeper ? { keeperName: bestKeeper, saveRate: Math.round(bestRate * 100), saves: bestSaves, faced: bestFaced } : null
+}
+
+export function getBestConversionRate(records: PenaltyRecord[], minAttempts = 5): {
+  playerName: string
+  goalRate: number
+  goals: number
+  attempts: number
+} | null {
+  if (records.length === 0) return null
+
+  const playerMap = new Map<string, { goals: number; attempts: number }>()
+
+  for (const record of records) {
+    const player = record.shooterName
+    const existing = playerMap.get(player) || { goals: 0, attempts: 0 }
+    existing.attempts++
+    if (record.status === 'goal') existing.goals++
+    playerMap.set(player, existing)
+  }
+
+  let bestPlayer = ''
+  let bestRate = -1
+  let bestGoals = 0
+  let bestAttempts = 0
+
+  for (const [player, stats] of playerMap) {
+    if (stats.attempts < minAttempts) continue
+    const rate = stats.goals / stats.attempts
+    if (rate > bestRate) {
+      bestRate = rate
+      bestPlayer = player
+      bestGoals = stats.goals
+      bestAttempts = stats.attempts
+    }
+  }
+
+  return bestPlayer ? { playerName: bestPlayer, goalRate: Math.round(bestRate * 100), goals: bestGoals, attempts: bestAttempts } : null
+}
+
+export function getPerfectSession(records: PenaltyRecord[], minAttempts = 3): {
+  playerName: string
+  goals: number
+  date: Date
+} | null {
+  if (records.length === 0) return null
+
+  const sessions = groupBySession(records)
+
+  for (const [dateStr, sessionRecords] of [...sessions.entries()].sort((a, b) => b[0].localeCompare(a[0]))) {
+    const playerGrouped = new Map<string, PenaltyRecord[]>()
+    for (const record of sessionRecords) {
+      const existing = playerGrouped.get(record.shooterName) || []
+      existing.push(record)
+      playerGrouped.set(record.shooterName, existing)
+    }
+
+    for (const [player, attempts] of playerGrouped) {
+      if (attempts.length < minAttempts) continue
+      const allGoals = attempts.every(r => r.status === 'goal')
+      if (allGoals) {
+        return { playerName: player, goals: attempts.length, date: new Date(dateStr) }
+      }
+    }
+  }
+
+  return null
+}
+
+export function getSessionLeader(records: PenaltyRecord[]): {
+  playerName: string
+  goals: number
+} | null {
+  if (records.length === 0) return null
+
+  const sessions = groupBySession(records)
+  const sortedDates = Array.from(sessions.keys()).sort((a, b) => b.localeCompare(a))
+  if (sortedDates.length === 0) return null
+
+  const latestRecords = sessions.get(sortedDates[0])!
+  const playerGoals = new Map<string, number>()
+
+  for (const record of latestRecords) {
+    if (record.status === 'goal') {
+      playerGoals.set(record.shooterName, (playerGoals.get(record.shooterName) || 0) + 1)
+    }
+  }
+
+  if (playerGoals.size === 0) return null
+
+  let bestPlayer = ''
+  let bestGoals = 0
+
+  for (const [player, goals] of playerGoals) {
+    if (goals > bestGoals) {
+      bestGoals = goals
+      bestPlayer = player
+    }
+  }
+
+  return bestPlayer ? { playerName: bestPlayer, goals: bestGoals } : null
+}
+
 export function getTopPlayer(records: PenaltyRecord[]): PlayerScore | null {
   const scores = calculatePlayerScores(records)
   return scores.length > 0 ? scores[0] : null

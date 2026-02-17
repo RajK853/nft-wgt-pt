@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './auth/AuthContext'
 import { LoadingSpinner } from './components/ui'
+import { TooltipProvider } from './components/ui/tooltip'
 // Lazy load pages for code splitting (performance optimization)
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const ScoringMethod = lazy(() => import('./pages/ScoringMethod'))
@@ -18,6 +19,7 @@ const KeeperPerformance = lazy(() => import('./pages/KeeperPerformance'))
 function App() {
   return (
     <ErrorBoundary>
+      <TooltipProvider>
       <AuthProvider>
         <Router>
           <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-legacy-bg-primary)' }}>
@@ -65,6 +67,7 @@ function App() {
           </div>
         </Router>
       </AuthProvider>
+      </TooltipProvider>
     </ErrorBoundary>
   )
 }
