@@ -26,10 +26,10 @@ Use this decision tree to know which context files to load next:
 What kind of task is this?
 │
 ├── Adding a new PAGE
-│   └── Read: 1_app_structure.md, 6_common_patterns.md, 2_page_design_guide.md
+│   └── Read: 1_app_structure.md, 6_common_patterns.md, 2_page_design_guide.md, 4_frontend_best_practices.md
 │
 ├── Adding/modifying a UI component
-│   └── Read: 2_component_design.md, 6_common_patterns.md
+│   └── Read: 2_component_design.md, 6_common_patterns.md, 4_frontend_best_practices.md
 │
 ├── Adding/modifying data fetching or Supabase queries
 │   └── Read: 5_supabase_integration.md, 2_data_schema.md, 6_common_patterns.md
@@ -38,7 +38,7 @@ What kind of task is this?
 │   └── Read: 3_core_logic_overview.md, 2_data_schema.md
 │
 ├── Styling changes
-│   └── Read: 2_page_design_guide.md, 3_code_style_practices.md
+│   └── Read: 2_page_design_guide.md, 3_code_style_practices.md, 4_frontend_best_practices.md
 │
 ├── Routing changes
 │   └── Read: 7_nextjs_routing.md (renamed: React Router v6 guide), 1_app_structure.md
