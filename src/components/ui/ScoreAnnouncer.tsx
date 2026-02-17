@@ -14,12 +14,12 @@ export function ScoreAnnouncer({ score, isActive }: ScoreAnnouncerProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isActive && ref.current) {
-      const text = `Score calculated. Total score: ${score.totalScore}. Grade: ${score.grade}.`;
-      setTimeout(() => {
-        if (ref.current) ref.current.textContent = text;
-      }, 100);
-    }
+    if (!isActive) return
+    const text = `Score calculated. Total score: ${score.totalScore}. Grade: ${score.grade}.`
+    const timer = setTimeout(() => {
+      if (ref.current) ref.current.textContent = text
+    }, 100)
+    return () => clearTimeout(timer)
   }, [score, isActive]);
 
   return (

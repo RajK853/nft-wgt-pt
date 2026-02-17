@@ -12,8 +12,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth()
   const location = useLocation()
 
-  // TEMP: Bypass auth for development - set to true to disable auth
-  const AUTH_DISABLED = true
+  // Set VITE_AUTH_DISABLED=true in .env to bypass auth during development
+  const AUTH_DISABLED = import.meta.env.VITE_AUTH_DISABLED === 'true'
 
   if (AUTH_DISABLED) {
     return <>{children}</>

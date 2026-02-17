@@ -7,7 +7,6 @@
 
 import { InformationCircleIcon } from '@heroicons/react/24/solid'
 import { useTheme } from '@/hooks/useTheme'
-import { useEffect, useState } from 'react'
 
 interface InfoBoxProps {
   title?: string
@@ -28,30 +27,6 @@ export function InfoBox({
   className = '' 
 }: InfoBoxProps) {
   const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  
-  if (!mounted) {
-    return (
-      <div className={`rounded-lg border p-4 bg-blue-50/50 border-blue-200/50 text-blue-800 ${className}`}>
-        <div className="flex items-start gap-3">
-          <InformationCircleIcon className="h-5 w-5 flex-shrink-0 mt-0.5 text-blue-500" />
-          <div className="flex-1">
-            {title && (
-              <h4 className="font-medium mb-1">{title}</h4>
-            )}
-            <div className="text-sm opacity-90">
-              {children}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   const isDark = resolvedTheme === 'dark'
 
   const variantStyles = {

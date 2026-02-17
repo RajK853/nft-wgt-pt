@@ -5,7 +5,7 @@
  * Theme-aware using CSS variables
  */
 
-import { useState, Fragment, useEffect } from 'react'
+import { useState, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronUpDownIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { useTheme } from '@/hooks/useTheme'
@@ -30,29 +30,7 @@ export function MultiSelect({
   className = ''
 }: MultiSelectProps) {
   const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
   const [search, setSearch] = useState('')
-  
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    // Return a neutral loading state before theme is determined
-    return (
-      <div className={`flex flex-col gap-2 ${className}`}>
-        {label && (
-          <label className="text-sm text-gray-500 font-medium">
-            {label}
-          </label>
-        )}
-        <div className="relative w-full cursor-pointer rounded-lg bg-gray-100 border border-gray-300 py-2 pl-3 pr-10 text-left shadow-md sm:text-sm">
-          <span className="text-gray-400">Loading...</span>
-        </div>
-      </div>
-    )
-  }
-
   const isDark = resolvedTheme === 'dark'
 
   const filteredOptions = options.filter(option =>

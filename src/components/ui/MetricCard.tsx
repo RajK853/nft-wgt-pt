@@ -6,7 +6,6 @@
  * Supports sentiment-based coloring for values
  */
 
-import { useEffect, useState } from 'react'
 
 type Sentiment = 'positive' | 'negative' | 'neutral' | 'rival' | 'auto'
 
@@ -19,24 +18,6 @@ interface MetricCardProps {
 }
 
 export function MetricCard({ label, value, delta, help, sentiment = 'auto' }: MetricCardProps) {
-  const [mounted, setMounted] = useState(false)
-  
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  
-  if (!mounted) {
-    return (
-      <div className="rounded-lg border p-4" style={{ 
-        backgroundColor: 'var(--color-legacy-bg-tertiary)', 
-        borderColor: 'var(--color-legacy-border)' 
-      }}>
-        <div className="text-sm mb-1" style={{ color: 'var(--color-legacy-text-secondary)' }}>{label}</div>
-        <div className="text-2xl font-bold" style={{ color: 'var(--color-legacy-text-primary)' }}>-</div>
-      </div>
-    )
-  }
-
   // Use legacy colors - neutral backgrounds
   const cardStyles = {
     backgroundColor: 'var(--color-legacy-bg-tertiary)',

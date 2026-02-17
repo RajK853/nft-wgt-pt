@@ -11,15 +11,10 @@ import { DataTable, MultiSelect, Tabs, InfoBox, LoadingSpinner } from '@/compone
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import type { PlayerScore } from '@/types'
+import { PLAYER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
+import { truncateName } from '@/lib/utils'
+import { useTableSort } from '@/hooks/useTableSort'
 import styles from './PlayerPerformance.module.css'
-
-const PLAYER_STATS_COLUMNS = [
-  { key: 'name', header: 'Player', sortable: true },
-  { key: 'score', header: 'Score', sortable: true },
-  { key: 'goals', header: 'Goals', sortable: true },
-  { key: 'saved', header: 'Saved', sortable: true },
-  { key: 'out', header: 'Out', sortable: true }
-]
 
 const COMPARISON_TABS = [
   { id: 'score', label: 'Score' },
@@ -52,7 +47,7 @@ function buildComparisonChartData(players: PlayerScore[], metric: ComparisonKey)
       else if (value === min) color = '#ef4444'
     }
     return {
-      name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
+      name: truncateName(p.name, CHART_NAME_MAX_LENGTH),
       value,
       score: value,
       fill: color,
@@ -65,8 +60,7 @@ export default function PlayerPerformance() {
 
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const [selectedPlayers, setSelectedPlayers] = useState<string[]>([])
-  const [tableSortKey, setTableSortKey] = useState<string>('score')
-  const [tableSortDirection, setTableSortDirection] = useState<'asc' | 'desc'>('desc')
+  const { sortKey: tableSortKey, sortDirection: tableSortDirection, handleSort: handleTableSort } = useTableSort()
 
   useEffect(() => {
     document.title = 'Player Performance - NFT Weingarten'
@@ -82,25 +76,23 @@ export default function PlayerPerformance() {
 
   const playerScores = useMemo(() => calculatePlayerScores(filteredData), [filteredData])
 
-  const sortedPlayerScores = useMemo(() => {
-    return [...playerScores].sort((a, b) => {
-      const aVal = a[tableSortKey as keyof typeof a]
-      const bVal = b[tableSortKey as keyof typeof b]
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
-      }
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return tableSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
-      }
-      return 0
-    })
-  }, [playerScores, tableSortKey, tableSortDirection])
+  const sortedPlayerScores = useMemo(() => [...playerScores].sort((a, b) => {
+    const aVal = a[tableSortKey as keyof typeof a]
+    const bVal = b[tableSortKey as keyof typeof b]
+    if (typeof aVal === 'number' && typeof bVal === 'number') {
+      return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
+    }
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
+      return tableSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
+    }
+    return 0
+  }), [playerScores, tableSortKey, tableSortDirection])
 
   const top10Players = useMemo(() => sortedPlayerScores.slice(0, 10), [sortedPlayerScores])
 
   const leaderboardChartData = useMemo(() =>
     top10Players.map(p => ({
-      name: p.name.length > 12 ? p.name.substring(0, 12) + '...' : p.name,
+      name: truncateName(p.name, CHART_NAME_MAX_LENGTH),
       value: p.score,
       score: p.score,
       goals: p.goals,
@@ -112,15 +104,6 @@ export default function PlayerPerformance() {
     playerScores.filter(p => selectedPlayers.includes(p.name)),
     [playerScores, selectedPlayers]
   )
-
-  const handleTableSort = (key: string) => {
-    if (tableSortKey === key) {
-      setTableSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
-    } else {
-      setTableSortKey(key)
-      setTableSortDirection('desc')
-    }
-  }
 
   if (loading) return <LoadingSpinner />
 

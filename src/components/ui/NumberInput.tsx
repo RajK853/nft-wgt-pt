@@ -4,7 +4,7 @@
  * Used for simulation controls in Scoring Method page
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import styles from './NumberInput.module.css'
 
 interface NumberInputProps {
@@ -27,6 +27,11 @@ export function NumberInput({
   disabled = false
 }: NumberInputProps) {
   const [inputValue, setInputValue] = useState(String(value))
+
+  // Keep the text field in sync when the value prop changes externally
+  useEffect(() => {
+    setInputValue(String(value))
+  }, [value])
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value

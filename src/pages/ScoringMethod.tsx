@@ -86,15 +86,12 @@ export default function ScoringMethod() {
   const scoreAtHalfLife = useMemo(() => Math.round(originalScore * 0.5), [originalScore])
   const scoreAtDouble   = useMemo(() => Math.round(originalScore * 0.25), [originalScore])
 
-  // Sample base score used in the static milestone tiles
-  const SAMPLE_BASE_SCORE = 100
-
-  // Decay milestones (fixed for the current app half-life)
+  // Decay milestones — use originalScore so tiles stay in sync with the simulator
   const milestones: DecayMilestone[] = [
-    { dayLabel: 'Day 0',                  pct: 100, score: SAMPLE_BASE_SCORE,                         description: 'Today' },
-    { dayLabel: `Day ${currentHalfLife}`, pct: 50,  score: Math.round(SAMPLE_BASE_SCORE * 0.5),       description: '½-Life' },
-    { dayLabel: `Day ${currentHalfLife * 2}`, pct: 25, score: Math.round(SAMPLE_BASE_SCORE * 0.25),  description: '2× ½-Life' },
-    { dayLabel: `Day ${currentHalfLife * 3}`, pct: 12, score: Math.round(SAMPLE_BASE_SCORE * 0.125), description: '3× ½-Life' },
+    { dayLabel: 'Day 0',                      pct: 100, score: originalScore,                         description: 'Today' },
+    { dayLabel: `Day ${currentHalfLife}`,     pct: 50,  score: Math.round(originalScore * 0.5),       description: '½-Life' },
+    { dayLabel: `Day ${currentHalfLife * 2}`, pct: 25,  score: Math.round(originalScore * 0.25),      description: '2× ½-Life' },
+    { dayLabel: `Day ${currentHalfLife * 3}`, pct: 12,  score: Math.round(originalScore * 0.125),     description: '3× ½-Life' },
   ]
 
   return (
@@ -151,7 +148,7 @@ export default function ScoringMethod() {
             ))}
           </div>
           <p className={styles.milestonesCaption}>
-            * Based on a sample base score of {SAMPLE_BASE_SCORE} pts
+            * Based on a base score of {originalScore} pts (adjust in the simulator below)
           </p>
         </div>
       </section>

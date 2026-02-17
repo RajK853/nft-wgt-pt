@@ -4,21 +4,18 @@ import {
   calculateKeeperScores,
   filterByMonth,
   getUniqueMonths,
+  getUniqueKeepers,
   getKeeperOutcomeDistribution
 } from '@/lib/analysis'
 import { BarChart, PieChart } from '@/components/charts'
 import { DataTable, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
+import { KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
+import { truncateName } from '@/lib/utils'
+import { useTableSort } from '@/hooks/useTableSort'
+// Intentionally reuses PlayerPerformance styles — shared layout
 import styles from './PlayerPerformance.module.css'
-
-const KEEPER_STATS_COLUMNS = [
-  { key: 'name', header: 'Goalkeeper', sortable: true },
-  { key: 'score', header: 'Score', sortable: true },
-  { key: 'saves', header: 'Saves', sortable: true },
-  { key: 'goalsConceded', header: 'Goals Conceded', sortable: true },
-  { key: 'outs', header: 'Out', sortable: true }
-]
 
 const OUTCOME_TABS = [
   { id: 'saves', label: 'Save Rate' },
@@ -31,20 +28,14 @@ export default function KeeperPerformance() {
 
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const [selectedKeeperForPie, setSelectedKeeperForPie] = useState<string>('')
-  const [tableSortKey, setTableSortKey] = useState<string>('score')
-  const [tableSortDirection, setTableSortDirection] = useState<'asc' | 'desc'>('desc')
+  const { sortKey: tableSortKey, sortDirection: tableSortDirection, handleSort: handleTableSort } = useTableSort()
 
   useEffect(() => {
     document.title = 'Goalkeeper Performance - NFT Weingarten'
   }, [])
 
   const monthOptions = useMemo(() => getUniqueMonths(data), [data])
-
-  const keeperOptions = useMemo(() => {
-    const keepers = new Set<string>()
-    data.forEach(r => keepers.add(r.keeperName))
-    return Array.from(keepers).sort()
-  }, [data])
+  const keeperOptions = useMemo(() => getUniqueKeepers(data), [data])
 
   const filteredData = useMemo(() => {
     if (!selectedMonth) return data
@@ -53,40 +44,29 @@ export default function KeeperPerformance() {
 
   const keeperScores = useMemo(() => calculateKeeperScores(filteredData), [filteredData])
 
-  const sortedKeeperScores = useMemo(() => {
-    return [...keeperScores].sort((a, b) => {
-      const aVal = a[tableSortKey as keyof typeof a]
-      const bVal = b[tableSortKey as keyof typeof b]
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
-      }
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return tableSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
-      }
-      return 0
-    })
-  }, [keeperScores, tableSortKey, tableSortDirection])
+  const sortedKeeperScores = useMemo(() => [...keeperScores].sort((a, b) => {
+    const aVal = a[tableSortKey as keyof typeof a]
+    const bVal = b[tableSortKey as keyof typeof b]
+    if (typeof aVal === 'number' && typeof bVal === 'number') {
+      return tableSortDirection === 'asc' ? aVal - bVal : bVal - aVal
+    }
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
+      return tableSortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal)
+    }
+    return 0
+  }), [keeperScores, tableSortKey, tableSortDirection])
 
   const top10Keepers = useMemo(() => sortedKeeperScores.slice(0, 10), [sortedKeeperScores])
 
   const leaderboardChartData = useMemo(() =>
     top10Keepers.map(k => ({
-      name: k.name.length > 12 ? k.name.substring(0, 12) + '...' : k.name,
+      name: truncateName(k.name, CHART_NAME_MAX_LENGTH),
       value: k.score,
       score: k.score,
       saves: k.saves
     })),
     [top10Keepers]
   )
-
-  const handleTableSort = (key: string) => {
-    if (tableSortKey === key) {
-      setTableSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
-    } else {
-      setTableSortKey(key)
-      setTableSortDirection('desc')
-    }
-  }
 
   const pieChartData = useMemo(() => {
     if (!selectedKeeperForPie) return []

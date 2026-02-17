@@ -22,7 +22,7 @@ function App() {
       <TooltipProvider>
       <AuthProvider>
         <Router>
-          <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-legacy-bg-primary)' }}>
+          <div className="app-shell">
             <Header />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <Suspense fallback={<LoadingSpinner />}>

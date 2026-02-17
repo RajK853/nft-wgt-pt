@@ -153,6 +153,12 @@ export function getUniquePlayers(records: PenaltyRecord[]): string[] {
   return Array.from(players).sort()
 }
 
+export function getUniqueKeepers(records: PenaltyRecord[]): string[] {
+  const keepers = new Set<string>()
+  records.forEach(r => keepers.add(r.keeperName))
+  return Array.from(keepers).sort()
+}
+
 function groupBySession(records: PenaltyRecord[]): Map<string, PenaltyRecord[]> {
   const sessions = new Map<string, PenaltyRecord[]>()
 
@@ -255,9 +261,8 @@ export function getMostSavesInSession(records: PenaltyRecord[]): { keeperName: s
   return bestKeeper ? { keeperName: bestKeeper, saves: bestSaves, date: bestDate! } : null
 }
 
-export function getMarathonMan(records: PenaltyRecord[]): { playerName: string; sessionCount: number } | null {
-  if (records.length === 0) return null
-
+/** Builds a map of player → unique session dates they appeared in. */
+function buildPlayerSessionMap(records: PenaltyRecord[]): Map<string, Set<string>> {
   const sessions = groupBySession(records)
   const playerSessions = new Map<string, Set<string>>()
 
@@ -270,6 +275,13 @@ export function getMarathonMan(records: PenaltyRecord[]): { playerName: string; 
     }
   }
 
+  return playerSessions
+}
+
+export function getMarathonMan(records: PenaltyRecord[]): { playerName: string; sessionCount: number } | null {
+  if (records.length === 0) return null
+
+  const playerSessions = buildPlayerSessionMap(records)
   let bestPlayer = ''
   let bestCount = 0
 
@@ -286,18 +298,7 @@ export function getMarathonMan(records: PenaltyRecord[]): { playerName: string; 
 export function getMysteriousNinja(records: PenaltyRecord[]): { playerName: string; sessionCount: number } | null {
   if (records.length === 0) return null
 
-  const sessions = groupBySession(records)
-  const playerSessions = new Map<string, Set<string>>()
-
-  for (const [dateStr, sessionRecords] of sessions) {
-    for (const record of sessionRecords) {
-      const player = record.shooterName
-      const existing = playerSessions.get(player) || new Set()
-      existing.add(dateStr)
-      playerSessions.set(player, existing)
-    }
-  }
-
+  const playerSessions = buildPlayerSessionMap(records)
   let bestPlayer = ''
   let bestCount = Infinity
 

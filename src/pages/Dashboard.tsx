@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from 'react'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { usePenaltyData } from '@/hooks/usePenaltyData'
 import {
   calculatePlayerScores,
@@ -24,23 +23,9 @@ import {
 import { MetricCard, Tabs, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List } from '@/components/ui'
 import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
+import { truncateName } from '@/lib/utils'
 import styles from './Dashboard.module.css'
-
-const PLAYER_STATS_COLUMNS = [
-  { key: 'name', header: 'Player', sortable: true },
-  { key: 'score', header: 'Score', sortable: true },
-  { key: 'goals', header: 'Goals', sortable: true },
-  { key: 'saved', header: 'Saved', sortable: true },
-  { key: 'out', header: 'Out', sortable: true }
-]
-
-const KEEPER_STATS_COLUMNS = [
-  { key: 'name', header: 'Goalkeeper', sortable: true },
-  { key: 'score', header: 'Score', sortable: true },
-  { key: 'saves', header: 'Saves', sortable: true },
-  { key: 'goalsConceded', header: 'Conceded', sortable: true },
-  { key: 'outs', header: 'Out', sortable: true }
-]
 
 function Dashboard() {
   const { data, loading, error } = usePenaltyData()
@@ -80,7 +65,7 @@ function Dashboard() {
 
   const chartData = useMemo(() =>
     top10Players.map(p => ({
-      name: p.name.length > 10 ? p.name.substring(0, 10) + '...' : p.name,
+      name: truncateName(p.name, CHART_NAME_MAX_LENGTH),
       value: p.score,
       score: p.score,
       goals: p.goals

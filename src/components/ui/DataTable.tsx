@@ -6,7 +6,6 @@
  */
 
 import { useTheme } from '@/hooks/useTheme'
-import { useEffect, useState } from 'react'
 
 interface Column<T> {
   key: keyof T | string
@@ -17,7 +16,7 @@ interface Column<T> {
 
 interface DataTableProps<T> {
   data: T[]
-  columns: Column<T>[]
+  columns: readonly Column<T>[]
   sortKey?: string
   sortDirection?: 'asc' | 'desc'
   onSort?: (key: string) => void
@@ -31,40 +30,6 @@ export function DataTable<T extends Record<string, any>>({
   onSort 
 }: DataTableProps<T>) {
   const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-  
-  if (!mounted) {
-    return (
-      <div className="overflow-x-auto rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead className="bg-muted">
-            <tr>
-              {columns.map((column) => (
-                <th
-                  key={String(column.key)}
-                  className="px-4 py-3 text-left text-muted-foreground font-medium"
-                >
-                  {column.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-muted-foreground">
-                Loading...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    )
-  }
-
   const isDark = resolvedTheme === 'dark'
 
   const handleSort = (key: string) => {

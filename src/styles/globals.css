@@ -183,6 +183,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* App root shell */
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--color-legacy-bg-primary);
+}
+
 /* Main content area */
 main {
   min-height: calc(100vh - 60px);
