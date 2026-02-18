@@ -4,7 +4,8 @@
  * Used for Top Performers section in Dashboard
  */
 
-import { useReducer, useEffect, useCallback } from 'react'
+import { useReducer, useEffect, useCallback, useRef } from 'react'
+import { animate } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import styles from './RevealButton.module.css'
 
@@ -51,10 +52,24 @@ export function RevealButton({
     countdown: null,
   })
 
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
   const handleClick = useCallback(() => {
     if (phase === 'revealed') return
     dispatch({ type: 'START', seconds: countdownSeconds })
   }, [countdownSeconds, phase])
+
+  // Heartbeat animation when countdown changes
+  useEffect(() => {
+    if (phase !== 'counting' || countdown === null || !buttonRef.current) return
+
+    // Trigger heartbeat animation on the button
+    animate(
+      buttonRef.current,
+      { scale: [1, 1.08, 1] },
+      { duration: 0.3, ease: 'easeInOut' }
+    )
+  }, [countdown, phase])
 
   useEffect(() => {
     if (phase !== 'counting' || countdown === null) return
@@ -80,10 +95,12 @@ export function RevealButton({
   return (
     <div className={styles.container}>
       <button
+        ref={buttonRef}
         className={cn(
           styles.button,
           styles[variant],
           phase === 'counting' && styles.animating,
+          phase === 'counting' && styles.heartbeatGlow,
           phase === 'revealed' && styles.revealed
         )}
         onClick={handleClick}
