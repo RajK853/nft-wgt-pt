@@ -12,6 +12,53 @@ function applyTimeDecay(records: PenaltyRecord[], halfLife: number = Scoring.PER
   })
 }
 
+function groupBySession(records: PenaltyRecord[]): Map<string, PenaltyRecord[]> {
+  const sessions = new Map<string, PenaltyRecord[]>()
+
+  for (const record of records) {
+    const dateStr = new Date(record.date).toISOString().split('T')[0]
+    const existing = sessions.get(dateStr) || []
+    existing.push(record)
+    sessions.set(dateStr, existing)
+  }
+
+  return sessions
+}
+
+/** Builds a map of player → unique session dates they appeared in. */
+function buildPlayerSessionMap(records: PenaltyRecord[]): Map<string, Set<string>> {
+  const sessions = groupBySession(records)
+  const playerSessions = new Map<string, Set<string>>()
+
+  for (const [dateStr, sessionRecords] of sessions) {
+    for (const record of sessionRecords) {
+      const player = record.shooterName
+      const existing = playerSessions.get(player) || new Set()
+      existing.add(dateStr)
+      playerSessions.set(player, existing)
+    }
+  }
+
+  return playerSessions
+}
+
+/** Builds a map of keeper → unique session dates they appeared in. */
+function buildKeeperSessionMap(records: PenaltyRecord[]): Map<string, Set<string>> {
+  const sessions = groupBySession(records)
+  const keeperSessions = new Map<string, Set<string>>()
+
+  for (const [dateStr, sessionRecords] of sessions) {
+    for (const record of sessionRecords) {
+      const keeper = record.keeperName
+      const existing = keeperSessions.get(keeper) || new Set()
+      existing.add(dateStr)
+      keeperSessions.set(keeper, existing)
+    }
+  }
+
+  return keeperSessions
+}
+
 export function calculatePlayerScores(records: PenaltyRecord[]): PlayerScore[] {
   if (records.length === 0) return []
 
@@ -43,13 +90,17 @@ export function calculatePlayerScores(records: PenaltyRecord[]): PlayerScore[] {
     entry.score += points
   }
 
+  // Calculate unique sessions per player
+  const playerSessions = buildPlayerSessionMap(records)
+
   return Array.from(scoreMap.entries())
     .map(([name, data]) => ({
       name,
       score: Math.round(data.score * 100) / 100,
       goals: data.goals,
       saved: data.saved,
-      out: data.out
+      out: data.out,
+      sessions: playerSessions.get(name)?.size ?? 0
     }))
     .sort((a, b) => b.score - a.score)
 }
@@ -85,13 +136,109 @@ export function calculateKeeperScores(records: PenaltyRecord[]): KeeperScore[] {
     entry.score += points
   }
 
+  // Calculate unique sessions per keeper
+  const keeperSessions = buildKeeperSessionMap(records)
+
   return Array.from(scoreMap.entries())
     .map(([name, data]) => ({
       name,
       score: Math.round(data.score * 100) / 100,
       goalsConceded: data.goalsConceded,
       saves: data.saves,
-      outs: data.outs
+      outs: data.outs,
+      sessions: keeperSessions.get(name)?.size ?? 0
+    }))
+    .sort((a, b) => b.score - a.score)
+}
+
+export function getRecentSessionPlayerScores(records: PenaltyRecord[]): PlayerScore[] {
+  if (records.length === 0) return []
+
+  const sessions = groupBySession(records)
+  const sortedDates = Array.from(sessions.keys()).sort((a, b) => b.localeCompare(a))
+
+  if (sortedDates.length === 0) return []
+
+  const latestDate = sortedDates[0]
+  const latestRecords = sessions.get(latestDate)!
+
+  const scoreMap = new Map<string, { score: number; goals: number; saved: number; out: number }>()
+
+  for (const record of latestRecords) {
+    const shooter = record.shooterName
+
+    if (!scoreMap.has(shooter)) {
+      scoreMap.set(shooter, { score: 0, goals: 0, saved: 0, out: 0 })
+    }
+
+    const entry = scoreMap.get(shooter)!
+
+    if (record.status === 'goal') {
+      entry.score += Scoring.GOAL
+      entry.goals++
+    } else if (record.status === 'saved') {
+      entry.score += Scoring.SAVED
+      entry.saved++
+    } else if (record.status === 'out') {
+      entry.score += Scoring.OUT
+      entry.out++
+    }
+  }
+
+  return Array.from(scoreMap.entries())
+    .map(([name, data]) => ({
+      name,
+      score: Math.round(data.score * 100) / 100,
+      goals: data.goals,
+      saved: data.saved,
+      out: data.out,
+      sessions: 1
+    }))
+    .sort((a, b) => b.score - a.score)
+}
+
+export function getRecentSessionKeeperScores(records: PenaltyRecord[]): KeeperScore[] {
+  if (records.length === 0) return []
+
+  const sessions = groupBySession(records)
+  const sortedDates = Array.from(sessions.keys()).sort((a, b) => b.localeCompare(a))
+
+  if (sortedDates.length === 0) return []
+
+  const latestDate = sortedDates[0]
+  const latestRecords = sessions.get(latestDate)!
+
+  const scoreMap = new Map<string, { score: number; goalsConceded: number; saves: number; outs: number }>()
+
+  for (const record of latestRecords) {
+    const keeper = record.keeperName
+
+    if (!scoreMap.has(keeper)) {
+      scoreMap.set(keeper, { score: 0, goalsConceded: 0, saves: 0, outs: 0 })
+    }
+
+    const entry = scoreMap.get(keeper)!
+
+    if (record.status === 'goal') {
+      entry.score += Scoring.KEEPER_GOAL
+      entry.goalsConceded++
+    } else if (record.status === 'saved') {
+      entry.score += Scoring.KEEPER_SAVED
+      entry.saves++
+    } else if (record.status === 'out') {
+      entry.score += Scoring.KEEPER_OUT
+      entry.outs++
+    }
+  }
+
+  return Array.from(scoreMap.entries())
+    .map(([name, data]) => ({
+      name,
+      score: Math.round(data.score * 100) / 100,
+      goalsConceded: data.goalsConceded,
+      saves: data.saves,
+      outs: data.outs,
+      sessions: 1
     }))
     .sort((a, b) => b.score - a.score)
 }
@@ -157,19 +304,6 @@ export function getUniqueKeepers(records: PenaltyRecord[]): string[] {
   const keepers = new Set<string>()
   records.forEach(r => keepers.add(r.keeperName))
   return Array.from(keepers).sort()
-}
-
-function groupBySession(records: PenaltyRecord[]): Map<string, PenaltyRecord[]> {
-  const sessions = new Map<string, PenaltyRecord[]>()
-
-  for (const record of records) {
-    const dateStr = new Date(record.date).toISOString().split('T')[0]
-    const existing = sessions.get(dateStr) || []
-    existing.push(record)
-    sessions.set(dateStr, existing)
-  }
-
-  return sessions
 }
 
 export function getLongestGoalStreak(records: PenaltyRecord[]): { playerName: string; streak: number; date: Date } | null {
@@ -259,23 +393,6 @@ export function getMostSavesInSession(records: PenaltyRecord[]): { keeperName: s
   }
 
   return bestKeeper ? { keeperName: bestKeeper, saves: bestSaves, date: bestDate! } : null
-}
-
-/** Builds a map of player → unique session dates they appeared in. */
-function buildPlayerSessionMap(records: PenaltyRecord[]): Map<string, Set<string>> {
-  const sessions = groupBySession(records)
-  const playerSessions = new Map<string, Set<string>>()
-
-  for (const [dateStr, sessionRecords] of sessions) {
-    for (const record of sessionRecords) {
-      const player = record.shooterName
-      const existing = playerSessions.get(player) || new Set()
-      existing.add(dateStr)
-      playerSessions.set(player, existing)
-    }
-  }
-
-  return playerSessions
 }
 
 export function getMarathonMan(records: PenaltyRecord[]): { playerName: string; sessionCount: number } | null {

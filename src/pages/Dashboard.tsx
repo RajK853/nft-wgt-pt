@@ -11,6 +11,8 @@ import {
   getMysteriousNinja,
   getBusiestDay,
   getRecentSession,
+  getRecentSessionPlayerScores,
+  getRecentSessionKeeperScores,
   getOverallStats,
   getHottestShooter,
   getBestSaveRate,
@@ -21,7 +23,7 @@ import {
 import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber } from '@/components/ui'
 import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
-import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
+import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, RECENT_PLAYER_STATS_COLUMNS, RECENT_KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
 import { truncateName } from '@/lib/utils'
 import styles from './Dashboard.module.css'
 
@@ -34,11 +36,16 @@ function Dashboard() {
     document.title = 'Dashboard - NFT Weingarten'
   }, [])
 
+  // All-time scores
   const playerScores = useMemo(() => calculatePlayerScores(data), [data])
   const keeperScores = useMemo(() => calculateKeeperScores(data), [data])
   const top3Players = useMemo(() => playerScores.slice(0, 3), [playerScores])
   const top3Keepers = useMemo(() => keeperScores.slice(0, 3), [keeperScores])
   const top10Players = useMemo(() => playerScores.slice(0, 10), [playerScores])
+
+  // Recent session scores (for Recent Activity section)
+  const recentPlayerScores = useMemo(() => getRecentSessionPlayerScores(data), [data])
+  const recentKeeperScores = useMemo(() => getRecentSessionKeeperScores(data), [data])
 
   const overallStats = useMemo(() => getOverallStats(data), [data])
   const hottestShooter = useMemo(() => getHottestShooter(data), [data])
@@ -67,6 +74,16 @@ function Dashboard() {
       goals: p.goals
     })),
     [top10Players]
+  )
+
+  const recentChartData = useMemo(() =>
+    recentPlayerScores.slice(0, 10).map(p => ({
+      name: truncateName(p.name, CHART_NAME_MAX_LENGTH),
+      value: p.score,
+      score: p.score,
+      goals: p.goals
+    })),
+    [recentPlayerScores]
   )
 
   if (loading) return <LoadingSpinner />
@@ -493,14 +510,14 @@ function Dashboard() {
             </TabsList>
 
             <TabsContent value="players">
-              {playerScores.length > 0 && (
+              {recentPlayerScores.length > 0 && (
                 <div className={styles.statsContent}>
                   <div className={styles.chartWrapper}>
-                    <BarChart data={chartData} dataKeys={['score']} height={200} />
+                    <BarChart data={recentChartData} dataKeys={['score']} height={200} />
                   </div>
                   <DataTable
-                    data={playerScores.slice(0, 10)}
-                    columns={PLAYER_STATS_COLUMNS}
+                    data={recentPlayerScores}
+                    columns={RECENT_PLAYER_STATS_COLUMNS}
                     sortKey="score"
                     sortDirection="desc"
                   />
@@ -509,10 +526,10 @@ function Dashboard() {
             </TabsContent>
 
             <TabsContent value="keepers">
-              {keeperScores.length > 0 && (
+              {recentKeeperScores.length > 0 && (
                 <div className={styles.statsContent}>
                   <div className={styles.keeperCharts}>
-                    {keeperScores.slice(0, 3).map(keeper => (
+                    {recentKeeperScores.slice(0, 3).map(keeper => (
                       <div key={keeper.name} className={styles.keeperChart}>
                         <h4 className={styles.keeperName}>{keeper.name}</h4>
                         <PieChart
@@ -527,8 +544,8 @@ function Dashboard() {
                     ))}
                   </div>
                   <DataTable
-                    data={keeperScores.slice(0, 10)}
-                    columns={KEEPER_STATS_COLUMNS}
+                    data={recentKeeperScores}
+                    columns={RECENT_KEEPER_STATS_COLUMNS}
                     sortKey="score"
                     sortDirection="desc"
                   />

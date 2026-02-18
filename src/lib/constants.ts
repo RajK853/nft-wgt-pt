@@ -4,14 +4,34 @@
  */
 
 export const PLAYER_STATS_COLUMNS = [
-  { key: 'name',  header: 'Player',  sortable: true },
-  { key: 'score', header: 'Score',   sortable: true },
-  { key: 'goals', header: 'Goals',   sortable: true },
-  { key: 'saved', header: 'Saved',   sortable: true },
-  { key: 'out',   header: 'Out',     sortable: true },
+  { key: 'name',     header: 'Player',    sortable: true },
+  { key: 'score',    header: 'Score',     sortable: true },
+  { key: 'goals',    header: 'Goals',     sortable: true },
+  { key: 'saved',    header: 'Saved',     sortable: true },
+  { key: 'out',      header: 'Out',       sortable: true },
+  { key: 'sessions', header: '# Sessions', sortable: true },
 ] as const
 
 export const KEEPER_STATS_COLUMNS = [
+  { key: 'name',          header: 'Goalkeeper',     sortable: true },
+  { key: 'score',         header: 'Score',          sortable: true },
+  { key: 'saves',         header: 'Saves',          sortable: true },
+  { key: 'goalsConceded', header: 'Goals Conceded', sortable: true },
+  { key: 'outs',          header: 'Out',            sortable: true },
+  { key: 'sessions',      header: '# Sessions',     sortable: true },
+] as const
+
+/** Columns for Dashboard Recent Activity section (no sessions column) */
+export const RECENT_PLAYER_STATS_COLUMNS = [
+  { key: 'name',  header: 'Player', sortable: true },
+  { key: 'score', header: 'Score',  sortable: true },
+  { key: 'goals', header: 'Goals',  sortable: true },
+  { key: 'saved', header: 'Saved',  sortable: true },
+  { key: 'out',   header: 'Out',    sortable: true },
+] as const
+
+/** Columns for Dashboard Recent Activity section (no sessions column) */
+export const RECENT_KEEPER_STATS_COLUMNS = [
   { key: 'name',          header: 'Goalkeeper',    sortable: true },
   { key: 'score',         header: 'Score',         sortable: true },
   { key: 'saves',         header: 'Saves',         sortable: true },

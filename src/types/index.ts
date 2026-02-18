@@ -27,6 +27,7 @@ export interface PlayerScore {
   goals: number
   saved: number
   out: number
+  sessions: number
 }
 
 // Keeper scoring  
@@ -36,6 +37,7 @@ export interface KeeperScore {
   goalsConceded: number
   saves: number
   outs: number
+  sessions: number
 }
 
 // Outcome distribution for pie charts
