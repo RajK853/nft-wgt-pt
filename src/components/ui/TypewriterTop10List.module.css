@@ -1,16 +1,23 @@
 /* Typewriter Top-10 List Styles */
+/* Uses legacy brand colors - 5 rows with 2 players each */
 .typewriterList {
   font-size: 0.875rem;
   line-height: 1.8;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .typewriterRow {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
   width: 100%;
-  margin-bottom: 0.25rem;
+  background: var(--color-legacy-bg-tertiary);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  gap: 0.5rem;
 }
 
 .playerCell {
@@ -18,6 +25,7 @@
   align-items: center;
   gap: 0.5rem;
   flex: 1;
+  min-width: 0;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -31,30 +39,33 @@
 }
 
 .playerCell .rank {
-  color: var(--color-muted-foreground);
+  color: var(--color-legacy-text-muted);
   min-width: 1.5rem;
   text-align: right;
   flex-shrink: 0;
 }
 
 .playerCell .name {
-  color: var(--color-foreground);
+  color: var(--color-legacy-text-primary);
   font-weight: 500;
   flex: 1;
   text-align: left;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .playerCell .score {
   color: var(--color-legacy-success);
   font-weight: 600;
-  min-width: 4rem;
+  min-width: 3.5rem;
   text-align: right;
   flex-shrink: 0;
 }
 
 .playerCell .cursor {
-  color: var(--color-primary);
+  color: var(--color-legacy-accent);
   animation: blink 0.7s infinite;
 }
 
@@ -70,6 +81,10 @@
 }
 
 @media (max-width: 480px) {
+  .typewriterList {
+    grid-template-columns: 1fr;
+  }
+
   .typewriterRow {
     flex-direction: column;
     gap: 0.25rem;

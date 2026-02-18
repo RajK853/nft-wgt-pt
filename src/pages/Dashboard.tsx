@@ -3,8 +3,6 @@ import { usePenaltyData } from '@/hooks/usePenaltyData'
 import {
   calculatePlayerScores,
   calculateKeeperScores,
-  getTopPlayer,
-  getTopKeeper,
   getMostGoalsInSession,
   getMostSavesInSession,
   getLongestGoalStreak,
@@ -30,9 +28,7 @@ import styles from './Dashboard.module.css'
 function Dashboard() {
   const { data, loading, error } = usePenaltyData()
 
-  const [revealedTop10, setRevealedTop10] = useState(false)
-  const [revealedTopPlayer, setRevealedTopPlayer] = useState(false)
-  const [revealedTopKeeper, setRevealedTopKeeper] = useState(false)
+  const [revealedTopPerformers, setRevealedTopPerformers] = useState(false)
 
   useEffect(() => {
     document.title = 'Dashboard - NFT Weingarten'
@@ -40,8 +36,8 @@ function Dashboard() {
 
   const playerScores = useMemo(() => calculatePlayerScores(data), [data])
   const keeperScores = useMemo(() => calculateKeeperScores(data), [data])
-  const topPlayer = useMemo(() => getTopPlayer(data), [data])
-  const topKeeper = useMemo(() => getTopKeeper(data), [data])
+  const top3Players = useMemo(() => playerScores.slice(0, 3), [playerScores])
+  const top3Keepers = useMemo(() => keeperScores.slice(0, 3), [keeperScores])
   const top10Players = useMemo(() => playerScores.slice(0, 10), [playerScores])
 
   const overallStats = useMemo(() => getOverallStats(data), [data])
@@ -146,70 +142,114 @@ function Dashboard() {
         </Tooltip>
       </div>
 
-      {/* Top Performers */}
+      {/* Top Performers - New Podium Layout */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>🏆 Top Performers</h2>
-
-        <div className={styles.topPerformersGrid}>
-          {/* Wide left card: Top-10 */}
-          <div className={`${styles.card} ${styles.cardWide} ${styles.cardAccentLeft}`}>
-            <h3 className={styles.cardTitle}>🔟 Top-10 Players</h3>
-            <RevealButton
-              label="Reveal Top-10"
-              onReveal={() => setRevealedTop10(true)}
-              onReset={() => setRevealedTop10(false)}
-              variant="primary"
-            />
-            {revealedTop10 && top10Players.length > 0 && (
-              <div className={styles.revealedContent}>
-                <TypewriterTop10List players={top10Players} />
-              </div>
-            )}
-          </div>
-
-          {/* Right column: Top Player + Top Keeper stacked */}
-          <div className={styles.topPerformersStack}>
-            <div className={`${styles.card} ${styles.cardAccentLeft}`}>
-              <h3 className={styles.cardTitle}>👤 Top Player</h3>
-              <RevealButton
-                label="Reveal Player"
-                onReveal={() => setRevealedTopPlayer(true)}
-                onReset={() => setRevealedTopPlayer(false)}
-                variant="primary"
-              />
-              {revealedTopPlayer && topPlayer && (
-                <div className={styles.revealedContent}>
-                  <MetricCard
-                    label={topPlayer.name}
-                    value={topPlayer.score.toFixed(2)}
-                    delta={`${topPlayer.goals} goals · ${topPlayer.saved} saved · ${topPlayer.out} out`}
-                    sentiment="positive"
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className={`${styles.card} ${styles.cardAccentLeft}`}>
-              <h3 className={styles.cardTitle}>🧤 Top Goalkeeper</h3>
-              <RevealButton
-                label="Reveal Keeper"
-                onReveal={() => setRevealedTopKeeper(true)}
-                onReset={() => setRevealedTopKeeper(false)}
-                variant="primary"
-              />
-              {revealedTopKeeper && topKeeper && (
-                <div className={styles.revealedContent}>
-                  <MetricCard
-                    label={topKeeper.name}
-                    value={topKeeper.score.toFixed(2)}
-                    delta={`${topKeeper.saves} saves · ${topKeeper.goalsConceded} conceded`}
-                    sentiment="positive"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+        <div className={styles.topPerformersHeader}>
+          <RevealButton
+            label={revealedTopPerformers ? 'Hide' : 'Reveal'}
+            onReveal={() => setRevealedTopPerformers(true)}
+            onReset={() => setRevealedTopPerformers(false)}
+            variant="primary"
+          />
         </div>
+
+        {revealedTopPerformers && (
+          <div className={styles.podiumSection}>
+            {/* Podium Row: Top 3 Players & Top 3 Keepers */}
+            <div className={styles.podiumGrid}>
+              {/* Shooters Podium */}
+              <div className={styles.podiumCard}>
+                <h3 className={styles.podiumTitle}>🎯 Top 3 Shooters</h3>
+                <div className={styles.podiumContent}>
+                  <div className={styles.podiumPositions}>
+                    {/* Gold - Position 1 */}
+                    <div className={`${styles.podiumPosition} ${styles.podiumGold}`}>
+                      <span className={styles.podiumMedal}>🥇</span>
+                      {top3Players[0] && (
+                        <>
+                          <span className={styles.podiumName}>{top3Players[0].name}</span>
+                          <span className={styles.podiumScore}>{top3Players[0].score.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                    {/* Silver - Position 2 */}
+                    <div className={`${styles.podiumPosition} ${styles.podiumSilver}`}>
+                      <span className={styles.podiumMedal}>🥈</span>
+                      {top3Players[1] && (
+                        <>
+                          <span className={styles.podiumName}>{top3Players[1].name}</span>
+                          <span className={styles.podiumScore}>{top3Players[1].score.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                    {/* Bronze - Position 3 */}
+                    <div className={`${styles.podiumPosition} ${styles.podiumBronze}`}>
+                      <span className={styles.podiumMedal}>🥉</span>
+                      {top3Players[2] && (
+                        <>
+                          <span className={styles.podiumName}>{top3Players[2].name}</span>
+                          <span className={styles.podiumScore}>{top3Players[2].score.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Keepers Podium */}
+              <div className={styles.podiumCard}>
+                <h3 className={styles.podiumTitle}>🧤 Top 3 Keepers</h3>
+                <div className={styles.podiumContent}>
+                  <div className={styles.podiumPositions}>
+                    {/* Gold - Position 1 */}
+                    <div className={`${styles.podiumPosition} ${styles.podiumGold}`}>
+                      <span className={styles.podiumMedal}>🥇</span>
+                      {top3Keepers[0] && (
+                        <>
+                          <span className={styles.podiumName}>{top3Keepers[0].name}</span>
+                          <span className={styles.podiumScore}>{top3Keepers[0].score.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                    {/* Silver - Position 2 */}
+                    <div className={`${styles.podiumPosition} ${styles.podiumSilver}`}>
+                      <span className={styles.podiumMedal}>🥈</span>
+                      {top3Keepers[1] && (
+                        <>
+                          <span className={styles.podiumName}>{top3Keepers[1].name}</span>
+                          <span className={styles.podiumScore}>{top3Keepers[1].score.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                    {/* Bronze - Position 3 */}
+                    <div className={`${styles.podiumPosition} ${styles.podiumBronze}`}>
+                      <span className={styles.podiumMedal}>🥉</span>
+                      {top3Keepers[2] && (
+                        <>
+                          <span className={styles.podiumName}>{top3Keepers[2].name}</span>
+                          <span className={styles.podiumScore}>{top3Keepers[2].score.toFixed(2)}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Full Leaderboard with Typewriter Animation */}
+            <div className={`${styles.card} ${styles.leaderboardCard}`}>
+              <h3 className={styles.cardTitle}>📊 Full Leaderboard (Top 10 Shooters)</h3>
+              {top10Players.length > 0 && (
+                <TypewriterTop10List players={top10Players} />
+              )}
+            </div>
+          </div>
+        )}
+
+        {!revealedTopPerformers && (
+          <div className={styles.topPerformersCollapsed} />
+        )}
       </section>
 
       {/* Current Form */}
