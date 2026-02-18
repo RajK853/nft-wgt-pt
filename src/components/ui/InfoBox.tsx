@@ -5,7 +5,7 @@
  * Theme-aware using CSS variables
  */
 
-import { InformationCircleIcon } from '@heroicons/react/24/solid'
+import { Info } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
 
 interface InfoBoxProps {
@@ -19,25 +19,25 @@ interface InfoBoxProps {
   className?: string
 }
 
-export function InfoBox({ 
-  title, 
-  children, 
-  link, 
+export function InfoBox({
+  title,
+  children,
+  link,
   variant = 'info',
-  className = '' 
+  className = ''
 }: InfoBoxProps) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
 
   const variantStyles = {
-    info: isDark 
-      ? 'bg-blue-900/20 border-blue-700/50 text-blue-200' 
+    info: isDark
+      ? 'bg-blue-900/20 border-blue-700/50 text-blue-200'
       : 'bg-blue-50 border-blue-200 text-blue-800',
-    warning: isDark 
-      ? 'bg-yellow-900/20 border-yellow-700/50 text-yellow-200' 
+    warning: isDark
+      ? 'bg-yellow-900/20 border-yellow-700/50 text-yellow-200'
       : 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    success: isDark 
-      ? 'bg-green-900/20 border-green-700/50 text-green-200' 
+    success: isDark
+      ? 'bg-green-900/20 border-green-700/50 text-green-200'
       : 'bg-green-50 border-green-200 text-green-800'
   }
 
@@ -47,14 +47,14 @@ export function InfoBox({
     success: isDark ? 'text-green-400' : 'text-green-600'
   }
 
-  const linkClasses = isDark 
-    ? 'inline-block mt-2 text-sm font-medium hover:underline opacity-80 hover:opacity-100' 
+  const linkClasses = isDark
+    ? 'inline-block mt-2 text-sm font-medium hover:underline opacity-80 hover:opacity-100'
     : 'inline-block mt-2 text-sm font-medium hover:underline text-blue-600'
 
   return (
     <div className={`rounded-lg border p-4 ${variantStyles[variant]} ${className}`}>
       <div className="flex items-start gap-3">
-        <InformationCircleIcon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${iconColors[variant]}`} />
+        <Info className={`h-5 w-5 flex-shrink-0 mt-0.5 ${iconColors[variant]}`} />
         <div className="flex-1">
           {title && (
             <h4 className="font-medium mb-1">{title}</h4>
@@ -63,7 +63,7 @@ export function InfoBox({
             {children}
           </div>
           {link && (
-            <a 
+            <a
               href={link.href}
               className={linkClasses}
             >

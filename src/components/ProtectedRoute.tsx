@@ -8,12 +8,12 @@ interface ProtectedRouteProps {
   children: ReactNode
 }
 
+// Set VITE_AUTH_DISABLED=true in .env to bypass auth during development
+const AUTH_DISABLED = import.meta.env.VITE_AUTH_DISABLED === 'true'
+
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth()
   const location = useLocation()
-
-  // Set VITE_AUTH_DISABLED=true in .env to bypass auth during development
-  const AUTH_DISABLED = import.meta.env.VITE_AUTH_DISABLED === 'true'
 
   if (AUTH_DISABLED) {
     return <>{children}</>
@@ -21,7 +21,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div className="loading-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+      <div className="loading-container flex justify-center items-center min-h-[200px]">
         <p>Loading...</p>
       </div>
     )

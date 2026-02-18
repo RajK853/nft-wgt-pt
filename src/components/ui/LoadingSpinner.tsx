@@ -3,8 +3,6 @@
  * Simple loading indicator with KISS principle
  */
 
-import React from 'react';
-
 interface LoadingSpinnerProps {
   text?: string;
   className?: string;

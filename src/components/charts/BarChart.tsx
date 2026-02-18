@@ -16,6 +16,7 @@ import {
   ResponsiveContainer,
   Cell,
   ReferenceLine,
+  LabelList,
 } from 'recharts'
 import { useTheme } from '@/hooks/useTheme'
 import {
@@ -38,8 +39,15 @@ interface BarChartProps {
   colorCoding?: 'single' | 'custom'
 }
 
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: Array<{ value?: number; name?: string }>
+  label?: string
+  isDark: boolean
+}
+
 /** Custom tooltip component */
-const CustomTooltip = ({ active, payload, label, isDark }: any) => {
+const CustomTooltip = ({ active, payload, label, isDark }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null
   return (
     <div className={isDark
@@ -174,6 +182,14 @@ export function BarChart({
               isAnimationActive
               animationDuration={ANIMATION_DURATION_MS}
             >
+              {colorCoding === 'single' && (
+                <LabelList
+                  dataKey={key}
+                  position={layout === 'horizontal' ? 'top' : 'right'}
+                  formatter={(value) => Number(value) === maxValue && maxValue > 0 ? '▲' : ''}
+                  style={{ fill: '#22c55e', fontSize: 14, fontWeight: 'bold' }}
+                />
+              )}
               {colorCoding === 'single' && data.map((entry, index) => {
                 const value = Number(entry[primaryDataKey]) || Number(entry.value) || 0
                 return (

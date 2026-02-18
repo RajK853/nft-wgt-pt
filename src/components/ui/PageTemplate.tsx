@@ -2,7 +2,7 @@
  * PageTemplate Component
  * Standard layout template for all pages
  * Provides: centered container, header, section structure
- * 
+ *
  * Usage:
  * <PageTemplate
  *   title="Page Title"
@@ -37,9 +37,9 @@ const MAX_WIDTH_CLASSES = {
   '3xl': 'max-w-full'
 }
 
-export function PageTemplate({ 
-  title, 
-  subtitle, 
+export function PageTemplate({
+  title,
+  subtitle,
   children,
   maxWidth = '2xl'
 }: PageTemplateProps) {
@@ -56,7 +56,7 @@ export function PageTemplate({
           </p>
         )}
       </header>
-      
+
       {/* Page Content */}
       {children}
     </div>
@@ -70,7 +70,7 @@ export function PageTemplate({
  */
 export function Section({ title, children, fullWidth = false }: SectionProps) {
   return (
-    <section className={`mb-8 ${fullWidth ? '' : ''}`}>
+    <section className={`mb-8 ${fullWidth ? 'w-full' : ''}`}>
       {title && (
         <h2 className="text-lg font-semibold text-white mb-4">
           {title}
@@ -85,12 +85,12 @@ export function Section({ title, children, fullWidth = false }: SectionProps) {
  * TwoColumn Section Layout
  * For side-by-side content
  */
-export function TwoColumn({ 
-  left, 
-  right 
-}: { 
+export function TwoColumn({
+  left,
+  right
+}: {
   left: ReactNode
-  right: ReactNode 
+  right: ReactNode
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -103,10 +103,10 @@ export function TwoColumn({
 /**
  * CardGrid - for responsive card layouts
  */
-export function CardGrid({ 
+export function CardGrid({
   children,
   columns = 3
-}: { 
+}: {
   children: ReactNode
   columns?: 2 | 3 | 4
 }) {
@@ -115,7 +115,7 @@ export function CardGrid({
     3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
     4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
   }
-  
+
   return (
     <div className={`grid ${gridCols[columns]} gap-4`}>
       {children}

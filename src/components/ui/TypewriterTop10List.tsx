@@ -25,22 +25,18 @@ interface DisplayedPlayer {
 }
 
 function PlayerCell({
-  player,
   index,
   displayed,
-  isAnimating,
   showCursorName,
   showCursorScore
 }: {
-  player: PlayerScore
   index: number
   displayed: DisplayedPlayer | undefined
-  isAnimating: boolean
   showCursorName: boolean
   showCursorScore: boolean
 }) {
   const isVisible = displayed !== undefined
-  
+
   return (
     <div className={`${styles.playerCell} ${isVisible ? styles.visible : styles.hidden}`}>
       <span className={styles.rank}>{index + 1}.</span>
@@ -78,7 +74,7 @@ export function TypewriterTop10List({ players, baseSpeed = 30 }: TypewriterTop10
 
     if (charIndex < targetText.length) {
       const delay = baseSpeed * Math.pow(0.85, charIndex)
-      
+
       timerRef.current = setTimeout(() => {
         setCharIndex(charIndex + 1)
         setDisplayedPlayers(prev => {
@@ -91,7 +87,7 @@ export function TypewriterTop10List({ players, baseSpeed = 30 }: TypewriterTop10
           return updated
         })
       }, delay)
-      
+
       return clearTimer
     }
 
@@ -107,7 +103,7 @@ export function TypewriterTop10List({ players, baseSpeed = 30 }: TypewriterTop10
         setCharIndex(0)
       }
     }, delay)
-    
+
     return clearTimer
   }, [currentIndex, phase, charIndex, players, baseSpeed])
 
@@ -126,23 +122,19 @@ export function TypewriterTop10List({ players, baseSpeed = 30 }: TypewriterTop10
       {playerPairs.map(([player1, player2], pairIndex) => {
         const index1 = pairIndex * 2
         const index2 = pairIndex * 2 + 1
-        
+
         return (
           <div key={pairIndex} className={styles.typewriterRow}>
             <PlayerCell
-              player={player1}
               index={index1}
               displayed={displayedPlayers[index1]}
-              isAnimating={index1 <= currentIndex}
               showCursorName={index1 === currentIndex && phase === 'name' && charIndex < player1.name.length}
               showCursorScore={index1 === currentIndex && phase === 'score' && charIndex < player1.score.toFixed(2).length}
             />
             {player2 && (
               <PlayerCell
-                player={player2}
                 index={index2}
                 displayed={displayedPlayers[index2]}
-                isAnimating={index2 <= currentIndex}
                 showCursorName={index2 === currentIndex && phase === 'name' && charIndex < player2.name.length}
                 showCursorScore={index2 === currentIndex && phase === 'score' && charIndex < player2.score.toFixed(2).length}
               />

@@ -8,20 +8,20 @@
   border-radius: 0.375rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
 }
 
 /* Variants */
 .button--primary {
-  background: linear-gradient(45deg, #a855f7, #ec4899);
+  background: linear-gradient(45deg, var(--primary-gradient-start), var(--primary-gradient-end));
 }
 
 .button--secondary {
-  background: linear-gradient(45deg, #3b82f6, #22c55e);
+  background: linear-gradient(45deg, var(--color-legacy-info), var(--color-legacy-success));
 }
 
 .button--danger {
-  background: linear-gradient(45deg, #ef4444, #f87171);
+  background: linear-gradient(45deg, var(--color-legacy-error), var(--color-legacy-error));
 }
 
 /* Sizes */
@@ -51,7 +51,7 @@
 }
 
 .button:focus {
-  outline: 2px solid #a855f7;
+  outline: 2px solid var(--color-legacy-accent);
   outline-offset: 2px;
 }
 

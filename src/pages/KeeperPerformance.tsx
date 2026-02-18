@@ -8,7 +8,7 @@ import {
   getKeeperOutcomeDistribution
 } from '@/lib/analysis'
 import { BarChart, PieChart } from '@/components/charts'
-import { DataTable, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, Tabs, TabsList, TabsTrigger, TabsContent, InfoBox, LoadingSpinner } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import { KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
@@ -175,21 +175,27 @@ export default function KeeperPerformance() {
                 </InfoBox>
               )}
 
-              <Tabs tabs={OUTCOME_TABS} defaultTab="saves">
-                {(activeTab) => {
-                  const outcome = pieChartData.find(d =>
-                    (activeTab === 'saves' && d.name === 'Saved') ||
-                    (activeTab === 'goals' && d.name === 'Goal') ||
-                    (activeTab === 'out' && d.name === 'Out')
-                  )
-                  return (
-                    <p className={styles.description}>
-                      {activeTab === 'saves' && `Save Rate: ${outcome?.percentage || 0}%`}
-                      {activeTab === 'goals' && `Goal Rate: ${outcome?.percentage || 0}%`}
-                      {activeTab === 'out' && `Out Rate: ${outcome?.percentage || 0}%`}
-                    </p>
-                  )
-                }}
+              <Tabs defaultValue="saves">
+                <TabsList>
+                  {OUTCOME_TABS.map(tab => (
+                    <TabsTrigger key={tab.id} value={tab.id}>{tab.label}</TabsTrigger>
+                  ))}
+                </TabsList>
+                <TabsContent value="saves">
+                  <p className={styles.description}>
+                    Save Rate: {pieChartData.find(d => d.name === 'Saved')?.percentage ?? 0}%
+                  </p>
+                </TabsContent>
+                <TabsContent value="goals">
+                  <p className={styles.description}>
+                    Goal Rate: {pieChartData.find(d => d.name === 'Goal')?.percentage ?? 0}%
+                  </p>
+                </TabsContent>
+                <TabsContent value="out">
+                  <p className={styles.description}>
+                    Out Rate: {pieChartData.find(d => d.name === 'Out')?.percentage ?? 0}%
+                  </p>
+                </TabsContent>
               </Tabs>
             </div>
           ) : (

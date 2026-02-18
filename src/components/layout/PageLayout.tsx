@@ -13,8 +13,8 @@ interface PageLayoutProps {
   padding?: 'none' | 'sm' | 'md' | 'lg'
 }
 
-export function PageLayout({ 
-  children, 
+export function PageLayout({
+  children,
   maxWidth = '2xl',
   padding = 'md'
 }: PageLayoutProps) {
@@ -35,10 +35,10 @@ export function PageLayout({
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-legacy-bg-primary)' }}>
+    <div className="min-h-screen app-shell">
       {/* Global Header */}
       <Header />
-      
+
       {/* Main Content Area */}
       <main className={`mx-auto ${maxWidthClasses[maxWidth]} ${paddingClasses[padding]}`}>
         {children}

@@ -36,8 +36,15 @@ interface LineChartProps {
   series?: LineChartSeries[]
 }
 
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: Array<{ dataKey?: string; name?: string; value?: number; color?: string }>
+  label?: string
+  isDark: boolean
+}
+
 /** Custom tooltip component for better styling - theme aware */
-const CustomTooltip = ({ active, payload, label, isDark }: any) => {
+const CustomTooltip = ({ active, payload, label, isDark }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null
   return (
     <div className={isDark
@@ -45,7 +52,7 @@ const CustomTooltip = ({ active, payload, label, isDark }: any) => {
       : 'bg-white border border-gray-200 p-3 rounded-lg shadow-lg'
     }>
       <p className={isDark ? 'text-sm text-gray-300 mb-2' : 'text-sm text-gray-700 mb-2'}>{label}</p>
-      {payload.map((entry: any) => (
+      {payload.map((entry: { dataKey?: string; name?: string; value?: number; color?: string }) => (
         <p key={entry.dataKey} className="text-sm font-semibold" style={{ color: entry.color }}>
           {entry.name}: {entry.value}
         </p>

@@ -46,7 +46,7 @@
 }
 
 .playerCell .score {
-  color: #22c55e;
+  color: var(--color-legacy-success);
   font-weight: 600;
   min-width: 4rem;
   text-align: right;
@@ -63,12 +63,18 @@
   51%, 100% { opacity: 0; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
 @media (max-width: 480px) {
   .typewriterRow {
     flex-direction: column;
     gap: 0.25rem;
   }
-  
+
   .playerCell {
     width: 100%;
   }

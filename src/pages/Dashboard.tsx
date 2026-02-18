@@ -20,7 +20,7 @@ import {
   getPerfectSession,
   getSessionLeader
 } from '@/lib/analysis'
-import { MetricCard, Tabs, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List } from '@/components/ui'
+import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List } from '@/components/ui'
 import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
@@ -312,100 +312,101 @@ function Dashboard() {
       <section className={`${styles.section} ${styles.sectionAccent}`}>
         <h2 className={styles.sectionTitle}>🏅 Hall of Fame</h2>
 
-        <Tabs
-          tabs={[
-            { id: 'single', label: 'Single Session' },
-            { id: 'alltime', label: 'All-Time Records' },
-            { id: 'funfacts', label: 'Fun Facts' }
-          ]}
-          defaultTab="single"
-        >
-          {(activeTab) => (
+        <Tabs defaultValue="single" className={styles.hallOfFameTabs}>
+          <TabsList>
+            <TabsTrigger value="single">Single Session</TabsTrigger>
+            <TabsTrigger value="alltime">All-Time Records</TabsTrigger>
+            <TabsTrigger value="funfacts">Fun Facts</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="single">
             <div className={styles.hallOfFameContent}>
-              {activeTab === 'single' && (
-                <div className={styles.recordsGrid}>
-                  <MetricCard
-                    label="Most Goals in Session"
-                    value={hallOfFame.mostGoals?.playerName || 'N/A'}
-                    delta={hallOfFame.mostGoals
-                      ? `${hallOfFame.mostGoals.goals} goals on ${hallOfFame.mostGoals.date.toLocaleDateString()}`
-                      : 'No data'}
-                    sentiment="positive"
-                  />
-                  <MetricCard
-                    label="Most Saves in Session"
-                    value={hallOfFame.mostSaves?.keeperName || 'N/A'}
-                    delta={hallOfFame.mostSaves
-                      ? `${hallOfFame.mostSaves.saves} saves on ${hallOfFame.mostSaves.date.toLocaleDateString()}`
-                      : 'No data'}
-                    sentiment="neutral"
-                  />
-                </div>
-              )}
-
-              {activeTab === 'alltime' && (
-                <div className={styles.recordsGrid}>
-                  <MetricCard
-                    label="Longest Goal Streak"
-                    value={hallOfFame.longestStreak?.playerName || 'N/A'}
-                    delta={hallOfFame.longestStreak
-                      ? `${hallOfFame.longestStreak.streak} consecutive goals`
-                      : 'No data'}
-                    sentiment="positive"
-                  />
-                  <MetricCard
-                    label="Biggest Rivalry"
-                    value={hallOfFame.biggestRivalry
-                      ? `${hallOfFame.biggestRivalry.shooterName} vs ${hallOfFame.biggestRivalry.keeperName}`
-                      : 'N/A'}
-                    delta={hallOfFame.biggestRivalry
-                      ? `${hallOfFame.biggestRivalry.encounters} encounters`
-                      : 'No data'}
-                    sentiment="neutral"
-                  />
-                </div>
-              )}
-
-              {activeTab === 'funfacts' && (
-                <div className={styles.recordsGridWide}>
-                  <MetricCard
-                    label="🏃 Marathon Man"
-                    value={hallOfFame.marathonMan?.playerName || 'N/A'}
-                    delta={hallOfFame.marathonMan
-                      ? `${hallOfFame.marathonMan.sessionCount} sessions played`
-                      : 'No data'}
-                    sentiment="positive"
-                  />
-                  <MetricCard
-                    label="🥷 Mysterious Ninja"
-                    value={hallOfFame.mysteriousNinja?.playerName || 'N/A'}
-                    delta={hallOfFame.mysteriousNinja
-                      ? `Only ${hallOfFame.mysteriousNinja.sessionCount} session(s)`
-                      : 'No data'}
-                    sentiment="neutral"
-                  />
-                  <MetricCard
-                    label="📅 Busiest Day"
-                    value={hallOfFame.busiestDay
-                      ? hallOfFame.busiestDay.date.toLocaleDateString()
-                      : 'N/A'}
-                    delta={hallOfFame.busiestDay
-                      ? `${hallOfFame.busiestDay.penaltyCount} penalties`
-                      : 'No data'}
-                    sentiment="neutral"
-                  />
-                  <MetricCard
-                    label="💯 Perfect Session"
-                    value={hallOfFame.perfectSession?.playerName || 'N/A'}
-                    delta={hallOfFame.perfectSession
-                      ? `${hallOfFame.perfectSession.goals}/${hallOfFame.perfectSession.goals} on ${hallOfFame.perfectSession.date.toLocaleDateString()}`
-                      : 'No perfect session yet'}
-                    sentiment="positive"
-                  />
-                </div>
-              )}
+              <div className={styles.recordsGrid}>
+                <MetricCard
+                  label="Most Goals in Session"
+                  value={hallOfFame.mostGoals?.playerName || 'N/A'}
+                  delta={hallOfFame.mostGoals
+                    ? `${hallOfFame.mostGoals.goals} goals on ${hallOfFame.mostGoals.date.toLocaleDateString()}`
+                    : 'No data'}
+                  sentiment="positive"
+                />
+                <MetricCard
+                  label="Most Saves in Session"
+                  value={hallOfFame.mostSaves?.keeperName || 'N/A'}
+                  delta={hallOfFame.mostSaves
+                    ? `${hallOfFame.mostSaves.saves} saves on ${hallOfFame.mostSaves.date.toLocaleDateString()}`
+                    : 'No data'}
+                  sentiment="neutral"
+                />
+              </div>
             </div>
-          )}
+          </TabsContent>
+
+          <TabsContent value="alltime">
+            <div className={styles.hallOfFameContent}>
+              <div className={styles.recordsGrid}>
+                <MetricCard
+                  label="Longest Goal Streak"
+                  value={hallOfFame.longestStreak?.playerName || 'N/A'}
+                  delta={hallOfFame.longestStreak
+                    ? `${hallOfFame.longestStreak.streak} consecutive goals`
+                    : 'No data'}
+                  sentiment="positive"
+                />
+                <MetricCard
+                  label="Biggest Rivalry"
+                  value={hallOfFame.biggestRivalry
+                    ? `${hallOfFame.biggestRivalry.shooterName} vs ${hallOfFame.biggestRivalry.keeperName}`
+                    : 'N/A'}
+                  delta={hallOfFame.biggestRivalry
+                    ? `${hallOfFame.biggestRivalry.encounters} encounters`
+                    : 'No data'}
+                  sentiment="neutral"
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="funfacts">
+            <div className={styles.hallOfFameContent}>
+              <div className={styles.recordsGridWide}>
+                <MetricCard
+                  label="🏃 Marathon Man"
+                  value={hallOfFame.marathonMan?.playerName || 'N/A'}
+                  delta={hallOfFame.marathonMan
+                    ? `${hallOfFame.marathonMan.sessionCount} sessions played`
+                    : 'No data'}
+                  sentiment="positive"
+                />
+                <MetricCard
+                  label="🥷 Mysterious Ninja"
+                  value={hallOfFame.mysteriousNinja?.playerName || 'N/A'}
+                  delta={hallOfFame.mysteriousNinja
+                    ? `Only ${hallOfFame.mysteriousNinja.sessionCount} session(s)`
+                    : 'No data'}
+                  sentiment="neutral"
+                />
+                <MetricCard
+                  label="📅 Busiest Day"
+                  value={hallOfFame.busiestDay
+                    ? hallOfFame.busiestDay.date.toLocaleDateString()
+                    : 'N/A'}
+                  delta={hallOfFame.busiestDay
+                    ? `${hallOfFame.busiestDay.penaltyCount} penalties`
+                    : 'No data'}
+                  sentiment="neutral"
+                />
+                <MetricCard
+                  label="💯 Perfect Session"
+                  value={hallOfFame.perfectSession?.playerName || 'N/A'}
+                  delta={hallOfFame.perfectSession
+                    ? `${hallOfFame.perfectSession.goals}/${hallOfFame.perfectSession.goals} on ${hallOfFame.perfectSession.date.toLocaleDateString()}`
+                    : 'No perfect session yet'}
+                  sentiment="positive"
+                />
+              </div>
+            </div>
+          </TabsContent>
         </Tabs>
       </section>
 
@@ -445,55 +446,55 @@ function Dashboard() {
         </div>
 
         <div className={styles.statsCard}>
-          <Tabs
-            tabs={[
-              { id: 'players', label: 'Player Stats' },
-              { id: 'keepers', label: 'Keeper Stats' }
-            ]}
-            defaultTab="players"
-          >
-            {(activeTab) => (
-              <div className={styles.statsContent}>
-                {activeTab === 'players' && playerScores.length > 0 && (
-                  <>
-                    <div className={styles.chartWrapper}>
-                      <BarChart data={chartData} dataKeys={['score']} height={200} />
-                    </div>
-                    <DataTable
-                      data={playerScores.slice(0, 10)}
-                      columns={PLAYER_STATS_COLUMNS}
-                      sortKey="score"
-                      sortDirection="desc"
-                    />
-                  </>
-                )}
-                {activeTab === 'keepers' && keeperScores.length > 0 && (
-                  <>
-                    <div className={styles.keeperCharts}>
-                      {keeperScores.slice(0, 3).map(keeper => (
-                        <div key={keeper.name} className={styles.keeperChart}>
-                          <h4 className={styles.keeperName}>{keeper.name}</h4>
-                          <PieChart
-                            data={[
-                              { name: 'Conceded', value: keeper.goalsConceded },
-                              { name: 'Saved', value: keeper.saves },
-                              { name: 'Out', value: keeper.outs }
-                            ]}
-                            height={180}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    <DataTable
-                      data={keeperScores.slice(0, 10)}
-                      columns={KEEPER_STATS_COLUMNS}
-                      sortKey="score"
-                      sortDirection="desc"
-                    />
-                  </>
-                )}
-              </div>
-            )}
+          <Tabs defaultValue="players">
+            <TabsList>
+              <TabsTrigger value="players">Player Stats</TabsTrigger>
+              <TabsTrigger value="keepers">Keeper Stats</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="players">
+              {playerScores.length > 0 && (
+                <div className={styles.statsContent}>
+                  <div className={styles.chartWrapper}>
+                    <BarChart data={chartData} dataKeys={['score']} height={200} />
+                  </div>
+                  <DataTable
+                    data={playerScores.slice(0, 10)}
+                    columns={PLAYER_STATS_COLUMNS}
+                    sortKey="score"
+                    sortDirection="desc"
+                  />
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="keepers">
+              {keeperScores.length > 0 && (
+                <div className={styles.statsContent}>
+                  <div className={styles.keeperCharts}>
+                    {keeperScores.slice(0, 3).map(keeper => (
+                      <div key={keeper.name} className={styles.keeperChart}>
+                        <h4 className={styles.keeperName}>{keeper.name}</h4>
+                        <PieChart
+                          data={[
+                            { name: 'Conceded', value: keeper.goalsConceded },
+                            { name: 'Saved', value: keeper.saves },
+                            { name: 'Out', value: keeper.outs }
+                          ]}
+                          height={180}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <DataTable
+                    data={keeperScores.slice(0, 10)}
+                    columns={KEEPER_STATS_COLUMNS}
+                    sortKey="score"
+                    sortDirection="desc"
+                  />
+                </div>
+              )}
+            </TabsContent>
           </Tabs>
         </div>
       </section>

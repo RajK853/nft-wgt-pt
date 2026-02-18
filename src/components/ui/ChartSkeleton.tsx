@@ -3,8 +3,6 @@
  * Simple skeleton loader with KISS principle
  */
 
-import React from 'react';
-
 interface ChartSkeletonProps {
   height?: number;
   className?: string;

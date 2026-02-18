@@ -3,7 +3,7 @@
  * Simple ARIA live region for screen readers
  */
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface ScoreAnnouncerProps {
   score: { totalScore: number; grade: string };

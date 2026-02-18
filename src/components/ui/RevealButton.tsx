@@ -4,7 +4,7 @@
  * Used for Top Performers section in Dashboard
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useReducer, useEffect, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import styles from './RevealButton.module.css'
 
@@ -16,73 +16,92 @@ interface RevealButtonProps {
   variant?: 'primary' | 'secondary' | 'success'
 }
 
-export function RevealButton({ 
-  label, 
-  onReveal, 
+type Phase = 'idle' | 'counting' | 'revealed'
+type State = { phase: Phase; countdown: number | null }
+type Action =
+  | { type: 'START'; seconds: number }
+  | { type: 'TICK' }
+  | { type: 'REVEAL' }
+  | { type: 'RESET' }
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'START':
+      return { phase: 'counting', countdown: action.seconds }
+    case 'TICK':
+      return { ...state, countdown: (state.countdown ?? 1) - 1 }
+    case 'REVEAL':
+      return { phase: 'revealed', countdown: null }
+    case 'RESET':
+      return { phase: 'idle', countdown: null }
+    default:
+      return state
+  }
+}
+
+export function RevealButton({
+  label,
+  onReveal,
   onReset,
   countdownSeconds = 3,
-  variant = 'primary' 
+  variant = 'primary',
 }: RevealButtonProps) {
-  const [countdown, setCountdown] = useState<number | null>(null)
-  const [isRevealed, setIsRevealed] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const [{ phase, countdown }, dispatch] = useReducer(reducer, {
+    phase: 'idle',
+    countdown: null,
+  })
 
   const handleClick = useCallback(() => {
-    if (isRevealed) return
-    setIsAnimating(true)
-    setCountdown(countdownSeconds)
-  }, [countdownSeconds, isRevealed])
+    if (phase === 'revealed') return
+    dispatch({ type: 'START', seconds: countdownSeconds })
+  }, [countdownSeconds, phase])
 
   useEffect(() => {
-    if (countdown === null) return
+    if (phase !== 'counting' || countdown === null) return
 
     if (countdown === 0) {
-      setIsRevealed(true)
-      setIsAnimating(false)
+      dispatch({ type: 'REVEAL' })
       onReveal()
-      setCountdown(null)
       return
     }
 
     const timer = setTimeout(() => {
-      setCountdown(countdown - 1)
+      dispatch({ type: 'TICK' })
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [countdown, onReveal])
+  }, [phase, countdown, onReveal])
 
   const handleReset = () => {
-    setIsRevealed(false)
-    setCountdown(null)
-    setIsAnimating(false)
+    dispatch({ type: 'RESET' })
     onReset?.()
   }
 
   return (
     <div className={styles.container}>
-      <button 
+      <button
         className={cn(
           styles.button,
           styles[variant],
-          isAnimating && styles.animating,
-          isRevealed && styles.revealed
+          phase === 'counting' && styles.animating,
+          phase === 'revealed' && styles.revealed
         )}
         onClick={handleClick}
-        disabled={isAnimating || isRevealed}
+        disabled={phase !== 'idle'}
       >
-        {isAnimating && countdown !== null ? (
+        {phase === 'counting' && countdown !== null ? (
           <span className={styles.countdown}>
             <span className={styles.countdownNumber}>{countdown}</span>
             <span className={styles.countdownText}>Get Ready...</span>
           </span>
-        ) : isRevealed ? (
+        ) : phase === 'revealed' ? (
           <span className={styles.revealedText}>✓ Revealed</span>
         ) : (
           <span className={styles.label}>{label}</span>
         )}
       </button>
-      
-      {isRevealed && (
+
+      {phase === 'revealed' && (
         <button className={styles.resetButton} onClick={handleReset}>
           ↺ Reset
         </button>

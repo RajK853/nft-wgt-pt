@@ -19,16 +19,22 @@ export function Expander({ title, children, defaultOpen = false }: ExpanderProps
   const [height, setHeight] = useState<number | 'auto'>(defaultOpen ? 'auto' : 0)
 
   useEffect(() => {
-    if (contentRef.current) {
-      setHeight(isOpen ? contentRef.current.scrollHeight : 0)
-    }
+    const el = contentRef.current
+    if (!el) return
+
+    const observer = new ResizeObserver(() => {
+      setHeight(isOpen ? el.scrollHeight : 0)
+    })
+
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [isOpen])
 
   const toggle = () => setIsOpen(!isOpen)
 
   return (
     <div className={styles.container}>
-      <button 
+      <button
         className={styles.header}
         onClick={toggle}
         aria-expanded={isOpen}
@@ -38,8 +44,8 @@ export function Expander({ title, children, defaultOpen = false }: ExpanderProps
           ▼
         </span>
       </button>
-      
-      <div 
+
+      <div
         className={styles.content}
         style={{ height: typeof height === 'number' ? height : height }}
       >

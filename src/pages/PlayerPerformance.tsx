@@ -7,7 +7,7 @@ import {
   getUniquePlayers
 } from '@/lib/analysis'
 import { BarChart } from '@/components/charts'
-import { DataTable, MultiSelect, Tabs, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, MultiSelect, Tabs, TabsList, TabsTrigger, TabsContent, InfoBox, LoadingSpinner } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import type { PlayerScore } from '@/types'
@@ -181,26 +181,33 @@ export default function PlayerPerformance() {
           </div>
 
           {selectedPlayers.length > 0 ? (
-            <Tabs tabs={COMPARISON_TABS} defaultTab="score">
-              {(activeTab) => {
-                const metric = activeTab as ComparisonKey
+            <Tabs defaultValue="score">
+              <TabsList>
+                {COMPARISON_TABS.map(tab => (
+                  <TabsTrigger key={tab.id} value={tab.id}>{tab.label}</TabsTrigger>
+                ))}
+              </TabsList>
+              {COMPARISON_TABS.map(({ id }) => {
+                const metric = id as ComparisonKey
                 const chartData = buildComparisonChartData(comparisonData, metric)
                 return (
-                  <div className={styles.tabsContainer}>
-                    <div className={styles.comparisonChart}>
-                      <BarChart
-                        data={chartData}
-                        height={300}
-                        layout="vertical"
-                        dataKeys={['value']}
-                        colors={chartData.map(d => d.fill || '#94a3b8')}
-                        colorCoding="custom"
-                      />
+                  <TabsContent key={id} value={id}>
+                    <div className={styles.tabsContainer}>
+                      <div className={styles.comparisonChart}>
+                        <BarChart
+                          data={chartData}
+                          height={300}
+                          layout="vertical"
+                          dataKeys={['value']}
+                          colors={chartData.map(d => d.fill || '#94a3b8')}
+                          colorCoding="custom"
+                        />
+                      </div>
+                      <p className={styles.description}>{COMPARISON_DESCRIPTIONS[metric]}</p>
                     </div>
-                    <p className={styles.description}>{COMPARISON_DESCRIPTIONS[metric]}</p>
-                  </div>
+                  </TabsContent>
                 )
-              }}
+              })}
             </Tabs>
           ) : (
             <div className={styles.noData}>
