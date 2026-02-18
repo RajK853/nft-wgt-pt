@@ -18,7 +18,7 @@ import {
   getPerfectSession,
   getSessionLeader
 } from '@/lib/analysis'
-import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List } from '@/components/ui'
+import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber } from '@/components/ui'
 import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
@@ -94,7 +94,7 @@ function Dashboard() {
         <Tooltip>
           <TooltipTrigger asChild>
             <div className={styles.statBarItem}>
-              <span className={styles.statBarValue}>{overallStats.totalPenalties.toLocaleString()}</span>
+              <span className={styles.statBarValue}><RollingNumber value={overallStats.totalPenalties} /></span>
               <span className={styles.statBarLabel}>Total Penalties</span>
             </div>
           </TooltipTrigger>
@@ -106,7 +106,7 @@ function Dashboard() {
         <Tooltip>
           <TooltipTrigger asChild>
             <div className={styles.statBarItem}>
-              <span className={styles.statBarValue}>{overallStats.totalSessions}</span>
+              <span className={styles.statBarValue}><RollingNumber value={overallStats.totalSessions} /></span>
               <span className={styles.statBarLabel}>Sessions</span>
             </div>
           </TooltipTrigger>
@@ -118,7 +118,7 @@ function Dashboard() {
         <Tooltip>
           <TooltipTrigger asChild>
             <div className={styles.statBarItem}>
-              <span className={styles.statBarValue}>{overallStats.totalPlayers}</span>
+              <span className={styles.statBarValue}><RollingNumber value={overallStats.totalPlayers} /></span>
               <span className={styles.statBarLabel}>Players</span>
             </div>
           </TooltipTrigger>
@@ -131,7 +131,7 @@ function Dashboard() {
           <TooltipTrigger asChild>
             <div className={styles.statBarItem}>
               <span className={`${styles.statBarValue} ${styles.statBarValueAccent}`}>
-                {overallStats.goalRate}%
+                <RollingNumber value={overallStats.goalRate} decimals={1} suffix="%" />
               </span>
               <span className={styles.statBarLabel}>Goal Rate</span>
             </div>
@@ -169,7 +169,7 @@ function Dashboard() {
                       {top3Players[0] && (
                         <>
                           <span className={styles.podiumName}>{top3Players[0].name}</span>
-                          <span className={styles.podiumScore}>{top3Players[0].score.toFixed(2)}</span>
+                          <span className={styles.podiumScore}><RollingNumber value={top3Players[0]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
                         </>
                       )}
                     </div>
@@ -179,7 +179,7 @@ function Dashboard() {
                       {top3Players[1] && (
                         <>
                           <span className={styles.podiumName}>{top3Players[1].name}</span>
-                          <span className={styles.podiumScore}>{top3Players[1].score.toFixed(2)}</span>
+                          <span className={styles.podiumScore}><RollingNumber value={top3Players[1]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
                         </>
                       )}
                     </div>
@@ -189,7 +189,7 @@ function Dashboard() {
                       {top3Players[2] && (
                         <>
                           <span className={styles.podiumName}>{top3Players[2].name}</span>
-                          <span className={styles.podiumScore}>{top3Players[2].score.toFixed(2)}</span>
+                          <span className={styles.podiumScore}><RollingNumber value={top3Players[2]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
                         </>
                       )}
                     </div>
@@ -208,7 +208,7 @@ function Dashboard() {
                       {top3Keepers[0] && (
                         <>
                           <span className={styles.podiumName}>{top3Keepers[0].name}</span>
-                          <span className={styles.podiumScore}>{top3Keepers[0].score.toFixed(2)}</span>
+                          <span className={styles.podiumScore}><RollingNumber value={top3Keepers[0]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
                         </>
                       )}
                     </div>
@@ -218,7 +218,7 @@ function Dashboard() {
                       {top3Keepers[1] && (
                         <>
                           <span className={styles.podiumName}>{top3Keepers[1].name}</span>
-                          <span className={styles.podiumScore}>{top3Keepers[1].score.toFixed(2)}</span>
+                          <span className={styles.podiumScore}><RollingNumber value={top3Keepers[1]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
                         </>
                       )}
                     </div>
@@ -228,7 +228,7 @@ function Dashboard() {
                       {top3Keepers[2] && (
                         <>
                           <span className={styles.podiumName}>{top3Keepers[2].name}</span>
-                          <span className={styles.podiumScore}>{top3Keepers[2].score.toFixed(2)}</span>
+                          <span className={styles.podiumScore}><RollingNumber value={top3Keepers[2]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
                         </>
                       )}
                     </div>
