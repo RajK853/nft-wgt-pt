@@ -5,9 +5,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ErrorBoundary from './components/ErrorBoundary'
 import Header from './components/layout/Header'
 import Home from './pages/Home'
-import Login from './pages/Login'
-import { ProtectedRoute } from './components/ProtectedRoute'
-import { AuthProvider } from './auth/AuthContext'
 import { LoadingSpinner } from './components/ui'
 import { TooltipProvider } from './components/ui/tooltip'
 // Lazy load pages for code splitting (performance optimization)
@@ -20,7 +17,6 @@ function App() {
   return (
     <ErrorBoundary>
       <TooltipProvider>
-      <AuthProvider>
         <Router>
           <div className="app-shell">
             <Header />
@@ -28,45 +24,15 @@ function App() {
               <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route 
-                    path="/dashboard" 
-                    element={
-                      <ProtectedRoute>
-                        <Dashboard />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/scoring-method" 
-                    element={
-                      <ProtectedRoute>
-                        <ScoringMethod />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/player-performance" 
-                    element={
-                      <ProtectedRoute>
-                        <PlayerPerformance />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/keeper-performance" 
-                    element={
-                      <ProtectedRoute>
-                        <KeeperPerformance />
-                      </ProtectedRoute>
-                    } 
-                  />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/scoring-method" element={<ScoringMethod />} />
+                  <Route path="/player-performance" element={<PlayerPerformance />} />
+                  <Route path="/keeper-performance" element={<KeeperPerformance />} />
                 </Routes>
               </Suspense>
             </main>
           </div>
         </Router>
-      </AuthProvider>
       </TooltipProvider>
     </ErrorBoundary>
   )

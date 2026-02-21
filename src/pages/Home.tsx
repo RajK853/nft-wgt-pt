@@ -1,56 +1,31 @@
 import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/auth/AuthContext'
+import { Link } from 'react-router-dom'
 import styles from './Home.module.css'
 
 interface NavCardProps {
   icon: string
   title: string
   description: string
-  to?: string
-  onClick?: () => void
-  variant?: 'default' | 'login'
+  to: string
 }
 
-function NavCard({ icon, title, description, to, onClick, variant = 'default' }: NavCardProps) {
-  const className = `${styles.navCard} ${variant === 'login' ? styles.login : ''}`
-  
-  if (to) {
-    return (
-      <Link to={to} className={className}>
-        <span className={styles.navCardIcon}>{icon}</span>
-        <div className={styles.navCardContent}>
-          <h3 className={styles.navCardTitle}>{title}</h3>
-          <p className={styles.navCardDescription}>{description}</p>
-        </div>
-        <span className={styles.navCardArrow}>→</span>
-      </Link>
-    )
-  }
-  
+function NavCard({ icon, title, description, to }: NavCardProps) {
   return (
-    <button onClick={onClick} className={className}>
+    <Link to={to} className={styles.navCard}>
       <span className={styles.navCardIcon}>{icon}</span>
       <div className={styles.navCardContent}>
         <h3 className={styles.navCardTitle}>{title}</h3>
         <p className={styles.navCardDescription}>{description}</p>
       </div>
       <span className={styles.navCardArrow}>→</span>
-    </button>
+    </Link>
   )
 }
 
 function Home() {
-  const { user, loading } = useAuth()
-  const navigate = useNavigate()
-  
   useEffect(() => {
     document.title = 'NFT Weingarten - Penalty Tracker'
   }, [])
-
-  const handleLoginClick = () => {
-    navigate('/login')
-  }
 
   return (
     <div className={styles.container}>
@@ -87,19 +62,19 @@ function Home() {
             icon="📊"
             title="Dashboard"
             description="View top performers, records, and recent activity"
-            to={user ? "/dashboard" : "/login"}
+            to="/dashboard"
           />
           <NavCard
             icon="⚽"
             title="Player Performance"
             description="Track player scores, goals, and compare statistics"
-            to={user ? "/player-performance" : "/login"}
+            to="/player-performance"
           />
           <NavCard
             icon="🧤"
             title="Goalkeeper Performance"
             description="Track goalkeeper scores, saves, and compare statistics"
-            to={user ? "/keeper-performance" : "/login"}
+            to="/keeper-performance"
           />
           <NavCard
             icon="📝"
@@ -108,17 +83,6 @@ function Home() {
             to="/scoring-method"
           />
         </div>
-        
-        {/* Login button for unauthenticated users - only show after auth check completes */}
-        {!loading && !user && (
-          <NavCard
-            icon="🔐"
-            title="Login"
-            description="Sign in to access the full dashboard and statistics"
-            onClick={handleLoginClick}
-            variant="login"
-          />
-        )}
       </div>
     </div>
   )
