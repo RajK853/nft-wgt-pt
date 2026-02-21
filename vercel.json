@@ -2,5 +2,8 @@
   "framework": "vite",
   "buildCommand": "bun run build",
   "outputDirectory": "dist",
-  "devCommand": "bun run dev"
+  "devCommand": "bun run dev",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
