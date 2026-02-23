@@ -7,17 +7,16 @@
  */
 
 
-type Sentiment = 'positive' | 'negative' | 'neutral' | 'rival' | 'auto'
-
 interface MetricCardProps {
   label: string
   value: string | number
   delta?: string | number
   help?: string
-  sentiment?: Sentiment
+  /** CSS variable for delta text color, e.g., 'var(--color-legacy-success)' */
+  deltaColor?: string
 }
 
-export function MetricCard({ label, value, delta, help, sentiment = 'auto' }: MetricCardProps) {
+export function MetricCard({ label, value, delta, help, deltaColor }: MetricCardProps): JSX.Element {
   // Use legacy colors - neutral backgrounds
   const cardStyles = {
     backgroundColor: 'var(--color-legacy-bg-tertiary)',
@@ -28,39 +27,15 @@ export function MetricCard({ label, value, delta, help, sentiment = 'auto' }: Me
     color: 'var(--color-legacy-text-secondary)'
   }
 
-  // Get color based on sentiment
-  const getValueColor = (): string => {
-    // Use legacy accent (purple) for rival sentiment
-    if (sentiment === 'rival') {
-      return 'var(--color-legacy-accent)'
-    }
-    // Neutral sentiment always uses text color
-    if (sentiment === 'neutral') {
-      return 'var(--color-legacy-text-primary)'
-    }
-    // Positive sentiment always uses success color
-    if (sentiment === 'positive') {
-      return 'var(--color-legacy-success)'
-    }
-    // Negative sentiment always uses error color
-    if (sentiment === 'negative') {
-      return 'var(--color-legacy-error)'
-    }
-    // Auto: use delta-based coloring - positive delta = green, negative = red
-    return 'var(--color-legacy-text-primary)'
+  // Value always uses neutral text color
+  const valueStyle = {
+    color: 'var(--color-legacy-text-primary)'
   }
 
-  // Delta colors - green for positive, red for negative
-  const getDeltaStyle = () => {
+  // Delta style - use provided color or default to muted
+  const getDeltaStyle = (): React.CSSProperties => {
     if (delta === undefined) return { color: 'var(--color-legacy-text-muted)' }
-
-    const numDelta = parseFloat(String(delta))
-    if (numDelta > 0) {
-      return { color: 'var(--color-legacy-success)' }
-    }
-    if (numDelta < 0) {
-      return { color: 'var(--color-legacy-error)' }
-    }
+    if (deltaColor) return { color: deltaColor }
     return { color: 'var(--color-legacy-text-muted)' }
   }
 
@@ -68,14 +43,10 @@ export function MetricCard({ label, value, delta, help, sentiment = 'auto' }: Me
     color: 'var(--color-legacy-text-disabled)'
   }
 
-  const sentimentValueStyle = {
-    color: getValueColor()
-  }
-
   return (
     <div className="rounded-lg border p-4" style={cardStyles}>
       <div className="text-sm mb-1" style={labelStyle}>{label}</div>
-      <div className="text-2xl font-bold" style={sentimentValueStyle}>
+      <div className="text-2xl font-bold" style={valueStyle}>
         {value}
       </div>
       {delta !== undefined && (

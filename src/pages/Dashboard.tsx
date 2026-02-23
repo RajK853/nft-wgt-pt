@@ -25,7 +25,68 @@ import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, RECENT_PLAYER_STATS_COLUMNS, RECENT_KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
 import { truncateName } from '@/lib/utils'
+import { HALL_OF_FAME_METRICS, type MetricConfig, DELTA_COLORS } from '@/lib/metricsConfig'
 import styles from './Dashboard.module.css'
+
+// Helper type for Hall of Fame data
+type HallOfFameData = {
+  mostGoals: { playerName: string; goals: number; date: Date } | null
+  mostSaves: { keeperName: string; saves: number; date: Date } | null
+  longestStreak: { playerName: string; streak: number; date: Date } | null
+  biggestRivalry: { shooterName: string; keeperName: string; encounters: number } | null
+  marathonMan: { playerName: string; sessionCount: number } | null
+  mysteriousNinja: { playerName: string; sessionCount: number } | null
+  busiestDay: { date: Date; penaltyCount: number } | null
+  perfectSession: { playerName: string; goals: number; date: Date } | null
+}
+
+// Helper to extract value and delta from Hall of Fame data based on metric key
+function getMetricValueAndDelta(data: HallOfFameData, config: MetricConfig): { value: string; delta: string } {
+  switch (config.key) {
+    case 'mostGoals': {
+      const item = data.mostGoals
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: item.playerName, delta: `${item.goals} goals on ${item.date.toLocaleDateString()}` }
+    }
+    case 'mostSaves': {
+      const item = data.mostSaves
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: item.keeperName, delta: `${item.saves} saves on ${item.date.toLocaleDateString()}` }
+    }
+    case 'longestStreak': {
+      const item = data.longestStreak
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: item.playerName, delta: `${item.streak} consecutive goals` }
+    }
+    case 'biggestRivalry': {
+      const item = data.biggestRivalry
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: `${item.shooterName} vs ${item.keeperName}`, delta: `${item.encounters} encounters` }
+    }
+    case 'marathonMan': {
+      const item = data.marathonMan
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: item.playerName, delta: `${item.sessionCount} sessions played` }
+    }
+    case 'mysteriousNinja': {
+      const item = data.mysteriousNinja
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: item.playerName, delta: `Only ${item.sessionCount} session(s)` }
+    }
+    case 'busiestDay': {
+      const item = data.busiestDay
+      if (!item) return { value: 'N/A', delta: 'No data' }
+      return { value: item.date.toLocaleDateString(), delta: `${item.penaltyCount} penalties` }
+    }
+    case 'perfectSession': {
+      const item = data.perfectSession
+      if (!item) return { value: 'N/A', delta: 'No perfect session yet' }
+      return { value: item.playerName, delta: `${item.goals}/${item.goals} on ${item.date.toLocaleDateString()}` }
+    }
+    default:
+      return { value: 'N/A', delta: 'No data' }
+  }
+}
 
 function Dashboard() {
   const { data, loading, error } = usePenaltyData()
@@ -379,22 +440,18 @@ function Dashboard() {
           <TabsContent value="single">
             <div className={styles.hallOfFameContent}>
               <div className={styles.recordsGrid}>
-                <MetricCard
-                  label="Most Goals in Session"
-                  value={hallOfFame.mostGoals?.playerName || 'N/A'}
-                  delta={hallOfFame.mostGoals
-                    ? `${hallOfFame.mostGoals.goals} goals on ${hallOfFame.mostGoals.date.toLocaleDateString()}`
-                    : 'No data'}
-                  sentiment="positive"
-                />
-                <MetricCard
-                  label="Most Saves in Session"
-                  value={hallOfFame.mostSaves?.keeperName || 'N/A'}
-                  delta={hallOfFame.mostSaves
-                    ? `${hallOfFame.mostSaves.saves} saves on ${hallOfFame.mostSaves.date.toLocaleDateString()}`
-                    : 'No data'}
-                  sentiment="neutral"
-                />
+                {HALL_OF_FAME_METRICS.single.map(config => {
+                  const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
+                  return (
+                    <MetricCard
+                      key={config.key}
+                      label={config.label}
+                      value={value}
+                      delta={delta}
+                      deltaColor={config.deltaColor}
+                    />
+                  )
+                })}
               </div>
             </div>
           </TabsContent>
@@ -402,24 +459,18 @@ function Dashboard() {
           <TabsContent value="alltime">
             <div className={styles.hallOfFameContent}>
               <div className={styles.recordsGrid}>
-                <MetricCard
-                  label="Longest Goal Streak"
-                  value={hallOfFame.longestStreak?.playerName || 'N/A'}
-                  delta={hallOfFame.longestStreak
-                    ? `${hallOfFame.longestStreak.streak} consecutive goals`
-                    : 'No data'}
-                  sentiment="positive"
-                />
-                <MetricCard
-                  label="Biggest Rivalry"
-                  value={hallOfFame.biggestRivalry
-                    ? `${hallOfFame.biggestRivalry.shooterName} vs ${hallOfFame.biggestRivalry.keeperName}`
-                    : 'N/A'}
-                  delta={hallOfFame.biggestRivalry
-                    ? `${hallOfFame.biggestRivalry.encounters} encounters`
-                    : 'No data'}
-                  sentiment="neutral"
-                />
+                {HALL_OF_FAME_METRICS.alltime.map(config => {
+                  const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
+                  return (
+                    <MetricCard
+                      key={config.key}
+                      label={config.label}
+                      value={value}
+                      delta={delta}
+                      deltaColor={config.deltaColor}
+                    />
+                  )
+                })}
               </div>
             </div>
           </TabsContent>
@@ -427,40 +478,18 @@ function Dashboard() {
           <TabsContent value="funfacts">
             <div className={styles.hallOfFameContent}>
               <div className={styles.recordsGridWide}>
-                <MetricCard
-                  label="🏃 Marathon Man"
-                  value={hallOfFame.marathonMan?.playerName || 'N/A'}
-                  delta={hallOfFame.marathonMan
-                    ? `${hallOfFame.marathonMan.sessionCount} sessions played`
-                    : 'No data'}
-                  sentiment="positive"
-                />
-                <MetricCard
-                  label="🥷 Mysterious Ninja"
-                  value={hallOfFame.mysteriousNinja?.playerName || 'N/A'}
-                  delta={hallOfFame.mysteriousNinja
-                    ? `Only ${hallOfFame.mysteriousNinja.sessionCount} session(s)`
-                    : 'No data'}
-                  sentiment="neutral"
-                />
-                <MetricCard
-                  label="📅 Busiest Day"
-                  value={hallOfFame.busiestDay
-                    ? hallOfFame.busiestDay.date.toLocaleDateString()
-                    : 'N/A'}
-                  delta={hallOfFame.busiestDay
-                    ? `${hallOfFame.busiestDay.penaltyCount} penalties`
-                    : 'No data'}
-                  sentiment="neutral"
-                />
-                <MetricCard
-                  label="💯 Perfect Session"
-                  value={hallOfFame.perfectSession?.playerName || 'N/A'}
-                  delta={hallOfFame.perfectSession
-                    ? `${hallOfFame.perfectSession.goals}/${hallOfFame.perfectSession.goals} on ${hallOfFame.perfectSession.date.toLocaleDateString()}`
-                    : 'No perfect session yet'}
-                  sentiment="positive"
-                />
+                {HALL_OF_FAME_METRICS.funfacts.map(config => {
+                  const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
+                  return (
+                    <MetricCard
+                      key={config.key}
+                      label={config.label}
+                      value={value}
+                      delta={delta}
+                      deltaColor={config.deltaColor}
+                    />
+                  )
+                })}
               </div>
             </div>
           </TabsContent>
@@ -483,21 +512,21 @@ function Dashboard() {
             <MetricCard
               label="Goals"
               value={recentSession?.goals ?? 0}
-              sentiment="positive"
+              deltaColor={DELTA_COLORS.success}
             />
           </div>
           <div className={`${styles.recentMetricCard} ${styles.recentMetricSaves}`}>
             <MetricCard
               label="Saves"
               value={recentSession?.saves ?? 0}
-              sentiment="neutral"
+              deltaColor={DELTA_COLORS.muted}
             />
           </div>
           <div className={`${styles.recentMetricCard} ${styles.recentMetricOut}`}>
             <MetricCard
               label="Out"
               value={recentSession?.outs ?? 0}
-              sentiment="negative"
+              deltaColor={DELTA_COLORS.error}
             />
           </div>
         </div>
