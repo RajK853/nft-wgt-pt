@@ -583,13 +583,13 @@
 }
 
 /* =============================================
-   Insights Grid (Side-by-Side Layout)
+   Insights Grid (Full-width stacked layout)
    ============================================= */
 
 .insightsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .insightsGrid .section {
@@ -677,7 +677,7 @@
   }
 
   .insightsGrid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 
   .mainTabsList {
