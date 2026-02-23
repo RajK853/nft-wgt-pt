@@ -167,7 +167,7 @@ function Dashboard() {
         <p className={styles.subtitle}>All-time penalty statistics & records</p>
       </div>
 
-      {/* Stats Summary Bar */}
+      {/* Stats Summary Bar - Always Visible */}
       <div className={styles.statsBar}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -220,370 +220,387 @@ function Dashboard() {
         </Tooltip>
       </div>
 
-      {/* Top Performers - New Podium Layout */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>🏆 Top Performers</h2>
-        <div className={styles.topPerformersHeader}>
-          <RevealButton
-            label={revealedTopPerformers ? 'Hide' : 'Reveal'}
-            onReveal={() => setRevealedTopPerformers(true)}
-            onReset={() => setRevealedTopPerformers(false)}
-            variant="primary"
-          />
-        </div>
+      {/* Main Tabs Navigation */}
+      <Tabs defaultValue="leaderboard" className={styles.mainTabs}>
+        <TabsList className={styles.mainTabsList}>
+          <TabsTrigger value="leaderboard" className={styles.mainTabsTrigger}>
+            <span className={styles.tabIcon}>🏆</span>
+            Leaderboard
+          </TabsTrigger>
+          <TabsTrigger value="insights" className={styles.mainTabsTrigger}>
+            <span className={styles.tabIcon}>📈</span>
+            Insights
+          </TabsTrigger>
+        </TabsList>
 
-        {revealedTopPerformers && (
-          <div className={styles.podiumSection}>
-            {/* Podium Row: Top 3 Players & Top 3 Keepers */}
-            <div className={styles.podiumGrid}>
-              {/* Shooters Podium */}
-              <div className={styles.podiumCard}>
-                <h3 className={styles.podiumTitle}>🎯 Top 3 Shooters</h3>
-                <div className={styles.podiumContent}>
-                  <div className={styles.podiumPositions}>
-                    {/* Gold - Position 1 */}
-                    <div className={`${styles.podiumPosition} ${styles.podiumGold}`}>
-                      <span className={styles.podiumMedal}>🥇</span>
-                      {top3Players[0] && (
-                        <>
-                          <span className={styles.podiumName}>{top3Players[0].name}</span>
-                          <span className={styles.podiumScore}><RollingNumber value={top3Players[0]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
-                        </>
-                      )}
+        {/* TAB 1: LEADERBOARD */}
+        <TabsContent value="leaderboard">
+          <section className={styles.section}>
+            <div className={styles.topPerformersHeader}>
+              <h2 className={styles.sectionTitle}>🎯 Top Performers</h2>
+              <div className={styles.topPerformersActions}>
+                <RevealButton
+                  label="Reveal"
+                  onReveal={() => setRevealedTopPerformers(true)}
+                  onReset={() => setRevealedTopPerformers(false)}
+                  isRevealed={revealedTopPerformers}
+                  variant="primary"
+                />
+              </div>
+            </div>
+
+            {revealedTopPerformers && (
+              <div className={styles.podiumSection}>
+                <div className={styles.podiumGrid}>
+                  {/* Shooters Podium */}
+                  <div className={styles.podiumCard}>
+                    <h3 className={styles.podiumTitle}>🎯 Top 3 Shooters</h3>
+                    <div className={styles.podiumContent}>
+                      <div className={styles.podiumPositions}>
+                        <div className={`${styles.podiumPosition} ${styles.podiumGold}`}>
+                          <span className={styles.podiumMedal}>🥇</span>
+                          {top3Players[0] && (
+                            <>
+                              <span className={styles.podiumName}>{top3Players[0].name}</span>
+                              <span className={styles.podiumScore}><RollingNumber value={top3Players[0]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
+                            </>
+                          )}
+                        </div>
+                        <div className={`${styles.podiumPosition} ${styles.podiumSilver}`}>
+                          <span className={styles.podiumMedal}>🥈</span>
+                          {top3Players[1] && (
+                            <>
+                              <span className={styles.podiumName}>{top3Players[1].name}</span>
+                              <span className={styles.podiumScore}><RollingNumber value={top3Players[1]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
+                            </>
+                          )}
+                        </div>
+                        <div className={`${styles.podiumPosition} ${styles.podiumBronze}`}>
+                          <span className={styles.podiumMedal}>🥉</span>
+                          {top3Players[2] && (
+                            <>
+                              <span className={styles.podiumName}>{top3Players[2].name}</span>
+                              <span className={styles.podiumScore}><RollingNumber value={top3Players[2]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    {/* Silver - Position 2 */}
-                    <div className={`${styles.podiumPosition} ${styles.podiumSilver}`}>
-                      <span className={styles.podiumMedal}>🥈</span>
-                      {top3Players[1] && (
-                        <>
-                          <span className={styles.podiumName}>{top3Players[1].name}</span>
-                          <span className={styles.podiumScore}><RollingNumber value={top3Players[1]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
-                        </>
-                      )}
-                    </div>
-                    {/* Bronze - Position 3 */}
-                    <div className={`${styles.podiumPosition} ${styles.podiumBronze}`}>
-                      <span className={styles.podiumMedal}>🥉</span>
-                      {top3Players[2] && (
-                        <>
-                          <span className={styles.podiumName}>{top3Players[2].name}</span>
-                          <span className={styles.podiumScore}><RollingNumber value={top3Players[2]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
-                        </>
-                      )}
+                  </div>
+
+                  {/* Keepers Podium */}
+                  <div className={styles.podiumCard}>
+                    <h3 className={styles.podiumTitle}>🧤 Top 3 Keepers</h3>
+                    <div className={styles.podiumContent}>
+                      <div className={styles.podiumPositions}>
+                        <div className={`${styles.podiumPosition} ${styles.podiumGold}`}>
+                          <span className={styles.podiumMedal}>🥇</span>
+                          {top3Keepers[0] && (
+                            <>
+                              <span className={styles.podiumName}>{top3Keepers[0].name}</span>
+                              <span className={styles.podiumScore}><RollingNumber value={top3Keepers[0]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
+                            </>
+                          )}
+                        </div>
+                        <div className={`${styles.podiumPosition} ${styles.podiumSilver}`}>
+                          <span className={styles.podiumMedal}>🥈</span>
+                          {top3Keepers[1] && (
+                            <>
+                              <span className={styles.podiumName}>{top3Keepers[1].name}</span>
+                              <span className={styles.podiumScore}><RollingNumber value={top3Keepers[1]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
+                            </>
+                          )}
+                        </div>
+                        <div className={`${styles.podiumPosition} ${styles.podiumBronze}`}>
+                          <span className={styles.podiumMedal}>🥉</span>
+                          {top3Keepers[2] && (
+                            <>
+                              <span className={styles.podiumName}>{top3Keepers[2].name}</span>
+                              <span className={styles.podiumScore}><RollingNumber value={top3Keepers[2]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                <div className={`${styles.card} ${styles.leaderboardCard}`}>
+                  <h3 className={styles.cardTitle}>📊 Full Leaderboard (Top 10 Shooters)</h3>
+                  {top10Players.length > 0 && (
+                    <TypewriterTop10List players={top10Players} />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {!revealedTopPerformers && (
+              <div className={styles.topPerformersCollapsed} />
+            )}
+          </section>
+        </TabsContent>
+
+        {/* TAB 2: INSIGHTS */}
+        <TabsContent value="insights">
+          {/* Current Form Section */}
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>⚡ Current Form</h2>
+            <p className={styles.sectionSubtitle}>Live stats based on recent activity</p>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formCard}>
+                <div className={styles.formCardIcon}>🔥</div>
+                <div className={styles.formCardBody}>
+                  <div className={styles.formCardName}>
+                    {hottestShooter?.playerName ?? 'N/A'}
+                  </div>
+                  <div className={styles.formCardStat}>
+                    {hottestShooter
+                      ? `${hottestShooter.goalRate}% in last ${hottestShooter.sessions} session${hottestShooter.sessions !== 1 ? 's' : ''} (${hottestShooter.attempts} attempts)`
+                      : 'Not enough data'}
+                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Hottest Shooter ⓘ</div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Player with the highest goal rate across their last 3 sessions (min. 3 attempts total)</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
 
-              {/* Keepers Podium */}
-              <div className={styles.podiumCard}>
-                <h3 className={styles.podiumTitle}>🧤 Top 3 Keepers</h3>
-                <div className={styles.podiumContent}>
-                  <div className={styles.podiumPositions}>
-                    {/* Gold - Position 1 */}
-                    <div className={`${styles.podiumPosition} ${styles.podiumGold}`}>
-                      <span className={styles.podiumMedal}>🥇</span>
-                      {top3Keepers[0] && (
-                        <>
-                          <span className={styles.podiumName}>{top3Keepers[0].name}</span>
-                          <span className={styles.podiumScore}><RollingNumber value={top3Keepers[0]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
-                        </>
-                      )}
-                    </div>
-                    {/* Silver - Position 2 */}
-                    <div className={`${styles.podiumPosition} ${styles.podiumSilver}`}>
-                      <span className={styles.podiumMedal}>🥈</span>
-                      {top3Keepers[1] && (
-                        <>
-                          <span className={styles.podiumName}>{top3Keepers[1].name}</span>
-                          <span className={styles.podiumScore}><RollingNumber value={top3Keepers[1]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
-                        </>
-                      )}
-                    </div>
-                    {/* Bronze - Position 3 */}
-                    <div className={`${styles.podiumPosition} ${styles.podiumBronze}`}>
-                      <span className={styles.podiumMedal}>🥉</span>
-                      {top3Keepers[2] && (
-                        <>
-                          <span className={styles.podiumName}>{top3Keepers[2].name}</span>
-                          <span className={styles.podiumScore}><RollingNumber value={top3Keepers[2]?.score ?? 0} decimals={2} enabled={revealedTopPerformers} /></span>
-                        </>
-                      )}
-                    </div>
+              <div className={styles.formCard}>
+                <div className={styles.formCardIcon}>🧊</div>
+                <div className={styles.formCardBody}>
+                  <div className={styles.formCardName}>
+                    {iceMan?.keeperName ?? 'N/A'}
                   </div>
+                  <div className={styles.formCardStat}>
+                    {iceMan
+                      ? `${iceMan.saveRate}% save rate (${iceMan.saves}/${iceMan.faced})`
+                      : 'Not enough data'}
+                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Ice Man ⓘ</div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Goalkeeper with the best all-time save rate (min. 5 shots faced, excluding shots that went wide)</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </div>
+
+              <div className={styles.formCard}>
+                <div className={styles.formCardIcon}>🎯</div>
+                <div className={styles.formCardBody}>
+                  <div className={styles.formCardName}>
+                    {sharpshooter?.playerName ?? 'N/A'}
+                  </div>
+                  <div className={styles.formCardStat}>
+                    {sharpshooter
+                      ? `${sharpshooter.goalRate}% conversion (${sharpshooter.goals}/${sharpshooter.attempts})`
+                      : 'Not enough data'}
+                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Sharpshooter ⓘ</div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Player with the best all-time penalty conversion rate (min. 5 attempts)</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              </div>
+
+              <div className={styles.formCard}>
+                <div className={styles.formCardIcon}>🏃</div>
+                <div className={styles.formCardBody}>
+                  <div className={styles.formCardName}>
+                    {sessionLeader?.playerName ?? 'N/A'}
+                  </div>
+                  <div className={styles.formCardStat}>
+                    {sessionLeader
+                      ? `${sessionLeader.goals} goal${sessionLeader.goals !== 1 ? 's' : ''} scored`
+                      : 'No goals in latest session'}
+                  </div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Session Leader ⓘ</div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Player who scored the most goals in the most recent session</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               </div>
             </div>
+          </section>
 
-            {/* Full Leaderboard with Typewriter Animation */}
-            <div className={`${styles.card} ${styles.leaderboardCard}`}>
-              <h3 className={styles.cardTitle}>📊 Full Leaderboard (Top 10 Shooters)</h3>
-              {top10Players.length > 0 && (
-                <TypewriterTop10List players={top10Players} />
-              )}
-            </div>
-          </div>
-        )}
+          {/* Hall of Fame + Recent Activity Side by Side */}
+          <div className={styles.insightsGrid}>
+            {/* Hall of Fame */}
+            <section className={`${styles.section} ${styles.sectionAccent}`}>
+              <h2 className={styles.sectionTitle}>🏅 Hall of Fame</h2>
 
-        {!revealedTopPerformers && (
-          <div className={styles.topPerformersCollapsed} />
-        )}
-      </section>
+              <Tabs defaultValue="single" className={styles.hallOfFameTabs}>
+                <TabsList>
+                  <TabsTrigger value="single">Single Session</TabsTrigger>
+                  <TabsTrigger value="alltime">All-Time</TabsTrigger>
+                  <TabsTrigger value="funfacts">Fun Facts</TabsTrigger>
+                </TabsList>
 
-      {/* Current Form */}
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>⚡ Current Form</h2>
-        <p className={styles.sectionSubtitle}>Live stats based on recent activity</p>
-
-        <div className={styles.formGrid}>
-          <div className={styles.formCard}>
-            <div className={styles.formCardIcon}>🔥</div>
-            <div className={styles.formCardBody}>
-              <div className={styles.formCardName}>
-                {hottestShooter?.playerName ?? 'N/A'}
-              </div>
-              <div className={styles.formCardStat}>
-                {hottestShooter
-                  ? `${hottestShooter.goalRate}% in last ${hottestShooter.sessions} session${hottestShooter.sessions !== 1 ? 's' : ''} (${hottestShooter.attempts} attempts)`
-                  : 'Not enough data'}
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Hottest Shooter ⓘ</div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Player with the highest goal rate across their last 3 sessions (min. 3 attempts total)</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-
-          <div className={styles.formCard}>
-            <div className={styles.formCardIcon}>🧊</div>
-            <div className={styles.formCardBody}>
-              <div className={styles.formCardName}>
-                {iceMan?.keeperName ?? 'N/A'}
-              </div>
-              <div className={styles.formCardStat}>
-                {iceMan
-                  ? `${iceMan.saveRate}% save rate (${iceMan.saves}/${iceMan.faced})`
-                  : 'Not enough data'}
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Ice Man ⓘ</div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Goalkeeper with the best all-time save rate (min. 5 shots faced, excluding shots that went wide)</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-
-          <div className={styles.formCard}>
-            <div className={styles.formCardIcon}>🎯</div>
-            <div className={styles.formCardBody}>
-              <div className={styles.formCardName}>
-                {sharpshooter?.playerName ?? 'N/A'}
-              </div>
-              <div className={styles.formCardStat}>
-                {sharpshooter
-                  ? `${sharpshooter.goalRate}% conversion (${sharpshooter.goals}/${sharpshooter.attempts})`
-                  : 'Not enough data'}
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Sharpshooter ⓘ</div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Player with the best all-time penalty conversion rate (min. 5 attempts)</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-
-          <div className={styles.formCard}>
-            <div className={styles.formCardIcon}>🏃</div>
-            <div className={styles.formCardBody}>
-              <div className={styles.formCardName}>
-                {sessionLeader?.playerName ?? 'N/A'}
-              </div>
-              <div className={styles.formCardStat}>
-                {sessionLeader
-                  ? `${sessionLeader.goals} goal${sessionLeader.goals !== 1 ? 's' : ''} scored`
-                  : 'No goals in latest session'}
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className={`${styles.formCardLabel} ${styles.formCardLabelTooltip}`}>Session Leader ⓘ</div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Player who scored the most goals in the most recent session</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Hall of Fame */}
-      <section className={`${styles.section} ${styles.sectionAccent}`}>
-        <h2 className={styles.sectionTitle}>🏅 Hall of Fame</h2>
-
-        <Tabs defaultValue="single" className={styles.hallOfFameTabs}>
-          <TabsList>
-            <TabsTrigger value="single">Single Session</TabsTrigger>
-            <TabsTrigger value="alltime">All-Time Records</TabsTrigger>
-            <TabsTrigger value="funfacts">Fun Facts</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="single">
-            <div className={styles.hallOfFameContent}>
-              <div className={styles.recordsGrid}>
-                {HALL_OF_FAME_METRICS.single.map(config => {
-                  const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
-                  return (
-                    <MetricCard
-                      key={config.key}
-                      label={config.label}
-                      value={value}
-                      delta={delta}
-                      deltaColor={config.deltaColor}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="alltime">
-            <div className={styles.hallOfFameContent}>
-              <div className={styles.recordsGrid}>
-                {HALL_OF_FAME_METRICS.alltime.map(config => {
-                  const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
-                  return (
-                    <MetricCard
-                      key={config.key}
-                      label={config.label}
-                      value={value}
-                      delta={delta}
-                      deltaColor={config.deltaColor}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="funfacts">
-            <div className={styles.hallOfFameContent}>
-              <div className={styles.recordsGridWide}>
-                {HALL_OF_FAME_METRICS.funfacts.map(config => {
-                  const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
-                  return (
-                    <MetricCard
-                      key={config.key}
-                      label={config.label}
-                      value={value}
-                      delta={delta}
-                      deltaColor={config.deltaColor}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </section>
-
-      {/* Recent Activity */}
-      <section className={styles.section}>
-        <div className={styles.recentHeader}>
-          <h2 className={styles.sectionTitle}>📊 Recent Activity</h2>
-          {recentSession && (
-            <span className={styles.sessionDatePill}>
-              {recentSession.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-            </span>
-          )}
-        </div>
-
-        <div className={styles.recentMetrics}>
-          <div className={`${styles.recentMetricCard} ${styles.recentMetricGoals}`}>
-            <MetricCard
-              label="Goals"
-              value={recentSession?.goals ?? 0}
-              deltaColor={DELTA_COLORS.success}
-            />
-          </div>
-          <div className={`${styles.recentMetricCard} ${styles.recentMetricSaves}`}>
-            <MetricCard
-              label="Saves"
-              value={recentSession?.saves ?? 0}
-              deltaColor={DELTA_COLORS.muted}
-            />
-          </div>
-          <div className={`${styles.recentMetricCard} ${styles.recentMetricOut}`}>
-            <MetricCard
-              label="Out"
-              value={recentSession?.outs ?? 0}
-              deltaColor={DELTA_COLORS.error}
-            />
-          </div>
-        </div>
-
-        <div className={styles.statsCard}>
-          <Tabs defaultValue="players">
-            <TabsList>
-              <TabsTrigger value="players">Player Stats</TabsTrigger>
-              <TabsTrigger value="keepers">Keeper Stats</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="players">
-              {recentPlayerScores.length > 0 && (
-                <div className={styles.statsContent}>
-                  <div className={styles.chartWrapper}>
-                    <BarChart data={recentChartData} dataKeys={['score']} height={200} />
+                <TabsContent value="single">
+                  <div className={styles.hallOfFameContent}>
+                    <div className={styles.recordsGrid}>
+                      {HALL_OF_FAME_METRICS.single.map(config => {
+                        const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
+                        return (
+                          <MetricCard
+                            key={config.key}
+                            label={config.label}
+                            value={value}
+                            delta={delta}
+                            deltaColor={config.deltaColor}
+                          />
+                        )
+                      })}
+                    </div>
                   </div>
-                  <DataTable
-                    data={recentPlayerScores}
-                    columns={RECENT_PLAYER_STATS_COLUMNS}
-                    sortKey="score"
-                    sortDirection="desc"
+                </TabsContent>
+
+                <TabsContent value="alltime">
+                  <div className={styles.hallOfFameContent}>
+                    <div className={styles.recordsGrid}>
+                      {HALL_OF_FAME_METRICS.alltime.map(config => {
+                        const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
+                        return (
+                          <MetricCard
+                            key={config.key}
+                            label={config.label}
+                            value={value}
+                            delta={delta}
+                            deltaColor={config.deltaColor}
+                          />
+                        )
+                      })}
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="funfacts">
+                  <div className={styles.hallOfFameContent}>
+                    <div className={styles.recordsGridWide}>
+                      {HALL_OF_FAME_METRICS.funfacts.map(config => {
+                        const { value, delta } = getMetricValueAndDelta(hallOfFame, config)
+                        return (
+                          <MetricCard
+                            key={config.key}
+                            label={config.label}
+                            value={value}
+                            delta={delta}
+                            deltaColor={config.deltaColor}
+                          />
+                        )
+                      })}
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </section>
+
+            {/* Recent Activity */}
+            <section className={styles.section}>
+              <div className={styles.recentHeader}>
+                <h2 className={styles.sectionTitle}>📊 Recent Activity</h2>
+                {recentSession && (
+                  <span className={styles.sessionDatePill}>
+                    {recentSession.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                )}
+              </div>
+
+              <div className={styles.recentMetrics}>
+                <div className={`${styles.recentMetricCard} ${styles.recentMetricGoals}`}>
+                  <MetricCard
+                    label="Goals"
+                    value={recentSession?.goals ?? 0}
+                    deltaColor={DELTA_COLORS.success}
                   />
                 </div>
-              )}
-            </TabsContent>
+                <div className={`${styles.recentMetricCard} ${styles.recentMetricSaves}`}>
+                  <MetricCard
+                    label="Saves"
+                    value={recentSession?.saves ?? 0}
+                    deltaColor={DELTA_COLORS.muted}
+                  />
+                </div>
+                <div className={`${styles.recentMetricCard} ${styles.recentMetricOut}`}>
+                  <MetricCard
+                    label="Out"
+                    value={recentSession?.outs ?? 0}
+                    deltaColor={DELTA_COLORS.error}
+                  />
+                </div>
+              </div>
 
-            <TabsContent value="keepers">
-              {recentKeeperScores.length > 0 && (
-                <div className={styles.statsContent}>
-                  <div className={styles.keeperCharts}>
-                    {recentKeeperScores.slice(0, 3).map(keeper => (
-                      <div key={keeper.name} className={styles.keeperChart}>
-                        <h4 className={styles.keeperName}>{keeper.name}</h4>
-                        <PieChart
-                          data={[
-                            { name: 'Conceded', value: keeper.goalsConceded },
-                            { name: 'Saved', value: keeper.saves },
-                            { name: 'Out', value: keeper.outs }
-                          ]}
-                          height={180}
+              <div className={styles.statsCard}>
+                <Tabs defaultValue="players">
+                  <TabsList>
+                    <TabsTrigger value="players">Player Stats</TabsTrigger>
+                    <TabsTrigger value="keepers">Keeper Stats</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="players">
+                    {recentPlayerScores.length > 0 && (
+                      <div className={styles.statsContent}>
+                        <div className={styles.chartWrapper}>
+                          <BarChart data={recentChartData} dataKeys={['score']} height={200} />
+                        </div>
+                        <DataTable
+                          data={recentPlayerScores}
+                          columns={RECENT_PLAYER_STATS_COLUMNS}
+                          sortKey="score"
+                          sortDirection="desc"
                         />
                       </div>
-                    ))}
-                  </div>
-                  <DataTable
-                    data={recentKeeperScores}
-                    columns={RECENT_KEEPER_STATS_COLUMNS}
-                    sortKey="score"
-                    sortDirection="desc"
-                  />
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="keepers">
+                    {recentKeeperScores.length > 0 && (
+                      <div className={styles.statsContent}>
+                        <div className={styles.keeperCharts}>
+                          {recentKeeperScores.slice(0, 3).map(keeper => (
+                            <div key={keeper.name} className={styles.keeperChart}>
+                              <h4 className={styles.keeperName}>{keeper.name}</h4>
+                              <PieChart
+                                data={[
+                                  { name: 'Conceded', value: keeper.goalsConceded },
+                                  { name: 'Saved', value: keeper.saves },
+                                  { name: 'Out', value: keeper.outs }
+                                ]}
+                                height={180}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                        <DataTable
+                          data={recentKeeperScores}
+                          columns={RECENT_KEEPER_STATS_COLUMNS}
+                          sortKey="score"
+                          sortDirection="desc"
+                        />
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              </div>
+            </section>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

@@ -191,7 +191,7 @@ body {
 
 /* Main content area */
 main {
-  min-height: calc(100vh - 60px);
+  min-height: auto;
 }
 
 /* Focus styles for accessibility */

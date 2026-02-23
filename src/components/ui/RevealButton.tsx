@@ -13,6 +13,7 @@ interface RevealButtonProps {
   label: string
   onReveal: () => void
   onReset?: () => void
+  isRevealed?: boolean
   countdownSeconds?: number
   variant?: 'primary' | 'secondary' | 'success'
 }
@@ -44,6 +45,7 @@ export function RevealButton({
   label,
   onReveal,
   onReset,
+  isRevealed,
   countdownSeconds = 3,
   variant = 'primary',
 }: RevealButtonProps) {
@@ -54,10 +56,22 @@ export function RevealButton({
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
+  // Sync internal state with external isRevealed prop
+  useEffect(() => {
+    if (isRevealed === true && phase !== 'revealed') {
+      dispatch({ type: 'REVEAL' })
+    } else if (isRevealed === false && phase === 'revealed') {
+      dispatch({ type: 'RESET' })
+    }
+  }, [isRevealed, phase])
+
+  // Determine the effective phase based on prop
+  const effectivePhase = isRevealed === true ? 'revealed' : phase
+
   const handleClick = useCallback(() => {
-    if (phase === 'revealed') return
+    if (effectivePhase === 'revealed') return
     dispatch({ type: 'START', seconds: countdownSeconds })
-  }, [countdownSeconds, phase])
+  }, [countdownSeconds, effectivePhase])
 
   // Heartbeat animation when countdown changes
   useEffect(() => {
@@ -101,24 +115,24 @@ export function RevealButton({
           styles[variant],
           phase === 'counting' && styles.animating,
           phase === 'counting' && styles.heartbeatGlow,
-          phase === 'revealed' && styles.revealed
+          effectivePhase === 'revealed' && styles.revealed
         )}
         onClick={handleClick}
-        disabled={phase !== 'idle'}
+        disabled={effectivePhase !== 'idle'}
       >
         {phase === 'counting' && countdown !== null ? (
           <span className={styles.countdown}>
             <span className={styles.countdownNumber}>{countdown}</span>
             <span className={styles.countdownText}>Get Ready...</span>
           </span>
-        ) : phase === 'revealed' ? (
+        ) : effectivePhase === 'revealed' ? (
           <span className={styles.revealedText}>✓ Revealed</span>
         ) : (
           <span className={styles.label}>{label}</span>
         )}
       </button>
 
-      {phase === 'revealed' && (
+      {effectivePhase === 'revealed' && (
         <button className={styles.resetButton} onClick={handleReset}>
           ↺ Reset
         </button>
