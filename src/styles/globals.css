@@ -40,11 +40,11 @@
   --color-legacy-bg-tertiary: oklch(0.88 0 0);
   --color-legacy-bg-elevated: oklch(0.96 0 0);
   
-  /* Legacy Text Colors - Light (softer, less harsh) */
+  /* Legacy Text Colors - Light (WCAG AA compliant) */
   --color-legacy-text-primary: oklch(0.15 0 0);
-  --color-legacy-text-secondary: oklch(0.40 0 0);
-  --color-legacy-text-muted: oklch(0.52 0 0);
-  --color-legacy-text-disabled: oklch(0.72 0 0);
+  --color-legacy-text-secondary: oklch(0.35 0 0); /* Improved contrast */
+  --color-legacy-text-muted: oklch(0.45 0 0);    /* Improved contrast */
+  --color-legacy-text-disabled: oklch(0.60 0 0); /* Improved contrast */
   
   /* Legacy Accent Colors - Light (red/white team colors - darker for better contrast) */
   --color-legacy-accent: oklch(0.42 0.12 25);
@@ -101,11 +101,11 @@
   --color-legacy-bg-tertiary: oklch(0.12 0 0);
   --color-legacy-bg-elevated: oklch(0.15 0 0);
   
-  /* Legacy Text Colors - Dark (softer, less harsh) */
+  /* Legacy Text Colors - Dark (WCAG AA compliant) */
   --color-legacy-text-primary: oklch(0.94 0 0);
-  --color-legacy-text-secondary: oklch(0.65 0 0);
-  --color-legacy-text-muted: oklch(0.46 0 0);
-  --color-legacy-text-disabled: oklch(0.32 0 0);
+  --color-legacy-text-secondary: oklch(0.70 0 0); /* Improved contrast */
+  --color-legacy-text-muted: oklch(0.55 0 0);    /* Improved contrast */
+  --color-legacy-text-disabled: oklch(0.45 0 0); /* Improved contrast */
   
   /* Legacy Accent Colors - Dark (red/white team colors - darker for better contrast) */
   --color-legacy-accent: oklch(0.50 0.14 25);
@@ -194,10 +194,41 @@ main {
   min-height: auto;
 }
 
-/* Focus styles for accessibility */
+/* Focus styles for accessibility - enhanced for WCAG compliance */
 *:focus {
-  outline: 2px solid var(--primary-gradient-start);
+  outline: 3px solid var(--color-ring);
   outline-offset: 2px;
+}
+
+/* Ensure high contrast focus indicators */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* High contrast focus for dark mode */
+.dark *:focus-visible {
+  outline-color: var(--color-ring);
+}
+
+/* Skip link focus enhancement - already visible when focused */
+.sr-only:focus:not(:focus-visible) {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 /* Scrollbar styling */
