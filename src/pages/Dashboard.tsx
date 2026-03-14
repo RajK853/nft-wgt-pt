@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, Suspense } from 'react'
 import { usePenaltyData } from '@/hooks/usePenaltyData'
 import {
   calculatePlayerScores,
@@ -20,9 +20,9 @@ import {
   getPerfectSession,
   getSessionLeader
 } from '@/lib/analysis'
-import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber } from '@/components/ui'
+import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton } from '@/components/ui'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'
-import { BarChart, PieChart } from '@/components/charts'
+import { BarChart, PieChart, LazyBarChart, LazyPieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, RECENT_PLAYER_STATS_COLUMNS, RECENT_KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
 import { truncateName } from '@/lib/utils'
@@ -90,14 +90,13 @@ function getMetricValueAndDelta(data: HallOfFameData, config: MetricConfig): { v
 }
 
 function Dashboard() {
-  const { data, loading, error } = usePenaltyData()
+  const { data, isLoading, error } = usePenaltyData()
 
   const [revealedTopPerformers, setRevealedTopPerformers] = useState(false)
 
   useEffect(() => {
     document.title = 'Dashboard - NFT Weingarten'
   }, [])
-
   // All-time scores
   const playerScores = useMemo(() => calculatePlayerScores(data), [data])
   const keeperScores = useMemo(() => calculateKeeperScores(data), [data])
@@ -148,7 +147,32 @@ function Dashboard() {
     [recentPlayerScores]
   )
 
-  if (loading) return <LoadingSpinner />
+  if (isLoading || !data) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.pageHeader}>
+          <h1 className={styles.title}>Dashboard</h1>
+          <p className={styles.subtitle}>All-time penalty statistics & records</p>
+        </div>
+        
+        {/* Stats Summary Bar Skeleton */}
+        <div className={styles.statsBar}>
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className={styles.statBarItem}>
+              <div className="h-8 bg-muted rounded w-16 animate-pulse mb-1"></div>
+              <div className="h-4 bg-muted rounded w-24 animate-pulse"></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Main Content Skeleton */}
+        <div className="space-y-6 mt-6">
+          <ChartSkeleton height={300} />
+          <ChartSkeleton height={300} />
+        </div>
+      </div>
+    )
+  }
 
   if (error) {
     return (

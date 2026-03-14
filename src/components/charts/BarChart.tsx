@@ -5,6 +5,7 @@
  * Supports light/dark theme
  */
 
+import { memo, useMemo } from 'react'
 import {
   BarChart as RechartsBarChart,
   Bar,
@@ -71,7 +72,7 @@ const NEUTRAL_BAR_COLORS = [
   '#818cf8', // indigo-400
 ]
 
-export function BarChart({
+export const BarChart = memo(function BarChart({
   data,
   title,
   color = '#e2e8f0',
@@ -88,8 +89,13 @@ export function BarChart({
   const chartColors = getChartColors(isDark)
   const defaultColors = colors ?? NEUTRAL_BAR_COLORS
 
-  const primaryDataKey = dataKeys[0] ?? 'value'
-  const maxValue = Math.max(...data.map(d => Number(d[primaryDataKey]) || Number(d.value) || 0))
+  // Memoize expensive calculations
+  const primaryDataKey = useMemo(() => dataKeys[0] ?? 'value', [dataKeys])
+  
+  const maxValue = useMemo(() =>
+    Math.max(...data.map(d => Number(d[primaryDataKey]) || Number(d.value) || 0)),
+    [data, primaryDataKey]
+  )
 
   return (
     <div className={`chart-container rounded-lg p-2 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
@@ -211,4 +217,4 @@ export function BarChart({
       </ResponsiveContainer>
     </div>
   )
-}
+})
