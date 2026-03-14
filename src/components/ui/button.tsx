@@ -39,12 +39,14 @@ export type ButtonProps = React.ComponentProps<"button"> &
     asChild?: boolean
   }
 
-function Button({ className, variant, size, asChild = false, ref, ...props }: ButtonProps) {
+function Button({ className, variant, size, asChild = false, ref, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby, ...props }: ButtonProps) {
   const Comp = asChild ? Slot : "button"
   return (
     <Comp
       className={cn(buttonVariants({ variant, size, className }))}
       ref={ref}
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescribedby}
       {...props}
     />
   )

@@ -24,7 +24,8 @@ function TooltipContent({
         className
       )}
       role="tooltip"
-      aria-hidden="true"
+      aria-live="polite"
+      aria-atomic="true"
       {...props}
     />
   )
