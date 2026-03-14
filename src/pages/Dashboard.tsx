@@ -21,6 +21,7 @@ import {
   getSessionLeader
 } from '@/lib/analysis'
 import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber } from '@/components/ui'
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'
 import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, RECENT_PLAYER_STATS_COLUMNS, RECENT_KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
@@ -510,17 +511,20 @@ function Dashboard() {
               </Tabs>
             </section>
 
-            {/* Recent Activity */}
-            <section className={styles.section}>
-              <div className={styles.recentHeader}>
-                <h2 className={styles.sectionTitle}>📊 Recent Activity</h2>
-                {recentSession && (
-                  <span className={styles.sessionDatePill}>
-                    {recentSession.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </span>
-                )}
+            {/* Recent Activity - MetricCards + Carousels */}
+            <section className={styles.recentActivitySection}>
+              <div className={styles.recentActivityHeader}>
+                <div>
+                  <h2 className={styles.recentActivityTitle}>📊 Recent Activity</h2>
+                  {recentSession && (
+                    <span className={styles.recentActivityDate}>
+                      {recentSession.date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                  )}
+                </div>
               </div>
 
+              {/* Summary Stats - Old MetricCard Style */}
               <div className={styles.recentMetrics}>
                 <div className={`${styles.recentMetricCard} ${styles.recentMetricGoals}`}>
                   <MetricCard
@@ -545,57 +549,50 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div className={styles.statsCard}>
-                <Tabs defaultValue="players">
-                  <TabsList>
-                    <TabsTrigger value="players">Player Stats</TabsTrigger>
-                    <TabsTrigger value="keepers">Keeper Stats</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="players">
-                    {recentPlayerScores.length > 0 && (
-                      <div className={styles.statsContent}>
-                        <div className={styles.chartWrapper}>
-                          <BarChart data={recentChartData} dataKeys={['score']} height={200} />
+              {/* Shooters Row - Carousel */}
+              <div className={styles.recentActivityRow}>
+                <h3 className={styles.recentActivityRowTitle}>🎯 Shooters</h3>
+                <Carousel opts={{ align: 'start' }} className="w-full">
+                  <CarouselContent>
+                    {recentPlayerScores.map(player => (
+                      <CarouselItem key={player.name} className="basis-1/3 lg:basis-1/4">
+                        <div className={styles.recentActivityCard}>
+                          <span className={styles.recentActivityCardIcon}>🎯</span>
+                          <span className={styles.recentActivityCardName}>{player.name}</span>
+                          <span className={styles.recentActivityCardStats}>
+                            {player.goals}G / {player.out}O
+                          </span>
+                          <span className={styles.recentActivityCardScore}>{player.score.toFixed(1)}</span>
                         </div>
-                        <DataTable
-                          data={recentPlayerScores}
-                          columns={RECENT_PLAYER_STATS_COLUMNS}
-                          sortKey="score"
-                          sortDirection="desc"
-                        />
-                      </div>
-                    )}
-                  </TabsContent>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </div>
 
-                  <TabsContent value="keepers">
-                    {recentKeeperScores.length > 0 && (
-                      <div className={styles.statsContent}>
-                        <div className={styles.keeperCharts}>
-                          {recentKeeperScores.slice(0, 3).map(keeper => (
-                            <div key={keeper.name} className={styles.keeperChart}>
-                              <h4 className={styles.keeperName}>{keeper.name}</h4>
-                              <PieChart
-                                data={[
-                                  { name: 'Conceded', value: keeper.goalsConceded },
-                                  { name: 'Saved', value: keeper.saves },
-                                  { name: 'Out', value: keeper.outs }
-                                ]}
-                                height={180}
-                              />
-                            </div>
-                          ))}
+              {/* Keepers Row - Carousel */}
+              <div className={styles.recentActivityRow}>
+                <h3 className={styles.recentActivityRowTitle}>🧤 Keepers</h3>
+                <Carousel opts={{ align: 'start' }} className="w-full">
+                  <CarouselContent>
+                    {recentKeeperScores.map(keeper => (
+                      <CarouselItem key={keeper.name} className="basis-1/3 lg:basis-1/4">
+                        <div className={`${styles.recentActivityCard} ${styles.keeper}`}>
+                          <span className={styles.recentActivityCardIcon}>🧤</span>
+                          <span className={styles.recentActivityCardName}>{keeper.name}</span>
+                          <span className={styles.recentActivityCardStats}>
+                            {keeper.saves}S / {keeper.goalsConceded}G
+                          </span>
+                          <span className={styles.recentActivityCardScore}>{keeper.score.toFixed(1)}</span>
                         </div>
-                        <DataTable
-                          data={recentKeeperScores}
-                          columns={RECENT_KEEPER_STATS_COLUMNS}
-                          sortKey="score"
-                          sortDirection="desc"
-                        />
-                      </div>
-                    )}
-                  </TabsContent>
-                </Tabs>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
               </div>
             </section>
           </div>
