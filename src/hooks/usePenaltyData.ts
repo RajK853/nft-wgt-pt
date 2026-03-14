@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { useLoading } from './useLoading'
 import { getSupabaseClient } from '@/lib/supabase'
 import type { PenaltyRecord, Gender } from '@/types'
 
@@ -13,7 +14,7 @@ const supabase = (() => {
 
 interface UsePenaltyDataReturn {
   data: PenaltyRecord[]
-  loading: boolean
+  isLoading: boolean
   error: Error | null
   gender: Gender
   setGender: (gender: Gender) => void
@@ -21,13 +22,13 @@ interface UsePenaltyDataReturn {
 }
 
 export function usePenaltyData(): UsePenaltyDataReturn {
+  const { isLoading, start, stop } = useLoading(true)
   const [allData, setAllData] = useState<PenaltyRecord[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
   const [gender, setGender] = useState<Gender>('Male')
 
   const fetchData = useCallback(async () => {
-    setLoading(true)
+    start()
     setError(null)
 
     try {
@@ -58,9 +59,9 @@ export function usePenaltyData(): UsePenaltyDataReturn {
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch data'))
     } finally {
-      setLoading(false)
+      stop()
     }
-  }, [])
+  }, [start, stop])
 
   useEffect(() => {
     fetchData()
@@ -70,7 +71,7 @@ export function usePenaltyData(): UsePenaltyDataReturn {
 
   return {
     data: filteredData,
-    loading,
+    isLoading,
     error,
     gender,
     setGender,
