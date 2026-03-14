@@ -20,7 +20,8 @@ import {
   getPerfectSession,
   getSessionLeader
 } from '@/lib/analysis'
-import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton } from '@/components/ui'
+import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton, EmptyState } from '@/components/ui'
+import { RefreshCw, Users } from 'lucide-react'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'
 import { BarChart, PieChart, LazyBarChart, LazyPieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
@@ -155,31 +156,45 @@ function Dashboard() {
           <p className={styles.subtitle}>All-time penalty statistics & records</p>
         </div>
         
-        {/* Stats Summary Bar Skeleton */}
-        <div className={styles.statsBar}>
-          {[1, 2, 3, 4].map(i => (
-            <div key={i} className={styles.statBarItem}>
-              <div className="h-8 bg-muted rounded w-16 animate-pulse mb-1"></div>
-              <div className="h-4 bg-muted rounded w-24 animate-pulse"></div>
-            </div>
-          ))}
-        </div>
-
-        {/* Main Content Skeleton */}
-        <div className="space-y-6 mt-6">
-          <ChartSkeleton height={300} />
-          <ChartSkeleton height={300} />
-        </div>
+        <EmptyState
+          title="Loading Data"
+          description="Fetching penalty statistics and records. This may take a moment..."
+          icon={RefreshCw}
+        />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className={styles.errorState}>
-        <div className={styles.errorIcon}>!</div>
-        <p className={styles.errorTitle}>Error loading data</p>
-        <p className={styles.errorMessage}>{error.message}</p>
+      <div className={styles.container}>
+        <EmptyState
+          title="Data Unavailable"
+          description="Unable to load penalty data at this time. Please try again later."
+          icon={RefreshCw}
+          action={{
+            label: "Retry",
+            onClick: () => window.location.reload(),
+            variant: "primary"
+          }}
+        />
+      </div>
+    )
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <div className={styles.container}>
+        <EmptyState
+          title="No Penalty Data"
+          description="There are no penalty statistics available for the selected filters. Try adjusting your search criteria or check back later."
+          icon={Users}
+          action={{
+            label: "Refresh Data",
+            onClick: () => window.location.reload(),
+            variant: "secondary"
+          }}
+        />
       </div>
     )
   }

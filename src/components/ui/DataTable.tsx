@@ -6,6 +6,8 @@
  */
 
 import styles from './DataTable.module.css'
+import { EmptyState } from './EmptyState'
+import { RefreshCw, Search } from 'lucide-react'
 
 interface Column<T> {
   key: keyof T | string
@@ -21,6 +23,9 @@ interface DataTableProps<T> {
   sortDirection?: 'asc' | 'desc'
   onSort?: (key: string) => void
   rowKey?: (row: T) => string | number
+  isLoading?: boolean
+  error?: string
+  onRefresh?: () => void
 }
 
 export function DataTable<T extends object>({
@@ -30,6 +35,9 @@ export function DataTable<T extends object>({
   sortDirection = 'asc',
   onSort,
   rowKey,
+  isLoading = false,
+  error,
+  onRefresh,
 }: DataTableProps<T>) {
   const getValue = (row: T, key: string): unknown => {
     const record = row as Record<string, unknown>
@@ -38,6 +46,50 @@ export function DataTable<T extends object>({
       return parts.reduce((obj: unknown, part) => (obj as Record<string, unknown>)?.[part], record)
     }
     return record[key]
+  }
+
+  if (isLoading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.loading}>
+          <div className={styles.skeleton} />
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <EmptyState
+          title="Data Error"
+          description={error}
+          icon={RefreshCw}
+          action={{
+            label: "Retry",
+            onClick: onRefresh || (() => {}),
+            variant: "primary"
+          }}
+        />
+      </div>
+    )
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className={styles.container}>
+        <EmptyState
+          title="No Data Available"
+          description="No records match your current filters. Try adjusting your search criteria."
+          icon={Search}
+          action={{
+            label: "Clear Filters",
+            onClick: () => console.log('Clear filters'),
+            variant: "secondary"
+          }}
+        />
+      </div>
+    )
   }
 
   return (
@@ -78,10 +130,6 @@ export function DataTable<T extends object>({
           ))}
         </tbody>
       </table>
-
-      {data.length === 0 && (
-        <div className={styles.empty}>No data available</div>
-      )}
     </div>
   )
 }

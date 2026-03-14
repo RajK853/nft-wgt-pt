@@ -14,6 +14,8 @@ export { PageTemplate, Section, TwoColumn, CardGrid } from './PageTemplate';
 export { ThemeToggle } from './theme-toggle';
 // export { Carousel, CarouselContent, CarouselItem } from './carousel';
 
+export { EmptyState } from './EmptyState';
+
 // Shadcn UI components
 export * from './button';
 export * from './card';
