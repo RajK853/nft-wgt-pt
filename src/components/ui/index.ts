@@ -12,6 +12,7 @@ export { Expander } from './Expander';
 export { InfoBox } from './InfoBox';
 export { PageTemplate, Section, TwoColumn, CardGrid } from './PageTemplate';
 export { ThemeToggle } from './theme-toggle';
+// export { Carousel, CarouselContent, CarouselItem } from './carousel';
 
 // Shadcn UI components
 export * from './button';

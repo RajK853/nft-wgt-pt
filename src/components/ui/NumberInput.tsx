@@ -15,6 +15,8 @@ interface NumberInputProps {
   step?: number
   label?: string
   disabled?: boolean
+  error?: string
+  required?: boolean
 }
 
 export function NumberInput({
@@ -24,7 +26,9 @@ export function NumberInput({
   max = 100,
   step = 1,
   label,
-  disabled = false
+  disabled = false,
+  error,
+  required = false
 }: NumberInputProps) {
   const [inputValue, setInputValue] = useState(String(value))
 
@@ -70,17 +74,25 @@ export function NumberInput({
 
   return (
     <div className={styles.container}>
-      {label && <label className={styles.label}>{label}</label>}
-      <div className={styles.inputWrapper}>
+      {label && (
+        <label className={styles.label} id={`${label}-label`}>
+          {label}
+          {required && <span aria-hidden="true" style={{ color: 'var(--color-legacy-error)', marginLeft: '0.25rem' }}> *</span>}
+        </label>
+      )}
+      <div className={`${styles.inputWrapper} ${error ? styles.error : ''}`}>
         <button
           className={styles.button}
           onClick={handleDecrement}
           disabled={disabled || value <= min}
           type="button"
+          aria-label={`Decrease ${label || 'value'} by ${step}`}
+          aria-controls={`number-input-${label || 'value'}`}
         >
           −
         </button>
         <input
+          id={`number-input-${label || 'value'}`}
           type="number"
           className={styles.input}
           value={inputValue}
@@ -90,16 +102,27 @@ export function NumberInput({
           max={max}
           step={step}
           disabled={disabled}
+          aria-labelledby={label ? `${label}-label` : undefined}
+          aria-describedby={error ? `${label}-error` : undefined}
+          aria-invalid={!!error}
+          aria-required={required}
         />
         <button
           className={styles.button}
           onClick={handleIncrement}
           disabled={disabled || value >= max}
           type="button"
+          aria-label={`Increase ${label || 'value'} by ${step}`}
+          aria-controls={`number-input-${label || 'value'}`}
         >
           +
         </button>
       </div>
+      {error && (
+        <span id={`${label}-error`} className={styles.errorMessage} role="alert">
+          {error}
+        </span>
+      )}
     </div>
   )
 }

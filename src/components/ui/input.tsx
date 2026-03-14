@@ -13,6 +13,7 @@ function Input({ className, type, ref, ...props }: InputProps) {
         className
       )}
       ref={ref}
+      aria-label={props.name || props.placeholder || "input"}
       {...props}
     />
   )

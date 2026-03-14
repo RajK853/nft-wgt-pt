@@ -52,11 +52,12 @@ function SelectTrigger({ className, children, ref, ...props }: React.ComponentPr
         isDark ? triggerClasses.dark : triggerClasses.light,
         className
       )}
+      aria-haspopup="listbox"
       {...props}
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDown className="h-4 w-4 opacity-50" />
+        <ChevronDown className="h-4 w-4 opacity-50" aria-hidden="true" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
@@ -105,6 +106,7 @@ function SelectContent({ className, children, position = "popper", ref, ...props
           className
         )}
         position={position}
+        role="listbox"
         {...props}
       >
         <SelectScrollUpButton />
@@ -146,11 +148,12 @@ function SelectItem({ className, children, ref, ...props }: React.ComponentProps
         isDark ? itemClasses.dark : itemClasses.light,
         className
       )}
+      role="option"
       {...props}
     >
       <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Check className="h-4 w-4 text-white" />
+          <Check className="h-4 w-4 text-white" aria-hidden="true" />
         </SelectPrimitive.ItemIndicator>
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
