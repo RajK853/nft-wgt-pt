@@ -24,6 +24,19 @@
   --color-secondary-foreground: oklch(0.12 0 0);
   --color-destructive: oklch(0.45 0.08 25);
   --color-destructive-foreground: oklch(0.98 0 0);
+  --color-success: oklch(0.45 0.06 150);
+  --color-success-foreground: oklch(0.98 0 0);
+  --color-warning: oklch(0.55 0.08 75);
+  --color-warning-foreground: oklch(0.12 0 0);
+  --color-info: oklch(0.48 0.06 220);
+  --color-info-foreground: oklch(0.98 0 0);
+  
+  /* Chart Colors */
+  --color-chart-primary: var(--color-primary);
+  --color-chart-success: var(--color-success);
+  --color-chart-error: var(--color-destructive);
+  --color-chart-neutral: var(--color-muted-foreground);
+  
   --color-muted: oklch(0.90 0 0);
   --color-muted-foreground: oklch(0.42 0 0);
   --color-accent: oklch(0.90 0 0);
@@ -86,6 +99,19 @@
   --color-secondary-foreground: oklch(0.92 0 0);
   --color-destructive: oklch(0.6 0.18 25);
   --color-destructive-foreground: oklch(0.92 0 0);
+  --color-success: oklch(0.50 0.08 150);
+  --color-success-foreground: oklch(0.92 0 0);
+  --color-warning: oklch(0.58 0.08 75);
+  --color-warning-foreground: oklch(0.12 0 0);
+  --color-info: oklch(0.52 0.06 220);
+  --color-info-foreground: oklch(0.92 0 0);
+  
+  /* Chart Colors - Dark */
+  --color-chart-primary: var(--color-primary);
+  --color-chart-success: var(--color-success);
+  --color-chart-error: var(--color-destructive);
+  --color-chart-neutral: var(--color-muted-foreground);
+  
   --color-muted: oklch(0.14 0 0);
   --color-muted-foreground: oklch(0.62 0 0);
   --color-accent: oklch(0.14 0 0);
