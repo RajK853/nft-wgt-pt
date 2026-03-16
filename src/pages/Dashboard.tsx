@@ -23,7 +23,7 @@ import {
 import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton, EmptyState } from '@/components/ui'
 import { RefreshCw, Users } from 'lucide-react'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'
-import { BarChart, PieChart, LazyBarChart, LazyPieChart } from '@/components/charts'
+import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, RECENT_PLAYER_STATS_COLUMNS, RECENT_KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
 import { truncateName } from '@/lib/utils'

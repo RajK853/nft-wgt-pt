@@ -93,7 +93,10 @@ export default defineConfig(({ command, mode }) => {
             if (id.includes('@radix-ui')) return 'ui-primitives';
             if (id.includes('supabase')) return 'supabase';
             if (id.includes('react-router-dom')) return 'router';
-            if (id.includes('react-dom') || id.includes('react/')) return 'react-core';
+            
+            // Put react and react-dom in vendor to avoid circular dependency
+            // with other vendor chunks. React should be in a single chunk.
+            if (id.includes('react-dom') || id.includes('react/') || id.includes('scheduler')) return 'vendor';
             
             return 'vendor';
           },
