@@ -13,7 +13,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    minify: 'terser',
+    minify: 'esbuild',  // was: 'terser' - esbuild is 10-100x faster
     sourcemap: false,
     // Enable CSS code splitting
     cssCodeSplit: true,

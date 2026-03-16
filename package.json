@@ -63,7 +63,6 @@
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^28.1.0",
     "tailwindcss": "^4.1.18",
-    "terser": "^5.27.0",
     "typescript": "^5.3.3",
     "vite": "^7.3.1",
     "vitest": "^3.0.0"
