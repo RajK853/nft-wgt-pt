@@ -18,6 +18,7 @@ import {
 } from 'recharts'
 import { useTheme } from '@/hooks/useTheme'
 import { getChartColors, ANIMATION_DURATION_MS } from '@/lib/chartTheme'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 export interface LineChartSeries {
   key: string
@@ -65,7 +66,7 @@ export function LineChart({
   data,
   title,
   color = '#8884d8',
-  height = 300,
+  height,
   showGrid = true,
   showLegend = true,
   series,
@@ -73,16 +74,20 @@ export function LineChart({
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
   const chartColors = getChartColors(isDark)
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
+  // YAGNI: Only calculate height if not provided
+  const chartHeight = height ?? (isMobile ? 280 : 350)
 
   return (
-    <div className={`chart-container rounded-lg p-4 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+    <div className={`chart-container rounded-lg p-2 md:p-4 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
       {title && (
         <h3 className={`chart-title text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
           {title}
         </h3>
       )}
 
-      <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <RechartsLineChart data={data}>
           {showGrid && (
             <CartesianGrid

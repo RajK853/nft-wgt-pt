@@ -20,6 +20,7 @@ import {
   LabelList,
 } from 'recharts'
 import { useTheme } from '@/hooks/useTheme'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import {
   getChartColors,
   ANIMATION_DURATION_MS,
@@ -76,7 +77,7 @@ export const BarChart = memo(function BarChart({
   data,
   title,
   color = '#e2e8f0',
-  height = 300,
+  height,
   showGrid = true,
   showLegend = false,
   layout = 'horizontal',
@@ -88,6 +89,8 @@ export const BarChart = memo(function BarChart({
   const isDark = resolvedTheme === 'dark'
   const chartColors = getChartColors(isDark)
   const defaultColors = colors ?? NEUTRAL_BAR_COLORS
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const chartHeight = height ?? (isMobile ? 280 : 350)
 
   // Memoize expensive calculations
   const primaryDataKey = useMemo(() => dataKeys[0] ?? 'value', [dataKeys])
@@ -105,7 +108,7 @@ export const BarChart = memo(function BarChart({
         </h3>
       )}
 
-      <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <RechartsBarChart
           data={data}
           layout={layout}

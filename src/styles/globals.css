@@ -327,3 +327,25 @@ main {
   margin: 0 auto;
   padding: 0 2rem;
 }
+
+/* ========================================
+   MOBILE TOUCH TARGETS - WCAG COMPLIANT
+   ======================================== */
+
+/* Minimum 44px touch target for mobile (WCAG) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Enhanced touch interaction */
+@media (hover: hover) and (pointer: fine) {
+  .touch-target:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.touch-target:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}

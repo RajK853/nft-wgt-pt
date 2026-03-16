@@ -37,13 +37,22 @@ const buttonVariants = cva(
 export type ButtonProps = React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    mobileSize?: 'default' | 'large' | 'icon'
   }
 
-function Button({ className, variant, size, asChild = false, ref, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby, ...props }: ButtonProps) {
+function Button({ className, variant, size, asChild = false, ref, 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby, mobileSize = 'default', ...props }: ButtonProps) {
   const Comp = asChild ? Slot : "button"
+
+  // Mobile-specific touch target sizes (KISS: inline logic, no separate hook needed)
+  const mobileClasses = mobileSize === 'large'
+    ? 'min-h-[44px] px-6 py-3'
+    : mobileSize === 'icon'
+      ? 'min-h-[44px] min-w-[44px]'
+      : ''
+
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className }), mobileClasses)}
       ref={ref}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedby}
