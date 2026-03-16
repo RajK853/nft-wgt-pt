@@ -8,7 +8,7 @@ import {
   getKeeperOutcomeDistribution
 } from '@/lib/analysis'
 import { BarChart, PieChart } from '@/components/charts'
-import { DataTable, Tabs, TabsList, TabsTrigger, TabsContent, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, Tabs, TabsList, TabsTrigger, TabsContent, InfoBox, LoadingSpinner, SkipLink } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import { KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
@@ -24,7 +24,7 @@ const OUTCOME_TABS = [
 ]
 
 export default function KeeperPerformance() {
-  const { data, loading, error } = usePenaltyData()
+  const { data, isLoading: loading, error } = usePenaltyData()
 
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const [selectedKeeperForPie, setSelectedKeeperForPie] = useState<string>('')
@@ -102,7 +102,8 @@ export default function KeeperPerformance() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <SkipLink />
+      <div className={styles.header} id="main-content">
         <h1 className={styles.title}>Goalkeeper Performance</h1>
         <p className={styles.subtitle}>Track and compare goalkeeper statistics over time</p>
       </div>

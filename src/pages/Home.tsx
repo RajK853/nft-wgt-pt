@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { SkipLink } from '@/components/ui'
 import styles from './Home.module.css'
 
 interface NavCardProps {
@@ -29,6 +30,7 @@ function Home() {
 
   return (
     <div className={styles.container}>
+      <SkipLink />
       {/* Header with Logo */}
       <header className={styles.header}>
         <div className={styles.logoContainer}>
@@ -56,6 +58,7 @@ function Home() {
       </header>
       
       {/* Navigation Cards */}
+      <main id="main-content">
       <div className={styles.content}>
         <div className={styles.navGrid}>
           <NavCard
@@ -84,6 +87,7 @@ function Home() {
           />
         </div>
       </div>
+      </main>
     </div>
   )
 }

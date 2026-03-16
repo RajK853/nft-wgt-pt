@@ -20,7 +20,7 @@ import {
   getPerfectSession,
   getSessionLeader
 } from '@/lib/analysis'
-import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton, EmptyState } from '@/components/ui'
+import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton, EmptyState, SkipLink } from '@/components/ui'
 import { RefreshCw, Users } from 'lucide-react'
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselPagination } from '@/components/ui/carousel'
 import { BarChart, PieChart } from '@/components/charts'
@@ -201,8 +201,9 @@ function Dashboard() {
 
   return (
     <div className={styles.container}>
+      <SkipLink />
       {/* Page Header */}
-      <div className={styles.pageHeader}>
+      <div className={styles.pageHeader} id="main-content">
         <h1 className={styles.title}>Dashboard</h1>
         <p className={styles.subtitle}>All-time penalty statistics & records</p>
       </div>

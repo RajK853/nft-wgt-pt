@@ -9,7 +9,7 @@
 
 import { useState, useMemo } from 'react'
 import { LineChart } from '../components/charts'
-import { NumberInput, MetricCard } from '../components/ui'
+import { NumberInput, MetricCard, SkipLink } from '../components/ui'
 import { Scoring } from '@/types'
 import { SHOOTER_OUTCOMES, KEEPER_OUTCOMES } from '@/lib/scoring'
 import type { ScoringOutcome } from '@/lib/scoring'
@@ -96,9 +96,9 @@ export default function ScoringMethod() {
 
   return (
     <div className={styles.container}>
-
+      <SkipLink />
       {/* ── Page Header ─────────────────────────────────────────────── */}
-      <header className={styles.header}>
+      <header className={styles.header} id="main-content">
         <h1 className={styles.title}>Scoring Method</h1>
         <p className={styles.subtitle}>
           Understanding how scores are calculated with the time-weighted system
@@ -191,19 +191,16 @@ export default function ScoringMethod() {
                 label="Today"
                 value={`${scoreToday} pts`}
                 help="Score on day 0"
-                sentiment="neutral"
               />
               <MetricCard
                 label={`At ½-Life (day ${halfLife})`}
                 value={`${scoreAtHalfLife} pts`}
                 help="50% of original score"
-                sentiment="neutral"
               />
               <MetricCard
                 label={`At 2× ½-Life (day ${halfLife * 2})`}
                 value={`${scoreAtDouble} pts`}
                 help="25% of original score"
-                sentiment="negative"
               />
             </div>
           </div>
@@ -215,8 +212,8 @@ export default function ScoringMethod() {
               height={340}
               showLegend
               series={[
-                { key: 'simulated', label: `Simulated (½-life: ${halfLife}d)`, color: '#b83232' },
-                { key: 'current',   label: `Current (½-life: ${currentHalfLife}d)`,  color: '#6b7280' },
+                { key: 'simulated', label: `Simulated (½-life: ${halfLife}d)`, color: 'var(--chart-error, #b83232)' },
+                { key: 'current',   label: `Current (½-life: ${currentHalfLife}d)`,  color: 'var(--chart-neutral, #6b7280)' },
               ]}
             />
           </div>

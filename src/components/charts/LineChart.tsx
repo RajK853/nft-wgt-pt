@@ -65,7 +65,7 @@ const CustomTooltip = ({ active, payload, label, isDark }: CustomTooltipProps) =
 export function LineChart({
   data,
   title,
-  color = '#8884d8',
+  color = 'var(--chart-primary, #a855f7)',
   height,
   showGrid = true,
   showLegend = true,

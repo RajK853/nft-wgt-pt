@@ -15,6 +15,7 @@ export { ThemeToggle } from './theme-toggle';
 export * from './carousel';
 
 export { EmptyState } from './EmptyState';
+export { SkipLink } from './SkipLink';
 
 // Shadcn UI components
 export * from './button';

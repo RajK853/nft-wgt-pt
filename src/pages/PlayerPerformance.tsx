@@ -7,7 +7,7 @@ import {
   getUniquePlayers
 } from '@/lib/analysis'
 import { BarChart } from '@/components/charts'
-import { DataTable, MultiSelect, Tabs, TabsList, TabsTrigger, TabsContent, InfoBox, LoadingSpinner } from '@/components/ui'
+import { DataTable, MultiSelect, Tabs, TabsList, TabsTrigger, TabsContent, InfoBox, LoadingSpinner, SkipLink } from '@/components/ui'
 import { SelectWithLabel as Select } from '@/components/ui/select'
 import { Scoring } from '@/types'
 import type { PlayerScore } from '@/types'
@@ -41,10 +41,10 @@ function buildComparisonChartData(players: PlayerScore[], metric: ComparisonKey)
 
   return players.map(p => {
     const value = p[metric] as number
-    let color = '#a855f7'
+    let color = 'var(--chart-primary, #a855f7)'
     if (max !== min) {
-      if (value === max) color = '#22c55e'
-      else if (value === min) color = '#ef4444'
+      if (value === max) color = 'var(--chart-success, #22c55e)'
+      else if (value === min) color = 'var(--chart-error, #ef4444)'
     }
     return {
       name: truncateName(p.name, CHART_NAME_MAX_LENGTH),
@@ -56,7 +56,7 @@ function buildComparisonChartData(players: PlayerScore[], metric: ComparisonKey)
 }
 
 export default function PlayerPerformance() {
-  const { data, loading, error } = usePenaltyData()
+  const { data, isLoading: loading, error } = usePenaltyData()
 
   const [selectedMonth, setSelectedMonth] = useState<string>('')
   const [selectedPlayers, setSelectedPlayers] = useState<string[]>([])
@@ -120,7 +120,8 @@ export default function PlayerPerformance() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <SkipLink />
+      <div className={styles.header} id="main-content">
         <h1 className={styles.title}>Player Performance</h1>
         <p className={styles.subtitle}>Track and compare player statistics over time</p>
       </div>
@@ -199,7 +200,7 @@ export default function PlayerPerformance() {
                           height={300}
                           layout="vertical"
                           dataKeys={['value']}
-                          colors={chartData.map(d => d.fill || '#94a3b8')}
+                          colors={chartData.map(d => d.fill || 'var(--chart-neutral, #94a3b8)')}
                           colorCoding="custom"
                         />
                       </div>

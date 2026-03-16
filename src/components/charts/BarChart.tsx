@@ -66,17 +66,17 @@ const CustomTooltip = ({ active, payload, label, isDark }: CustomTooltipProps) =
 
 // Neutral bright colours for bars when no custom colour is specified
 const NEUTRAL_BAR_COLORS = [
-  '#e2e8f0', // slate-200
-  '#f1f5f9', // slate-100
-  '#cbd5e1', // slate-300
-  '#ffffff', // white
-  '#818cf8', // indigo-400
+  'var(--chart-neutral, #94a3b8)',
+  'var(--chart-neutral, #94a3b8)',
+  'var(--chart-neutral, #94a3b8)',
+  'var(--color-foreground)',
+  'var(--chart-primary, #a855f7)',
 ]
 
 export const BarChart = memo(function BarChart({
   data,
   title,
-  color = '#e2e8f0',
+  color = 'var(--chart-neutral, #94a3b8)',
   height,
   showGrid = true,
   showLegend = false,
@@ -196,7 +196,7 @@ export const BarChart = memo(function BarChart({
                   dataKey={key}
                   position={layout === 'horizontal' ? 'top' : 'right'}
                   formatter={(value) => Number(value) === maxValue && maxValue > 0 ? '▲' : ''}
-                  style={{ fill: '#22c55e', fontSize: 14, fontWeight: 'bold' }}
+                  style={{ fill: 'var(--chart-success, #22c55e)', fontSize: 14, fontWeight: 'bold' }}
                 />
               )}
               {colorCoding === 'single' && data.map((entry, index) => {
@@ -204,7 +204,7 @@ export const BarChart = memo(function BarChart({
                 return (
                   <Cell
                     key={`cell-${index}`}
-                    fill={value === maxValue && maxValue > 0 ? '#22c55e' : color}
+                    fill={value === maxValue && maxValue > 0 ? 'var(--chart-success, #22c55e)' : color}
                   />
                 )
               })}
