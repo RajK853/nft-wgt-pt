@@ -100,6 +100,11 @@ export const BarChart = memo(function BarChart({
     [data, primaryDataKey]
   )
 
+  const minValue = useMemo(() =>
+    Math.min(...data.map(d => Number(d[primaryDataKey]) || Number(d.value) || 0)),
+    [data, primaryDataKey]
+  )
+
   return (
     <div className={`chart-container rounded-lg p-2 shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
       {title && (
@@ -195,16 +200,23 @@ export const BarChart = memo(function BarChart({
                 <LabelList
                   dataKey={key}
                   position={layout === 'horizontal' ? 'top' : 'right'}
-                  formatter={(value) => Number(value) === maxValue && maxValue > 0 ? '▲' : ''}
-                  style={{ fill: 'var(--chart-success, #22c55e)', fontSize: 14, fontWeight: 'bold' }}
+                  formatter={(value) => {
+                    const numValue = Number(value)
+                    if (numValue === maxValue && maxValue > 0) return '▲'
+                    if (numValue === minValue && minValue < maxValue && numValue !== 0) return '▼'
+                    return ''
+                  }}
+                  style={{ fontSize: 14, fontWeight: 'bold' }}
                 />
               )}
               {colorCoding === 'single' && data.map((entry, index) => {
                 const value = Number(entry[primaryDataKey]) || Number(entry.value) || 0
+                const isMax = value === maxValue && maxValue > 0
+                const isMin = value === minValue && minValue < maxValue && value !== 0
                 return (
                   <Cell
                     key={`cell-${index}`}
-                    fill={value === maxValue && maxValue > 0 ? 'var(--chart-success, #22c55e)' : color}
+                    fill={isMax ? 'var(--chart-success, #22c55e)' : isMin ? 'var(--chart-error, #ef4444)' : color}
                   />
                 )
               })}

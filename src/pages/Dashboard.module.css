@@ -4,12 +4,7 @@
    ============================================= */
 
 .container {
-  background: linear-gradient(
-    160deg,
-    var(--color-legacy-bg-primary) 0%,
-    var(--color-legacy-bg-secondary) 55%,
-    var(--color-legacy-bg-primary) 100%
-  );
+  background: var(--color-legacy-bg-primary);
   padding: 2rem 2rem 3rem;
   font-family: var(--font-legacy-sans);
 }
