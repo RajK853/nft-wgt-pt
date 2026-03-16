@@ -2,9 +2,11 @@
   "name": "nft-wgt-pt",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "bun run vite",
     "build": "bun run vite build",
+    "build:analyze": "ANALYZE=true bun run vite build",
     "preview": "bun run vite preview",
     "lint": "bun run eslint",
     "test": "bun test",
@@ -65,7 +67,8 @@
     "tailwindcss": "^4.1.18",
     "typescript": "^5.3.3",
     "vite": "^7.3.1",
-    "vite-plugin-compression": "^0.5.2",
+    "vite-plugin-compression": "^0.5.1",
+    "rollup-plugin-visualizer": "^5.14.0",
     "vitest": "^3.0.0"
   },
   "vitest": {
