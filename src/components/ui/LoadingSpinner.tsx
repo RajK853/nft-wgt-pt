@@ -10,8 +10,15 @@ interface LoadingSpinnerProps {
 
 export function LoadingSpinner({ text, className = '' }: LoadingSpinnerProps) {
   return (
-    <div className={`flex flex-col items-center gap-2 ${className}`}>
-      <div className="w-6 h-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600" />
+    <div 
+      className={`flex flex-col items-center gap-2 ${className}`}
+      role="status"
+      aria-live="polite"
+    >
+      <div 
+        className="w-6 h-6 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+        aria-label={text || 'Loading'}
+      />
       {text && <span className="text-gray-600">{text}</span>}
     </div>
   );

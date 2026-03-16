@@ -102,11 +102,12 @@ export function DataTable<T extends object>({
                 key={String(column.key)}
                 className={`${styles.th} ${column.sortable ? styles.thSortable : ''}`}
                 onClick={() => column.sortable && onSort?.(String(column.key))}
+                aria-sort={column.sortable && sortKey === column.key ? (sortDirection === 'asc' ? 'ascending' : 'descending') : undefined}
               >
                 <div className={styles.thInner}>
                   {column.header}
                   {column.sortable && sortKey === column.key && (
-                    <span className={styles.sortIcon}>
+                    <span className={styles.sortIcon} aria-hidden="true">
                       {sortDirection === 'asc' ? '↑' : '↓'}
                     </span>
                   )}
