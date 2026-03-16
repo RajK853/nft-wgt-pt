@@ -29,10 +29,21 @@ export default defineConfig({
     // Optimize chunk size
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          charts: ['recharts'],
-          ui: ['@radix-ui/react-select', '@radix-ui/react-dialog', '@radix-ui/react-tabs', '@radix-ui/react-tooltip']
+        // Dynamic chunk splitting for better caching
+        manualChunks: (id) => {
+          if (!id.includes('node_modules')) return;
+          
+          // Separate large libraries for better caching
+          if (id.includes('recharts')) return 'charts';
+          if (id.includes('framer-motion')) return 'animations';
+          if (id.includes('lucide-react')) return 'icons';
+          if (id.includes('katex') || id.includes('react-katex')) return 'math';
+          if (id.includes('@radix-ui')) return 'ui-primitives';
+          if (id.includes('supabase')) return 'supabase';
+          if (id.includes('react-router-dom')) return 'router';
+          if (id.includes('react-dom') || id.includes('react/')) return 'react-core';
+          
+          return 'vendor';
         },
         // Add content hash for better caching
         entryFileNames: 'assets/[name]-[hash].js',
