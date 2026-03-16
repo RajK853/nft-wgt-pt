@@ -938,3 +938,22 @@
     width: calc(50% - 0.375rem);
   }
 }
+
+@media (max-width: 480px) {
+  .container { padding: 1rem 0.75rem 2rem; }
+  .title { font-size: 1.5rem; }
+  .subtitle { font-size: 0.8rem; }
+  .sectionTitle { font-size: 1rem; }
+  .pageHeader { margin-bottom: 1rem; }
+  .statsBar { padding: 0.75rem 1rem; margin-bottom: 1.5rem; }
+  .statBarValue { font-size: 1.25rem; }
+  .statBarLabel { font-size: 0.65rem; }
+  .statBarItem { width: calc(50% - 0.25rem); }
+  .section { margin-bottom: 1.5rem; }
+  .podiumCard, .card { padding: 1rem; }
+  .formCard { padding: 1rem 0.75rem; flex-direction: column; }
+  .sectionAccent { padding: 0.75rem; }
+  .recentActivityCard { width: 120px; }
+  .statsCard { padding: 1rem; }
+  .keeperCharts { gap: 1rem; }
+}

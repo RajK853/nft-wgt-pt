@@ -190,3 +190,38 @@
     font-size: 1.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .header {
+    margin-bottom: 2rem;
+  }
+  
+  .logo {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .subtitle {
+    font-size: 0.875rem;
+  }
+  
+  .navCard {
+    padding: 1.25rem;
+  }
+  
+  .navCardTitle {
+    font-size: 1.1rem;
+  }
+  
+  .navCardDescription {
+    font-size: 0.8rem;
+  }
+}

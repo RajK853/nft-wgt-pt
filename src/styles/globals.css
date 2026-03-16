@@ -349,3 +349,64 @@ main {
   transform: scale(0.98);
   opacity: 0.9;
 }
+
+/* ========================================
+   RESPONSIVE UTILITIES
+   ======================================== */
+
+/* Hide on mobile */
+@media (max-width: 480px) {
+  .hide-xs {
+    display: none !important;
+  }
+}
+
+/* Hide on tablet and below */
+@media (max-width: 768px) {
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+/* Hide on desktop and below */
+@media (max-width: 1024px) {
+  .hide-md {
+    display: none !important;
+  }
+}
+
+/* Show only on mobile */
+@media (min-width: 481px) {
+  .show-xs-only {
+    display: none !important;
+  }
+}
+
+/* Show only on tablet and above */
+@media (max-width: 480px) {
+  .show-sm-up {
+    display: none !important;
+  }
+}
+
+/* Text alignment */
+@media (max-width: 480px) {
+  .text-xs-center {
+    text-align: center;
+  }
+  
+  .text-xs-left {
+    text-align: left;
+  }
+}
+
+/* Flex utilities for mobile */
+@media (max-width: 480px) {
+  .flex-xs-col {
+    flex-direction: column;
+  }
+  
+  .flex-xs-wrap {
+    flex-wrap: wrap;
+  }
+}

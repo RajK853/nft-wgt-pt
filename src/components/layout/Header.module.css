@@ -120,12 +120,44 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  .header {
+    padding: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .nav {
+    gap: 0.5rem;
+  }
+
+  .link,
+  .active {
+    font-size: 0.7rem;
+    padding: 0.375rem 0.2rem;
+  }
+  
+  .brandTitle {
+    font-size: 0.75rem;
+  }
+  
   .brandSubtitle {
     display: none;
   }
+  
+  .logo {
+    width: 28px;
+    height: 28px;
+  }
+}
 
-  .brandTitle {
-    font-size: 0.8rem;
+/* Hide all nav links on very small screens, show only logo and theme toggle */
+@media (max-width: 360px) {
+  .nav .link,
+  .nav .active {
+    display: none;
+  }
+  
+  .nav {
+    gap: 0.25rem;
   }
 }
