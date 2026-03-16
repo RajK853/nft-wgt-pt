@@ -88,16 +88,16 @@ export default function PlayerPerformance() {
     return 0
   }), [playerScores, tableSortKey, tableSortDirection])
 
-  const top10Players = useMemo(() => sortedPlayerScores.slice(0, 10), [sortedPlayerScores])
+  const allPlayers = useMemo(() => sortedPlayerScores, [sortedPlayerScores])
 
   const leaderboardChartData = useMemo(() =>
-    top10Players.map(p => ({
+    allPlayers.map(p => ({
       name: truncateName(p.name, CHART_NAME_MAX_LENGTH),
       value: p.score,
       score: p.score,
       goals: p.goals,
     })),
-    [top10Players]
+    [allPlayers]
   )
 
   const comparisonData = useMemo(() =>
@@ -145,7 +145,7 @@ export default function PlayerPerformance() {
           </div>
           <div className={styles.tableContainer}>
             <DataTable
-              data={top10Players}
+              data={allPlayers}
               columns={PLAYER_STATS_COLUMNS}
               sortKey={tableSortKey}
               sortDirection={tableSortDirection}

@@ -56,16 +56,16 @@ export default function KeeperPerformance() {
     return 0
   }), [keeperScores, tableSortKey, tableSortDirection])
 
-  const top10Keepers = useMemo(() => sortedKeeperScores.slice(0, 10), [sortedKeeperScores])
+  const allKeepers = useMemo(() => sortedKeeperScores, [sortedKeeperScores])
 
   const leaderboardChartData = useMemo(() =>
-    top10Keepers.map(k => ({
+    allKeepers.map(k => ({
       name: truncateName(k.name, CHART_NAME_MAX_LENGTH),
       value: k.score,
       score: k.score,
       saves: k.saves
     })),
-    [top10Keepers]
+    [allKeepers]
   )
 
   const pieChartData = useMemo(() => {
@@ -127,7 +127,7 @@ export default function KeeperPerformance() {
           </div>
           <div className={styles.tableContainer}>
             <DataTable
-              data={top10Keepers}
+              data={allKeepers}
               columns={KEEPER_STATS_COLUMNS}
               sortKey={tableSortKey}
               sortDirection={tableSortDirection}
