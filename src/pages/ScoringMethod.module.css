@@ -52,7 +52,7 @@
 .card {
   background: var(--color-muted);
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   padding: 1.75rem;
   box-shadow: 0 10px 30px var(--color-legacy-overlay);
 }
@@ -92,7 +92,7 @@
 .scoringCard {
   background: var(--color-secondary);
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 1.25rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
@@ -128,7 +128,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.625rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   background: var(--color-muted);
   border: 1px solid var(--color-border);
 }
@@ -187,7 +187,7 @@
 .formulaBlock {
   background: var(--color-secondary);
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -208,7 +208,7 @@
   color: var(--color-legacy-accent);
   background: color-mix(in oklch, var(--color-legacy-accent) 8%, transparent);
   border: 1px solid color-mix(in oklch, var(--color-legacy-accent) 20%, transparent);
-  border-radius: 0.375rem;
+  border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   display: block;
   white-space: normal;
@@ -231,7 +231,7 @@
 .milestone {
   background: var(--color-secondary);
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 1rem 0.875rem;
   display: flex;
   flex-direction: column;

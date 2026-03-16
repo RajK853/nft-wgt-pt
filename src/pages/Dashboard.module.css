@@ -43,7 +43,7 @@
   gap: 0;
   background: var(--color-legacy-bg-elevated);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 1rem 1.5rem;
   margin-bottom: 2.5rem;
   overflow: hidden;
@@ -114,7 +114,7 @@
 .sectionAccent {
   background: var(--color-legacy-accent-subtle);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
   margin-bottom: 2.5rem;
 }
@@ -126,7 +126,7 @@
 .card {
   background: var(--color-legacy-bg-elevated);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.875rem;
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -193,7 +193,7 @@
 .podiumCard {
   background: var(--color-legacy-bg-elevated);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.875rem;
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
 }
 
@@ -224,7 +224,7 @@
   flex-direction: column;
   align-items: center;
   padding: 1rem 0.75rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   flex: 1;
   max-width: 120px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -295,7 +295,7 @@
   gap: 0.75rem;
   padding: 0.625rem 0.875rem;
   background: var(--color-legacy-bg-tertiary);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   transition: background 0.15s ease;
 }
 
@@ -345,7 +345,7 @@
 .formCard {
   background: var(--color-legacy-bg-elevated);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.875rem;
+  border-radius: var(--radius-xl);
   padding: 1.25rem 1rem;
   display: flex;
   flex-direction: row;
@@ -457,7 +457,7 @@
   color: var(--color-legacy-text-secondary);
   background: var(--color-legacy-bg-tertiary);
   padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
 }
 
 .recentActivitySummary {
@@ -527,7 +527,7 @@
   max-width: 180px;
   background: var(--color-legacy-bg-elevated);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 1rem 0.875rem;
   display: flex;
   flex-direction: column;
@@ -589,7 +589,7 @@
   min-height: 120px;
   background: var(--color-legacy-bg-tertiary);
   border: 1px dashed var(--color-legacy-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   color: var(--color-legacy-text-muted);
   font-size: 0.875rem;
 }
@@ -640,7 +640,7 @@
 
 /* Color-coded left-border wrappers for recent metric cards */
 .recentMetricCard {
-  border-radius: 0.875rem;
+  border-radius: var(--radius-xl);
   overflow: hidden;
 }
 
@@ -660,7 +660,7 @@
 .statsCard {
   background: var(--color-legacy-bg-elevated);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.875rem;
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
 }
 
@@ -683,7 +683,7 @@
 .keeperChart {
   background: var(--color-legacy-bg-tertiary);
   border: 1px solid var(--color-legacy-border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 1rem;
 }
 
@@ -712,7 +712,7 @@
   gap: 0.5rem;
   background: var(--color-legacy-bg-tertiary);
   padding: 0.375rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-legacy-border);
   margin-bottom: 1.5rem;
   height: auto;
@@ -729,7 +729,7 @@
   color: var(--color-legacy-text-secondary);
   background: transparent;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
 }

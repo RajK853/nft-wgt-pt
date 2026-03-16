@@ -103,7 +103,7 @@
 .navCard {
   background: var(--color-muted);
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
   text-decoration: none;
   transition: all 0.3s ease;
