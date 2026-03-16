@@ -22,7 +22,7 @@ import {
 } from '@/lib/analysis'
 import { MetricCard, Tabs, TabsList, TabsTrigger, TabsContent, DataTable, LoadingSpinner, RevealButton, TypewriterTop10List, RollingNumber, ChartSkeleton, EmptyState } from '@/components/ui'
 import { RefreshCw, Users } from 'lucide-react'
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext, CarouselPagination } from '@/components/ui/carousel'
 import { BarChart, PieChart } from '@/components/charts'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { PLAYER_STATS_COLUMNS, KEEPER_STATS_COLUMNS, RECENT_PLAYER_STATS_COLUMNS, RECENT_KEEPER_STATS_COLUMNS, CHART_NAME_MAX_LENGTH } from '@/lib/constants'
@@ -591,11 +591,16 @@ function Dashboard() {
               {/* Shooters Row - Carousel */}
               <div className={styles.recentActivityRow}>
                 <h3 className={styles.recentActivityRowTitle}>🎯 Shooters</h3>
-                <Carousel opts={{ align: 'start' }} className="w-full">
-                  <CarouselContent>
+                {recentPlayerScores.length === 0 ? (
+                  <div className={styles.recentActivityEmpty}>
+                    <span>No shooter data available</span>
+                  </div>
+                ) : (
+                <Carousel opts={{ align: 'center', loop: false }} className="w-full">
+                  <CarouselContent className="justify-center">
                     {recentPlayerScores.map(player => (
-                      <CarouselItem key={player.name} className="basis-1/3 lg:basis-1/4">
-                        <div className={styles.recentActivityCard}>
+                      <CarouselItem key={player.name} className="basis-[140px] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 px-2">
+                        <div className={`${styles.recentActivityCard} ${styles.shooter}`}>
                           <span className={styles.recentActivityCardIcon}>🎯</span>
                           <span className={styles.recentActivityCardName}>{player.name}</span>
                           <span className={styles.recentActivityCardStats}>
@@ -608,16 +613,23 @@ function Dashboard() {
                   </CarouselContent>
                   <CarouselPrevious />
                   <CarouselNext />
+                  <CarouselPagination />
                 </Carousel>
+                )}
               </div>
 
               {/* Keepers Row - Carousel */}
               <div className={styles.recentActivityRow}>
                 <h3 className={styles.recentActivityRowTitle}>🧤 Keepers</h3>
-                <Carousel opts={{ align: 'start' }} className="w-full">
-                  <CarouselContent>
+                {recentKeeperScores.length === 0 ? (
+                  <div className={styles.recentActivityEmpty}>
+                    <span>No keeper data available</span>
+                  </div>
+                ) : (
+                <Carousel opts={{ align: 'center', loop: false }} className="w-full">
+                  <CarouselContent className="justify-center">
                     {recentKeeperScores.map(keeper => (
-                      <CarouselItem key={keeper.name} className="basis-1/3 lg:basis-1/4">
+                      <CarouselItem key={keeper.name} className="basis-[140px] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 px-2">
                         <div className={`${styles.recentActivityCard} ${styles.keeper}`}>
                           <span className={styles.recentActivityCardIcon}>🧤</span>
                           <span className={styles.recentActivityCardName}>{keeper.name}</span>
@@ -631,7 +643,9 @@ function Dashboard() {
                   </CarouselContent>
                   <CarouselPrevious />
                   <CarouselNext />
+                  <CarouselPagination />
                 </Carousel>
+                )}
               </div>
             </section>
           </div>

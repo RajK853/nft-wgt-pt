@@ -24,6 +24,9 @@ export interface CarouselContextValue {
   canScrollNext: boolean
   scrollNext: () => void
   scrollPrev: () => void
+  scrollTo: (index: number) => void
+  selectedIndex: number
+  scrollSnaps: number[]
 }
 
 const CarouselContext = React.createContext<CarouselContextValue | null>(null)
@@ -46,11 +49,14 @@ const Carousel = React.forwardRef<
   })
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
 
   const onSelect = React.useCallback((emblaApi: CarouselApi) => {
     if (!emblaApi) return
     setCanScrollPrev(emblaApi.canScrollPrev())
     setCanScrollNext(emblaApi.canScrollNext())
+    setSelectedIndex(emblaApi.selectedScrollSnap())
   }, [])
 
   const scrollPrev = React.useCallback(() => {
@@ -61,11 +67,21 @@ const Carousel = React.forwardRef<
     api?.scrollNext()
   }, [api])
 
+  const scrollTo = React.useCallback((index: number) => {
+    api?.scrollTo(index)
+  }, [api])
+
   React.useEffect(() => {
     if (!api) return
 
+    // Initialize scroll snaps
+    setScrollSnaps(api.scrollSnapList())
     onSelect(api)
-    api.on("reInit", onSelect)
+
+    api.on("reInit", () => {
+      setScrollSnaps(api.scrollSnapList())
+      onSelect(api)
+    })
     api.on("select", onSelect)
 
     return () => {
@@ -83,6 +99,9 @@ const Carousel = React.forwardRef<
         canScrollNext,
         scrollNext,
         scrollPrev,
+        scrollTo,
+        selectedIndex,
+        scrollSnaps,
       }}
     >
       <div
@@ -158,9 +177,12 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute h-8 w-8 rounded-full",
+        "absolute h-10 w-10 rounded-full transition-all duration-200",
+        "hover:scale-105 hover:shadow-md",
+        "disabled:opacity-30 disabled:hover:scale-100 disabled:hover:shadow-none",
+        "focus-visible:ring-2 focus-visible:ring-offset-2",
         orientation === "horizontal"
-          ? "-left-12 top-1/2 -translate-y-1/2"
+          ? "-left-3 sm:-left-12 top-1/2 -translate-y-1/2 z-10"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
@@ -187,9 +209,12 @@ const CarouselNext = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute h-8 w-8 rounded-full",
+        "absolute h-10 w-10 rounded-full transition-all duration-200",
+        "hover:scale-105 hover:shadow-md",
+        "disabled:opacity-30 disabled:hover:scale-100 disabled:hover:shadow-none",
+        "focus-visible:ring-2 focus-visible:ring-offset-2",
         orientation === "horizontal"
-          ? "-right-12 top-1/2 -translate-y-1/2"
+          ? "-right-3 sm:-right-12 top-1/2 -translate-y-1/2 z-10"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
@@ -204,10 +229,81 @@ const CarouselNext = React.forwardRef<
 })
 CarouselNext.displayName = "CarouselNext"
 
+// New Pagination Dots Component
+interface CarouselPaginationProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Number of visible dots to show before collapsing (default: 5) */
+  maxDots?: number
+}
+
+const CarouselPagination = React.forwardRef<
+  HTMLDivElement,
+  CarouselPaginationProps
+>(({ className, maxDots = 5, ...props }, ref) => {
+  const { selectedIndex, scrollSnaps, scrollTo } = useCarousel()
+  const totalSlides = scrollSnaps.length
+
+  // Don't render if there's only 1 slide or no slides
+  if (totalSlides <= 1) return null
+
+  // Handle case where there are more dots than maxDots
+  const displayDots = totalSlides <= maxDots
+    ? scrollSnaps.map((_, i) => i)
+    : (() => {
+        const half = Math.floor(maxDots / 2)
+        const start = Math.max(0, selectedIndex - half)
+        const end = Math.min(totalSlides - 1, start + maxDots - 1)
+        const adjustedStart = Math.max(0, end - maxDots + 1)
+        return Array.from({ length: Math.min(maxDots, totalSlides) }, (_, i) => adjustedStart + i)
+      })()
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "flex items-center justify-center gap-1.5 mt-4",
+        className
+      )}
+      role="tablist"
+      aria-label="Carousel pagination"
+      {...props}
+    >
+      {displayDots.map((dotIndex) => {
+        const isActive = dotIndex === selectedIndex
+        return (
+          <button
+            key={dotIndex}
+            role="tab"
+            aria-selected={isActive}
+            aria-label={`Go to slide ${dotIndex + 1}`}
+            onClick={() => scrollTo(dotIndex)}
+            className={cn(
+              "relative h-2 w-2 rounded-full transition-all duration-200",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary",
+              isActive
+                ? "bg-primary w-6"
+                : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+            )}
+          >
+            <span className="sr-only">Slide {dotIndex + 1}</span>
+          </button>
+        )
+      })}
+
+      {totalSlides > maxDots && (
+        <span className="ml-2 text-xs text-muted-foreground">
+          {selectedIndex + 1} / {totalSlides}
+        </span>
+      )}
+    </div>
+  )
+})
+CarouselPagination.displayName = "CarouselPagination"
+
 export {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselPagination,
 }

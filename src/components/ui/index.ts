@@ -12,7 +12,7 @@ export { Expander } from './Expander';
 export { InfoBox } from './InfoBox';
 export { PageTemplate, Section, TwoColumn, CardGrid } from './PageTemplate';
 export { ThemeToggle } from './theme-toggle';
-// export { Carousel, CarouselContent, CarouselItem } from './carousel';
+export * from './carousel';
 
 export { EmptyState } from './EmptyState';
 
